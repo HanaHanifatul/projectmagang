@@ -1,0 +1,64 @@
+{{--  4 colom --}}
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+    <div class="relative p-4 border rounded text-center">
+        {{-- icon --}}
+        <div class="absolute top-2 right-2 text-yellow-500">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                <path fill-rule="evenodd" d="M1 8a7 7 0 1 1 14 0A7 7 0 0 1 1 8Zm7.75-4.25a.75.75 0 0 0-1.5 0V8c0 .414.336.75.75.75h3.25a.75.75 0 0 0 0-1.5h-2.5v-3.5Z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        <p class="text-sm text-gray-500">Sedang Berlangsung</p>
+        <p class="text-2xl font-bold">0</p>
+        <p class="text-xs text-gray-400">Tahapan dalam proses</p>
+    </div>
+    <div class="relative p-4 border rounded text-center">
+        {{-- icon --}}
+        <div class="absolute top-2 right-2 text-emerald-500">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14Zm3.844-8.791a.75.75 0 0 0-1.188-.918l-3.7 4.79-1.649-1.833a.75.75 0 1 0-1.114 1.004l2.25 2.5a.75.75 0 0 0 1.15-.043l4.25-5.5Z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        <p class="text-sm text-gray-500">Tahapan Selesai</p>
+        <p class="text-2xl font-bold">4</p>
+        <p class="text-xs text-gray-400">Selesai sesuai rencana</p>
+    </div>
+    <div class="relative p-4 border rounded text-center">
+        {{-- icon --}}
+        <div class="absolute top-2 right-2 text-red-500">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                <path fill-rule="evenodd" d="M6.701 2.25c.577-1 2.02-1 2.598 0l5.196 9a1.5 1.5 0 0 1-1.299 2.25H2.804a1.5 1.5 0 0 1-1.3-2.25l5.197-9ZM8 4a.75.75 0 0 1 .75.75v3a.75.75 0 1 1-1.5 0v-3A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        <p class="text-sm text-gray-500">Tertunda/Mundur</p>
+        <p class="text-2xl font-bold">0</p>
+        <p class="text-xs text-gray-400">Tahapan dengan penundaan</p>
+    </div>
+    <div class="relative p-4 border rounded text-center">
+        {{-- icon --}}
+        <div class="absolute top-2 right-2 text-green-500">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                <path fill-rule="evenodd" d="M15 8c0 .982-.472 1.854-1.202 2.402a2.995 2.995 0 0 1-.848 2.547 2.995 2.995 0 0 1-2.548.849A2.996 2.996 0 0 1 8 15a2.996 2.996 0 0 1-2.402-1.202 2.995 2.995 0 0 1-2.547-.848 2.995 2.995 0 0 1-.849-2.548A2.996 2.996 0 0 1 1 8c0-.982.472-1.854 1.202-2.402a2.995 2.995 0 0 1 .848-2.547 2.995 2.995 0 0 1 2.548-.849A2.995 2.995 0 0 1 8 1c.982 0 1.854.472 2.402 1.202a2.995 2.995 0 0 1 2.547.848c.695.695.978 1.645.849 2.548A2.996 2.996 0 0 1 15 8Zm-3.291-2.843a.75.75 0 0 1 .135 1.052l-4.25 5.5a.75.75 0 0 1-1.151.043l-2.25-2.5a.75.75 0 1 1 1.114-1.004l1.65 1.832 3.7-4.789a.75.75 0 0 1 1.052-.134Z" clip-rule="evenodd" />
+            </svg>
+        </div>
+        <p class="text-sm text-gray-500">Persentase Realisasi</p>
+        <p class="text-2xl font-bold">100</p>
+        <p class="text-xs text-gray-400">Tingkat penyelesaian</p>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div class="p-4 border rounded text-center">
+        <p class="text-sm text-black-900">4 Total Tahapan Direncanakan</p>
+        <p class="text-xs text-gray-400">Q1 2024</p>
+    </div>
+    <div class="relative bg-green-100 p-4 border rounded text-center">
+        <p class="text-sm text-blue-900">Efektifitas Realisasi: 100%</p>
+        <p class="text-xs text-gray-400">4 dari 4 tahapan selesai</p>
+    </div>
+</div>
+
+<div class="mt-4 text-center">
+    <span class="px-3 py-1 rounded-full bg-gray-100 text-sm">
+        Data untuk Q1 2024 - Fokus Tahapan
+    </span>
+</div>
