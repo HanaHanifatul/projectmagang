@@ -83,7 +83,7 @@
                         <h2 class="text-lg font-semibold text-blue-900">Daftar Publikasi Survei</h2>
                         <p class="text-sm text-gray-500">Tabel ringkasan publikasi survei tracking per triwulan</p>
                     </div>
-                    <button class="flex items-center bg-emerald-600 text-white px-2 py-1 rounded-lg sm:text-sm shadow hover:bg-emerald-700 ">
+                    <button class="flex items-center bg-emerald-600 text-white px-2 py-1 rounded-lg sm:text-lm shadow hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
                         +  Publikasi
                     </button>
                 </div>
