@@ -17,3 +17,7 @@ Route::get('/ketuatim', function () {
 Route::get('/ketuatim/laporan', function () {
     return view('/ketuatim/laporan');
 });
+
+Route::get('/login', function () {
+    return view('/auth/login');
+});
