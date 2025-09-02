@@ -6,8 +6,10 @@
     <title>{{ config('app.name', 'Laravel') }}</title>
     @vite('resources/css/app.css')
     @vite('resources/js/app.js')
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
 </head>
-<body class="bg-gray-50 dark:bg-gray-900">
+<body class="bg-gray-50 dark:bg-gray-300">
 
     {{-- Navbar --}}
     @include('layouts.navbar')
