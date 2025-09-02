@@ -83,9 +83,52 @@
                         <h2 class="text-lg font-semibold text-blue-900">Daftar Publikasi Survei</h2>
                         <p class="text-sm text-gray-500">Tabel ringkasan publikasi survei tracking per triwulan</p>
                     </div>
-                    <button class="flex items-center bg-emerald-600 text-white px-2 py-1 rounded-lg sm:text-lm shadow hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
-                        +  Publikasi
-                    </button>
+
+                    <div x-data="{ open: false }">
+                        <!-- Tombol -->
+                        <button 
+                            @click="open = true" 
+                            class="flex items-center bg-emerald-600 text-white px-3 py-2 rounded-lg sm:text-sm shadow hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
+                            + Publikasi
+                        </button>
+
+                        <!-- Modal -->
+                        <div 
+                            x-show="open" 
+                            x-transition 
+                            class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                            <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+                                <!-- Tombol close -->
+                                <button 
+                                    @click="open = false" 
+                                    class="absolute top-2 right-2 text-gray-600 hover:text-red-600">
+                                    ✖
+                                </button>
+                                
+                                <h2 class="text-lg font-semibold mb-4">Tambah Publikasi Survei</h2>
+                                <!-- Form -->
+                                <form method="POST">
+                                    @csrf
+                                    <div class="mb-3">
+                                        <label class="block text-sm font-medium text-gray-700">Nama Publikasi Survei</label>
+                                        <input type="text" name="nama" 
+                                            class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                    </div>
+
+                                    <!-- Tombol Simpan -->
+                                    <div class="flex justify-end mt-4">
+                                        <button type="submit" 
+                                            class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
+                                            Simpan
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+
                 </div>
                 <!-- Table -->
                 <div class="bg-white shadow rounded-lg overflow-hidden">
