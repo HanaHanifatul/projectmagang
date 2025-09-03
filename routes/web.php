@@ -3,19 +3,15 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('/viewer/home');
+    return view('/tampilan/homeketua');
 });
 
-Route::get('/laporan/lap', function () {
-    return view('/laporan/lap');
+Route::get('/laporan', function () {
+    return view('/tampilan/laporan');
 });
 
-Route::get('/ketuatim', function () {
-    return view('/ketuatim/homeketua');
-});
-
-Route::get('/ketuatim/laporan', function () {
-    return view('/ketuatim/laporan');
+Route::get('/detail', function () {
+    return view('/tampilan/detail');
 });
 
 Route::get('/login', function () {
