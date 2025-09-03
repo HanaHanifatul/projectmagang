@@ -163,7 +163,62 @@
                                     <!-- Nama Publikasi -->
                                     <td class="px-4 py-4 align-top ">
                                         <div class="font-semibold text-gray-700">Sakernas</div>
-                                        <button class="sm:text-xs mt-2 px-3 py-1 text-xs text-gray-700 bg-gray-100 border rounded-lg hover:bg-emerald-600 hover:text-white whitespace-nowrap min-w-[100px]" >+ Tahapan</button>
+                                        <!-- Button Tahapan -->
+                                        <div x-data="{ open: false }">
+                                            <button 
+                                                @click="open = true" 
+                                                class="sm:text-xs mt-2 px-3 py-1 text-xs text-gray-700 bg-gray-100 border rounded-lg hover:bg-emerald-600 hover:text-white whitespace-nowrap min-w-[100px]" >
+                                                + Tahapan
+                                            </button>
+
+                                            <!-- Modal -->
+                                            <div 
+                                                x-show="open" 
+                                                x-transition 
+                                                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                                <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+                                                    <!-- Tombol close -->
+                                                    <button 
+                                                        @click="open = false" 
+                                                        class="absolute top-2 right-2 text-gray-600 hover:text-red-600">
+                                                        ✖
+                                                    </button>
+                                                    <!-- Modal Content -->
+                                                    <h2 class="text-lg font-semibold mb-4">Tambah Publikasi Survei</h2>
+                                                    <!-- Form -->
+                                                    <form method="POST">
+                                                        @csrf
+                                                        <!-- Nama Publikasi Survei -->
+                                                        <div class="mb-3">
+                                                            <label class="block text-sm font-medium text-gray-700">Nama Publikasi Survei</label>
+                                                            <select name="nama_publikasi" 
+                                                                class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
+                                                                <option value="">-- Pilih Publikasi --</option>
+                                                                <option value="sosial_ekonomi">Survei Sosial Ekonomi</option>
+                                                                <option value="ketenagakerjaan">Survei Ketenagakerjaan</option>
+                                                                <option value="pendidikan">Survei Pendidikan</option>
+                                                                <option value="kesehatan">Survei Kesehatan</option>
+                                                            </select>
+                                                        </div>
+
+                                                        <!-- Tambah Tahapan Survei -->
+                                                        <div class="mb-3">
+                                                            <label class="block text-sm font-medium text-gray-700">Tahapan Survei</label>
+                                                            <input type="text" name="tahapan" 
+                                                                class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                                        </div>
+
+                                                        <!-- Tombol Simpan -->
+                                                        <div class="flex justify-end mt-4">
+                                                            <button type="submit" 
+                                                                class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
+                                                                Simpan
+                                                            </button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </td>
                                     <!-- Tahapan -->
                                     <td class="px-4 py-4 align-top">
