@@ -339,14 +339,14 @@
                         </div>
 
                         <!-- Buttons -->
-                        <div class="flex space-x-2">
-                            <button type="submit"
-                                class="bg-blue-800 hover:bg-blue-700 text-white px-4 py-2 rounded">
-                                Simpan
-                            </button>
+                        <div class="flex justify-end space-x-2 mt-4">
                             <button type="button" @click="editMode = false"
                                 class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
                                 Batal
+                            </button>
+                            <button type="submit"
+                                class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                                Simpan
                             </button>
                         </div>
 
