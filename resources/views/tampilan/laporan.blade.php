@@ -19,7 +19,9 @@
         {{-- Header --}}
         <x-header></x-header>
     </div>
-
+    <main>
+        <h3 class="italic text-gray-500 text-sm text-center">Maaf Halaman Ini Belum Tersedia</h3>
+    </main>
     {{-- <main>
         <div class="max-w-7xl mx-auto px-4 space-y-6">
             <div class="p-6">

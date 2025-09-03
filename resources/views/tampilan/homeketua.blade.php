@@ -67,10 +67,10 @@
                 <!-- Konten Tab -->
                 <div>
                     <div x-show="tab === 'publikasi'">
-                        @include('dashboard.rekapitulasi-publikasi')
+                        @include('statistik.rekapitulasi-publikasi')
                     </div>
                     <div x-show="tab === 'tahapan'">
-                        @include('dashboard.rekapitulasi-tahapan')
+                        @include('statistik.rekapitulasi-tahapan')
                     </div>
                 </div>
             </div>
