@@ -10,9 +10,9 @@
     <script src="https://unpkg.com/alpinejs" defer></script>
 </head>
 <body class="bg-gray-50 dark:bg-gray-300">
-
+    
     {{-- Navbar --}}
-    @include('layouts.navbar')
+    <x-navbar ></x-navbar>
 
     {{-- Main Content --}}
     <main class="min-h-screen">

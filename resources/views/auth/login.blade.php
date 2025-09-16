@@ -16,7 +16,7 @@
         <!-- Bar Judul untuk ukuran kecil -->
         <div class="p-4 text-white md:hidden bg-primary">
             <a href="#" class="flex ms-2 md:me-24">
-                <!-- <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Logo_BMKG_%282010%29.png" class="h-8 me-3" -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Logo_BMKG_%282010%29.png" class="h-8 me-3"
                     alt="FlowBite Logo" />
                 <span
                     class="self-center text-xl font-semibold tracking-wide sm:text-2xl whitespace-nowrap dark:text-white">Tim SAKIP BPS Kota Bekasi</span>
@@ -25,11 +25,10 @@
 
         <!-- Kanan: Form Login -->
         <div class="flex flex-col items-center justify-center w-full p-6 mt-10 md:w-1/2 bg-secondary md:p-10">
-            <form method="POST" action="#"
+            <form method="POST" action="{{ route('login.post') }}"
                 class="flex flex-col w-full max-w-md p-6 bg-white rounded-lg shadow-md md:p-10">
                 @csrf
-                <!-- <img src="/img/bps.png" alt="BPS Logo" class="w-24 mx-auto mb-6 md:w-40"> -->
-
+                <!-- Username/Email -->
                 <div class="mb-4">
                     <label for="email" class="block text-sm font-bold md:text-lg">Username</label>
                     <input type="text" name="email" id="email" placeholder="Masukkan Email"
@@ -38,7 +37,7 @@
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
-
+                <!-- Kata Sandi -->
                 <div class="mb-4">
                     <label for="password" class="block text-sm font-bold md:text-lg">Kata Sandi</label>
                     <input type="password" name="password" id="password" placeholder="Masukkan Kata Sandi"
@@ -47,6 +46,7 @@
                         <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
                     @enderror
                 </div>
+                <!-- Remember Me -->
                 <div class="flex items-center justify-between mb-4">
                     <div class="flex items-center">
                         <input id="remember-me" name="remember" type="checkbox"
@@ -54,6 +54,7 @@
                         <label for="remember-me" class="block ml-2 text-sm text-gray-900">Remember-me</label>
                     </div>
                 </div>
+                <!-- Button Login -->
                 <div>
                     <a href="#"
                         class="text-sm tracking-wider text-blue-600 hover:underline">Lupa kata sandi? Klik disini</a>

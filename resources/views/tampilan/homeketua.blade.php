@@ -87,12 +87,13 @@
 
                     <div x-data="{ open: false }">
                         <!-- Tombol -->
-                        <button 
-                            @click="open = true" 
-                            class="flex items-center bg-emerald-600 text-white px-3 py-2 rounded-lg sm:text-sm shadow hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
-                            + Publikasi
-                        </button>
-
+                        @if(auth()->check() && auth()->user()->role === 'ketua_tim')
+                            <button 
+                                @click="open = true" 
+                                class="flex items-center bg-emerald-600 text-white px-3 py-2 rounded-lg sm:text-sm shadow hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
+                                + Publikasi
+                            </button>
+                        @endif
                         <!-- Modal -->
                         <div 
                             x-show="open" 
