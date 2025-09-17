@@ -15,8 +15,16 @@ return new class extends Migration
             $table->id('struggle_id'); // Primary Key custom (fixed typo)
             $table->text('struggle_desc');
             $table->text('solution_desc');
-            $table->text('solution_doc')->nullable();
-            $table->timestamps();
+            $table->string('solution_doc')->nullable();
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
+        
+            
+            // Foreign Key kedua ke strugles
+            $table->foreignId('step_final_id')
+                  ->constrained('steps_finals', 'step_final_id')
+                  ->onDelete('cascade')
+                  ->onUpdate('cascade');
         });
     }
 

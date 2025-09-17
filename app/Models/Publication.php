@@ -13,7 +13,9 @@ class Publication extends Model
     
     protected $fillable = [
         'publication_name',
-        'user_id'
+        'fk_user_id',
+        'publication_report',
+        'publication_pic',
     ];
 
     // Relasi: Publication dimiliki oleh satu User
@@ -25,6 +27,6 @@ class Publication extends Model
     // Relasi: Publication memiliki banyak Steps Plans
     public function stepsPlans()
     {
-        return $this->hasMany(StepsPlan::class, 'fk_publication_id', 'publication_id');
+        return $this->hasMany(StepsPlan::class, 'publication_id', 'publication_id');
     }
 }

@@ -14,18 +14,19 @@ return new class extends Migration
         Schema::create('steps_plans', function (Blueprint $table) {
             $table->id('step_plan_id'); // Primary Key custom
             $table->date('plan_start_date');
+            $table->date('plan_end_date');
             $table->string('plan_name');
-            $table->enum('plan_type', ['PERSIAPAN', 'PENGUMPULAN DATA', 'PENGOLAHAN DATA', 'ANALISIS DATA', 'DISEMINASI']);
+            $table->string('plan_type');
             //$table->integer('plan_triwulan');
             $table->text('plan_desc');
-            $table->text('plan_doc')->nullable();
+            $table->string('plan_doc')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             
             // Foreign Key ke publications table
-            $table->foreignId('fk_publication_id')
+            $table->foreignId('publication_id')
                   ->constrained('publications', 'publication_id')
-                  ->onDelete('cascade')
+                  ->onDelete('no action')
                   ->onUpdate('no action');
         });
     }

@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('publications', function (Blueprint $table) {
             $table->id('publication_id'); // Primary Key custom
             $table->string('publication_name');
+            $table->string('publication_report');
+            $table->string('publication_pic');
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             
