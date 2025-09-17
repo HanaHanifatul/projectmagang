@@ -48,7 +48,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-6 gap-2 mb-4 items-center">
                     <!-- Search (2 kolom di layar besar) -->
-                    <div class="sm:col-span-4">
+                    <div class="@if(auth()->check() && auth()->user()->role === 'ketua_tim') sm:col-span-4 @else sm:col-span-5 @endif">
                         <input 
                             type="text" 
                             placeholder="Cari Nama Tahapan..." 
@@ -67,75 +67,76 @@
                         </a>
                     </div>
                     <!-- Tambah Tahapan -->
-                    <div class="sm:col-span-1">
-                        <div x-data="{ open: false }">
-                            <button 
-                                @click="open = true" 
-                                class="w-full flex gap-1 items-center justify-center bg-emerald-600 text-white px-3 py-2 rounded-lg text-sm shadow hover:bg-emerald-800">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                    <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
-                                </svg>
-                                Tahapan
-                            </button>
+                    @if(auth()->check() && auth()->user()->role === 'ketua_tim')
+                        <div class="sm:col-span-1">
+                            <div x-data="{ open: false }">
+                                <button 
+                                    @click="open = true" 
+                                    class="w-full flex gap-1 items-center justify-center bg-emerald-600 text-white px-3 py-2 rounded-lg text-sm shadow hover:bg-emerald-800">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                                    </svg>
+                                    Tahapan
+                                </button>
 
-                            <!-- Modal -->
-                            <div 
-                                x-show="open" 
-                                x-transition 
-                                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                                <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
-                                    <!-- Tombol close -->
-                                    <button 
-                                        @click="open = false" 
-                                        class="absolute top-2 right-2 text-gray-600 hover:text-red-600">
-                                        ✖
-                                    </button>
-                                    <!-- Modal Content -->
-                                    <h2 class="text-lg font-semibold">Tambah Tahapan</h2>
-                                    <p class="text-sm text-gray-500 mb-2">Tambahkan tahapan baru untuk publikasi/laporan</p>
-                                    <!-- Form -->
-                                    <form method="POST">
-                                        @csrf
-                                        <!-- Jenis Tahapan -->
-                                        <div class="mb-3">
-                                            <label class="block text-sm font-medium text-gray-700">Jenis Tahapan</label>
-                                            <select name="nama_publikasi" 
-                                                class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
-                                                <option value="">-- Pilih Jenis Tahapan --</option>
-                                                <option value="persiapan">Persiapan</option>
-                                                <option value="pengumpulan_data">Pengumpulan Data</option>
-                                                <option value="pengolahan_data">Pengolahan Data</option>
-                                                <option value="analisis_data">Analisis Data</option>
-                                                <option value="diseminasi">Diseminasi</option>
-                                            </select>
-                                        </div>
+                                <!-- Modal -->
+                                <div 
+                                    x-show="open" 
+                                    x-transition 
+                                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+                                        <!-- Tombol close -->
+                                        <button 
+                                            @click="open = false" 
+                                            class="absolute top-2 right-2 text-gray-600 hover:text-red-600">
+                                            ✖
+                                        </button>
+                                        <!-- Modal Content -->
+                                        <h2 class="text-lg font-semibold">Tambah Tahapan</h2>
+                                        <p class="text-sm text-gray-500 mb-2">Tambahkan tahapan baru untuk publikasi/laporan</p>
+                                        <!-- Form -->
+                                        <form method="POST">
+                                            @csrf
+                                            <!-- Jenis Tahapan -->
+                                            <div class="mb-3">
+                                                <label class="block text-sm font-medium text-gray-700">Jenis Tahapan</label>
+                                                <select name="nama_publikasi" 
+                                                    class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
+                                                    <option value="">-- Pilih Jenis Tahapan --</option>
+                                                    <option value="persiapan">Persiapan</option>
+                                                    <option value="pengumpulan_data">Pengumpulan Data</option>
+                                                    <option value="pengolahan_data">Pengolahan Data</option>
+                                                    <option value="analisis_data">Analisis Data</option>
+                                                    <option value="diseminasi">Diseminasi</option>
+                                                </select>
+                                            </div>
 
-                                        <!-- Tambah Tahapan Survei -->
-                                        <div class="mb-3">
-                                            <label class="block text-sm font-medium text-gray-700">Nama Tahapan</label>
-                                            <input type="text" name="tahapan" 
-                                                class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                                                placeholder="Contoh: Perekrutan Anggota Pelatihan Anggota">
-                                        </div>
+                                            <!-- Tambah Tahapan Survei -->
+                                            <div class="mb-3">
+                                                <label class="block text-sm font-medium text-gray-700">Nama Tahapan</label>
+                                                <input type="text" name="tahapan" 
+                                                    class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                                    placeholder="Contoh: Perekrutan Anggota Pelatihan Anggota">
+                                            </div>
 
-                                        <!-- Tombol Simpan -->
-                                        <div class="flex justify-end mt-4 gap-2">
-                                            <button type="button" @click="open = false" 
-                                                class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
-                                                Batal
-                                            </button>
-                                            <button type="submit" 
-                                                class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
-                                                Simpan
-                                            </button>
-                                        </div>
-                                    </form>
+                                            <!-- Tombol Simpan -->
+                                            <div class="flex justify-end mt-4 gap-2">
+                                                <button type="button" @click="open = false" 
+                                                    class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
+                                                    Batal
+                                                </button>
+                                                <button type="submit" 
+                                                    class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
+                                                    Simpan
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    @endif
                 </div>
-
 
                 <!-- Badges -->
                 <div class="flex gap-2 mb-6">
@@ -214,20 +215,26 @@
 
                         <!-- Tombol Edit -->
                         <div class="flex justify-end mt-4 gap-2">
-                            <button @click="editMode = true"
-                                class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-red-500 hover:bg-red-600 hover:text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                    <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
-                                </svg>
-                                Hapus
-                            </button>
-                            <button @click="editMode = true"
-                                class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-gray-700 hover:bg-emerald-600 hover:text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                    <path fill-rule="evenodd" d="M11.013 2.513a1.75 1.75 0 0 1 2.475 2.474L6.226 12.25a2.751 2.751 0 0 1-.892.596l-2.047.848a.75.75 0 0 1-.98-.98l.848-2.047a2.75 2.75 0 0 1 .596-.892l7.262-7.261Z" clip-rule="evenodd" />
-                                </svg>
-                                Edit
-                            </button>
+                            @if(auth()->check()) 
+                                @if(auth()->user()->role === 'ketua_tim')
+                                    <button @click="editMode = true"
+                                        class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-red-500 hover:bg-red-600 hover:text-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                            <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
+                                        </svg>
+                                        Hapus
+                                    </button>
+                                @endif
+                                @if(auth()->user()->role === 'ketua_tim' || 'operator')
+                                    <button @click="editMode = true"
+                                        class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-gray-700 hover:bg-emerald-600 hover:text-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                            <path fill-rule="evenodd" d="M11.013 2.513a1.75 1.75 0 0 1 2.475 2.474L6.226 12.25a2.751 2.751 0 0 1-.892.596l-2.047.848a.75.75 0 0 1-.98-.98l.848-2.047a2.75 2.75 0 0 1 .596-.892l7.262-7.261Z" clip-rule="evenodd" />
+                                        </svg>
+                                        Edit
+                                    </button>
+                                @endif
+                            @endif
                         </div>
                     </div>
 
