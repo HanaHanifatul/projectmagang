@@ -6,10 +6,10 @@
             <p class="text-sm text-gray-500">Tabel ringkasan per publikasi/laporan per triwulan</p>
         </div>
 
-        <div class="flex flex-row-gap-2" x-data="{ open: false }">
+        <div class="flex flex-wrap gap-2 justify-start sm:justify-end" x-data="{ open: false }">
             <!-- Tombol Unduh Excel -->
             <a href="" 
-                class="flex items-center gap-1 border text-gray-700 px-3 py-2 rounded-lg sm:text-sm shadow hover:text-white hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
+                class="flex items-center justify-center gap-1 border text-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm shadow hover:text-white hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                     <path d="M8.75 2.75a.75.75 0 0 0-1.5 0v5.69L5.03 6.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.44V2.75Z" />
                     <path d="M3.5 9.75a.75.75 0 0 0-1.5 0v1.5A2.75 2.75 0 0 0 4.75 14h6.5A2.75 2.75 0 0 0 14 11.25v-1.5a.75.75 0 0 0-1.5 0v1.5c0 .69-.56 1.25-1.25 1.25h-6.5c-.69 0-1.25-.56-1.25-1.25v-1.5Z" />
@@ -21,8 +21,11 @@
             @if(auth()->check() && auth()->user()->role === 'ketua_tim')
                 <button 
                     @click="open = true" 
-                    class="flex items-center bg-emerald-600 text-white px-3 py-2 rounded-lg sm:text-sm shadow hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
-                    + Publikasi
+                    class="flex items-center justify-center gap-1 bg-emerald-600 text-white px-3 py-2 rounded-lg text-xs sm:text-sm shadow hover:bg-emerald-800 whitespace-nowrap min-w-[110px]">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                        <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+                        </svg>
+                    Publikasi
                 </button>
             @endif
             <!-- Modal -->
@@ -38,18 +41,63 @@
                         ✖
                     </button>
                     
-                    <h2 class="text-lg font-semibold mb-4">Tambah Publikasi Survei</h2>
+                    <h2 class="text-lg font-semibold">Formulir Tambah Publikasi/Laporan</h2>
+                    <p class="text-xs text-gray-500 mb-4">Catatan: Nama Laporan dapat memiliki banyak Nama Kegiatan</p>
                     <!-- Form -->
                     <form method="POST">
                         @csrf
+                        <!-- Nama Laporan -->
                         <div class="mb-3">
-                            <label class="block text-sm font-medium text-gray-700">Nama Publikasi Survei</label>
+                            <label class="block text-sm font-medium text-gray-700">Nama Laporan/Publikasi</label>
+                            <select name="nama_publikasi" 
+                                class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
+                                <option value="">-- Pilih Nama Laporan --</option>
+                                <option value="L1">Laporan Statistik Kependudukan dan Ketenagakerjaan</option>
+                                <option value="L2">Laporan Statistik Statistik Kesejahteraan Rakyat</option>
+                                <option value="L3">Laporan Statistik Ketahanan Sosial</option>
+                                <option value="L4">Laporan Statistik Tanaman Pangan</option>
+                                <option value="L5">Laporan Statistik Peternakan, Perikanan, dan Kehutanan</option>
+                                <option value="L6">Laporan Statistik Industri</option>
+                                <option value="L7">Laporan Statistik Distribusi</option>
+                                <option value="L7">Laporan Statistik Harga</option>
+                                <option value="L8">Laporan Statistik Keuangan, Teknologi Informasi, dan Pariwisata</option>
+                                <option value="L9">Laporan Neraca Produksi</option>
+                                <option value="L10">Laporan Neraca Pengeluaran</option>
+                                <option value="L11">Laporan Analisis dan Pengembangan Statistik</option>
+                                <option value="L12">Tingkat Penyelenggaraan Pembinaan Statistik Sektoral sesuai Standar</option>
+                                <option value="L13">Indeks Pelayanan Publik - Penilaian mandiri</option>
+                                <option value="L14">Nilai SAKIP oleh Inspektorat</option>
+                                <option value="L15">Indeks Implementasi BerAKHLAK</option>
+                            </select>
+                        </div>
+                        <!-- Nama kegiatan -->
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium text-gray-700">Nama Kegiatan</label>
                             <input type="text" name="nama" 
-                                class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                                class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                placeholder="Contoh: Sakernas">
+                        </div>
+                        <!-- PIC -->
+                        <div class="mb-3">
+                            <label class="block text-sm font-medium text-gray-700">Nama Laporan/Publikasi</label>
+                            <select name="pic" 
+                                class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
+                                <option value="">-- Pilih PIC --</option>
+                                <option value="umum">Tim Umum</option>
+                                <option value="produksi">Tim Produksi</option>
+                                <option value="distribusi">Tim Distribusi</option>
+                                <option value="neraca">Tim Neraca</option>
+                                <option value="sosial">Tim Sosial</option>
+                                <option value="ipds">Tim IPDS</option>
+                            </select>
                         </div>
 
                         <!-- Tombol Simpan -->
-                        <div class="flex justify-end mt-4">
+                        <div class="flex justify-end mt-4 gap-2">
+                            <button type="button" @click="open = false" 
+                                class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
+                                Batal
+                            </button>
                             <button type="submit" 
                                 class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
                                 Simpan
@@ -110,72 +158,7 @@
                         <!-- No -->
                         <td class="px-4 py-4 align-top">1</td>
                         <!-- Nama Publikasi -->
-                        <td class="px-4 py-4 align-top ">
-                            <div class="font-semibold text-gray-700">Laporan Statistik Kependudukan</div>
-                            <!-- Button Tahapan -->
-                            <div x-data="{ open: false }">
-                                <button 
-                                    @click="open = true" 
-                                    class="sm:text-xs mt-2 px-3 py-1 text-xs text-gray-700 bg-gray-100 border rounded-lg hover:bg-emerald-600 hover:text-white whitespace-nowrap min-w-[100px]" >
-                                    + Tahapan
-                                </button>
-
-                                <!-- Modal -->
-                                <div 
-                                    x-show="open" 
-                                    x-transition 
-                                    class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                                    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
-                                        <!-- Tombol close -->
-                                        <button 
-                                            @click="open = false" 
-                                            class="absolute top-2 right-2 text-gray-600 hover:text-red-600">
-                                            ✖
-                                        </button>
-                                        <!-- Modal Content -->
-                                        <h2 class="text-lg font-semibold">Tambah Tahapan</h2>
-                                        <p class="text-sm text-gray-500 mb-2">Tambahkan tahapan baru untuk publikasi/laporan</p>
-                                        <!-- Form -->
-                                        <form method="POST">
-                                            @csrf
-                                            <!-- Jenis Tahapan -->
-                                            <div class="mb-3">
-                                                <label class="block text-sm font-medium text-gray-700">Jenis Tahapan</label>
-                                                <select name="nama_publikasi" 
-                                                    class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
-                                                    <option value="">-- Pilih Jenis Tahapan --</option>
-                                                    <option value="persiapan">Persiapan</option>
-                                                    <option value="pengumpulan_data">Pengumpulan Data</option>
-                                                    <option value="pengolahan_data">Pengolahan Data</option>
-                                                    <option value="analisis_data">Analisis Data</option>
-                                                    <option value="diseminasi">Diseminasi</option>
-                                                </select>
-                                            </div>
-
-                                            <!-- Tambah Tahapan Survei -->
-                                            <div class="mb-3">
-                                                <label class="block text-sm font-medium text-gray-700">Nama Tahapan</label>
-                                                <input type="text" name="tahapan" 
-                                                    class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                                                    placeholder="Contoh: Perekrutan Anggota Pelatihan Anggota">
-                                            </div>
-
-                                            <!-- Tombol Simpan -->
-                                            <div class="flex justify-end mt-4 gap-2">
-                                                <button type="button" @click="open = false" 
-                                                    class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
-                                                    Batal
-                                                </button>
-                                                <button type="submit" 
-                                                    class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
-                                                    Simpan
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-                        </td>
+                        <td class="px-4 py-4 align-top font-semibold text-gray-700">Laporan Statistik Kependudukan</td>
                         <!-- Nama Kegiatan -->
                         <td class="px-4 py-4 align-top font-semibold text-gray-700">Sakernas</td>
                         <!-- PIC -->
@@ -236,12 +219,12 @@
                                     </svg>
                                     Detail
                                 </a>
-                                <button class="flex gap-1 sm:text-xs w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-emerald-600 hover:text-white">
+                                <button class="flex gap-1 sm:text-xs w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-600 hover:text-white">
                                     {{-- icon --}}
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                         <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
                                     </svg>
-                                    Edit
+                                    Hapus
                                 </button>
                             </div>
                         </td>
@@ -251,10 +234,7 @@
                         <!-- No -->
                         <td class="px-4 py-4 align-top">2</td>
                         <!-- Nama Publikasi -->
-                        <td class="px-4 py-4 align-top ">
-                            <div class="font-semibold text-gray-700">Laporan Statistik Ketenagakerjaan</div>
-                            <button class="sm:text-xs mt-2 px-3 py-1 text-xs text-gray-700 bg-gray-100 border rounded-lg hover:bg-emerald-600 hover:text-white whitespace-nowrap min-w-[100px]">+ Tahapan</button>
-                        </td>
+                        <td class="px-4 py-4 align-top font-semibold text-gray-700">Laporan Statistik Ketenagakerjaan</td>
                         <!-- Nama Kegiatan -->
                         <td class="px-4 py-4 align-top font-semibold text-gray-700">Sakernas</td>
                         <!-- PIC -->
@@ -316,12 +296,12 @@
                                     </svg>
                                     Detail
                                 </button>
-                                <button class="flex gap-1 sm:text-xs w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-emerald-600 hover:text-white">
+                                <button class="flex gap-1 sm:text-xs w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-600 hover:text-white">
                                     {{-- icon --}}
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                         <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
                                     </svg>
-                                    Edit
+                                    Hapus
                                 </button>
                             </div>
                         </td>
