@@ -48,7 +48,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-6 gap-2 mb-4 items-center">
                     <!-- Search (2 kolom di layar besar) -->
-                    <div class="@if(auth()->check() && auth()->user()->role === 'ketua_tim') sm:col-span-4 @else sm:col-span-5 @endif">
+                    <div class="{{ (auth()->check() && auth()->user()->role === 'ketua_tim') ? 'sm:col-span-4' : 'sm:col-span-5' }}">
                         <input 
                             type="text" 
                             placeholder="Cari Nama Tahapan..." 
