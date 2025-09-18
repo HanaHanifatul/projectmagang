@@ -2,81 +2,79 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Publication;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PublicationController extends Controller
 {
-    // Menampilkan semua publikasi dengan relasi user
+    /**
+     * Tampilkan daftar publikasi
+     */
     public function index()
     {
-        $publications = Publication::with('user')->get();
-        
+        $publications = Publication::with('stepsPlans')->get();
         return view('publications.index', compact('publications'));
     }
 
-    // Menampilkan detail publikasi dengan semua relasinya
-    public function show($id)
-    {
-        $publication = Publication::with([
-            'user',
-            'stepsPlans.stepsFinals.struggles'
-        ])->findOrFail($id);
-
-        return view('publications.show', compact('publication'));
-    }
-
-    // Menampilkan form untuk membuat publikasi baru
-    public function create()
-    {
-        $users = User::all();
-        return view('publications.create', compact('users'));
-    }
-
-    // Menyimpan publikasi baru
+    /**
+     * Simpan publikasi baru
+     */
     public function store(Request $request)
     {
         $request->validate([
-            'publication_name' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,user_id'
+            'nama_publikasi' => 'required|string',
+            'nama'           => 'required|string',
+            'pic'            => 'required|string',
         ]);
 
-        Publication::create($request->all());
+        dd(Auth::id(), $request->all());
 
-        return redirect()->route('publications.index')
-                        ->with('success', 'Publikasi berhasil dibuat!');
+        Publication::create([
+            'publication_report' => $request->nama_publikasi,
+            'publication_name'   => $request->nama,
+            'publication_pic'    => $request->pic,
+            'fk_user_id'         => Auth::id(),
+        ]);
+
+        return redirect()->route('publications.index')->with('success', 'Publikasi berhasil ditambahkan.');
     }
 
-    // Menampilkan form edit publikasi
-    public function edit($id)
-    {
-        $publication = Publication::findOrFail($id);
-        $users = User::all();
-        
-        return view('publications.edit', compact('publication', 'users'));
-    }
-
-    // Update publikasi
+    /**
+     * Update publikasi
+     */
     public function update(Request $request, $id)
     {
         $request->validate([
-            'publication_name' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,user_id'
+            'nama_publikasi' => 'required|string',
+            'nama'           => 'required|string',
+            'pic'            => 'required|string',
         ]);
 
         $publication = Publication::findOrFail($id);
-        $publication->update($request->all());
+        $publication->update([
+            'publication_report' => $request->nama_publikasi,
+            'publication_name'   => $request->nama,
+            'publication_pic'    => $request->pic,
+        ]);
 
-        return redirect()->route('publications.index')
-                        ->with('success', 'Publikasi berhasil diupdate!');
+        return redirect()->route('publications.index')->with('success', 'Publikasi berhasil diperbarui.');
     }
 
-    // Hapus publikasi
+    /**
+     * Hapus publikasi
+     */
     public function destroy($id)
     {
         $publication = Publication::findOrFail($id);
         $publication->delete();
 
-        return redirect()->route('publications.index')
-                        ->with('success', 'Publikasi berhasil dihapus!');
+        return redirect()->route('publications.index')->with('success', 'Publikasi berhasil dihapus.');
     }
+
+public function export()
+{
+    // contoh: kalau pakai Laravel Excel
+    return Excel::download(new PublicationsExport, 'publications.xlsx');
+}
 }

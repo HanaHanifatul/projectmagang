@@ -44,12 +44,12 @@
                     <h2 class="text-lg font-semibold">Formulir Tambah Publikasi/Laporan</h2>
                     <p class="text-xs text-gray-500 mb-4">Catatan: Nama Laporan dapat memiliki banyak Nama Kegiatan</p>
                     <!-- Form -->
-                    <form method="POST">
+                    <form method="POST" action="{{ route('publications.store') }}"> 
                         @csrf
                         <!-- Nama Laporan -->
                         <div class="mb-3">
                             <label class="block text-sm font-medium text-gray-700">Nama Laporan/Publikasi</label>
-                            <select name="nama_publikasi" 
+                            <select name="publication_report" 
                                 class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
                                 <option value="">-- Pilih Nama Laporan --</option>
                                 <option value="L1">Laporan Statistik Kependudukan dan Ketenagakerjaan</option>
@@ -73,14 +73,14 @@
                         <!-- Nama kegiatan -->
                         <div class="mb-3">
                             <label class="block text-sm font-medium text-gray-700">Nama Kegiatan</label>
-                            <input type="text" name="nama" 
-                                class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                                placeholder="Contoh: Sakernas">
+                            <input type="text" name="publication_name" 
+                            class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                            placeholder="Contoh: Sakernas">
                         </div>
                         <!-- PIC -->
                         <div class="mb-3">
-                            <label class="block text-sm font-medium text-gray-700">Nama Laporan/Publikasi</label>
-                            <select name="pic" 
+                        <label class="block text-sm font-medium text-gray-700">PIC</label>
+                            <select name="publication_pic" 
                                 class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
                                 <option value="">-- Pilih PIC --</option>
                                 <option value="umum">Tim Umum</option>
@@ -92,7 +92,7 @@
                             </select>
                         </div>
 
-                        <!-- Tombol Simpan -->
+                         <!-- Tombol Simpan -->
                         <div class="flex justify-end mt-4 gap-2">
                             <button type="button" @click="open = false" 
                                 class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
