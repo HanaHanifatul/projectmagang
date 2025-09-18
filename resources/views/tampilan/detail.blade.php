@@ -184,10 +184,10 @@
                                 <p class="text-sm mb-2">{{ $plan->plan_start_date->format('d F Y') }} - {{  $plan->plan_end_date->format('d F Y')}}</p>
 
                                 <p class="text-sm text-gray-600">Narasi</p>
-                                <p class="text-sm mb-2">Melakukan perekrutan anggota tim survei</p>
+                                <p class="text-sm mb-2">{{ $plan->plan_desc }}</p>
 
                                 <p class="text-sm text-gray-600">Dokumen</p>
-                                <a href="#" class="text-blue-600 hover:underline text-sm">📄 Kriteria_Rekrutmen.pdf</a>
+                                <a href="#" class="text-blue-600 hover:underline text-sm">{{ $plan->plan_doc }}</a>
                             </div>
                             <!-- Realisasi -->
                             <div>
