@@ -108,21 +108,38 @@
                                 
                                 <h2 class="text-lg font-semibold mb-4">Tambah Publikasi Survei</h2>
                                 <!-- Form -->
-                                <form method="POST">
-                                    @csrf
-                                    <div class="mb-3">
-                                        <label class="block text-sm font-medium text-gray-700">Nama Publikasi Survei</label>
-                                        <input type="text" name="nama" 
-                                            class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                                    </div>
+                                <form action="{{ route('publications.store') }}" method="POST" enctype="multipart/form-data">
+                                    <!-- @csrf -->
+                                    <!-- Nama Publikasi -->
+        <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700">Nama Publikasi Survei</label>
+            <input type="text" name="publication_name" 
+                class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                required>
+        </div>
 
-                                    <!-- Tombol Simpan -->
-                                    <div class="flex justify-end mt-4">
-                                        <button type="submit" 
-                                            class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
-                                            Simpan
-                                        </button>
-                                    </div>
+        <!-- PIC -->
+        <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700">PIC Publikasi</label>
+            <input type="text" name="publication_pic" 
+                class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500">
+        </div>
+
+        <!-- Laporan Publikasi (File) -->
+        <div class="mb-3">
+            <label class="block text-sm font-medium text-gray-700">Laporan Publikasi</label>
+            <input type="file" name="publication_report"
+                class="w-full border rounded px-3 py-2 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-gray-600 file:text-white"
+                accept=".pdf,.png,.jpg,.jpeg">
+        </div>
+
+        <!-- Tombol Simpan -->
+        <div class="flex justify-end mt-4">
+            <button type="submit" 
+                class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
+                Simpan
+            </button>
+        </div>
                                 </form>
                             </div>
                         </div>

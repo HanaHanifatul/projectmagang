@@ -2,81 +2,95 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Publication;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PublicationController extends Controller
 {
-    // Menampilkan semua publikasi dengan relasi user
+    // 📌 Tampilkan semua publikasi
     public function index()
     {
-        $publications = Publication::with('user')->get();
-        
+        $publications = Publication::all();
         return view('publications.index', compact('publications'));
     }
 
-    // Menampilkan detail publikasi dengan semua relasinya
-    public function show($id)
-    {
-        $publication = Publication::with([
-            'user',
-            'stepsPlans.stepsFinals.struggles'
-        ])->findOrFail($id);
-
-        return view('publications.show', compact('publication'));
-    }
-
-    // Menampilkan form untuk membuat publikasi baru
+    // 📌 Form tambah publikasi
     public function create()
     {
-        $users = User::all();
-        return view('publications.create', compact('users'));
+        return view('publications.create');
     }
 
-    // Menyimpan publikasi baru
+    // 📌 Simpan publikasi baru
     public function store(Request $request)
     {
         $request->validate([
-            'publication_name' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,user_id'
+            'publication_name'   => 'required|string|max:255',
+            'publication_pic'    => 'nullable|string|max:255',
+            'publication_report' => 'nullable|file|mimes:pdf,png,jpg,jpeg',
         ]);
 
-        Publication::create($request->all());
+        $data = $request->all();
 
-        return redirect()->route('publications.index')
-                        ->with('success', 'Publikasi berhasil dibuat!');
+        if ($request->hasFile('publication_report')) {
+            $data['publication_report'] = $request->file('publication_report')->store('publications', 'public');
+        }
+
+        Publication::create($data);
+
+        return redirect()->route('publications.index')->with('success', 'Publikasi berhasil ditambahkan');
     }
 
-    // Menampilkan form edit publikasi
+    // 📌 Detail publikasi
+    public function show($id)
+    {
+        $publication = Publication::findOrFail($id);
+        return view('publications.show', compact('publication'));
+    }
+
+    // 📌 Form edit publikasi
     public function edit($id)
     {
         $publication = Publication::findOrFail($id);
-        $users = User::all();
-        
-        return view('publications.edit', compact('publication', 'users'));
+        return view('publications.edit', compact('publication'));
     }
 
-    // Update publikasi
+    // 📌 Update publikasi
     public function update(Request $request, $id)
     {
+        $publication = Publication::findOrFail($id);
+
         $request->validate([
-            'publication_name' => 'required|string|max:255',
-            'user_id' => 'required|exists:users,user_id'
+            'publication_name'   => 'required|string|max:255',
+            'publication_pic'    => 'nullable|string|max:255',
+            'publication_report' => 'nullable|file|mimes:pdf,png,jpg,jpeg',
         ]);
 
-        $publication = Publication::findOrFail($id);
-        $publication->update($request->all());
+        $data = $request->all();
 
-        return redirect()->route('publications.index')
-                        ->with('success', 'Publikasi berhasil diupdate!');
+        if ($request->hasFile('publication_report')) {
+            if ($publication->publication_report) {
+                Storage::disk('public')->delete($publication->publication_report);
+            }
+            $data['publication_report'] = $request->file('publication_report')->store('publications', 'public');
+        }
+
+        $publication->update($data);
+
+        return redirect()->route('publications.index')->with('success', 'Publikasi berhasil diperbarui');
     }
 
-    // Hapus publikasi
+    // 📌 Hapus publikasi
     public function destroy($id)
     {
         $publication = Publication::findOrFail($id);
+
+        if ($publication->publication_report) {
+            Storage::disk('public')->delete($publication->publication_report);
+        }
+
         $publication->delete();
 
-        return redirect()->route('publications.index')
-                        ->with('success', 'Publikasi berhasil dihapus!');
+        return redirect()->route('publications.index')->with('success', 'Publikasi berhasil dihapus');
     }
 }
