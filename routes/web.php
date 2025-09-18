@@ -22,21 +22,20 @@ Route::get('/laporan', function () {
 //     return view('/tampilan/detail');
 // });
 
-// Tambah tahapan
-Route::post('/tahapan/store', [
+// Baca Rencana
+Route::get('/detail', [
+    StepsPlanController::class, 'index'])
+->name('plans.index');
+
+// Simpan Tahapan
+Route::post('/detail', [
     StepsPlanController::class, 'store'])
 ->name('tahapan.store');
 
-// Baca Tahapan
-Route::get('/detail', [
-    StepsPlanController::class, 'index'])
-->name('stepsplans.index');
-
-
 // Simpan tahapan
-Route::post('/steps/store', [
+Route::post('/plans/store', [
     StepsPlanController::class, 'store'
-])->name('steps.store');
+])->name('plans.store');
 
 // Route::get('/login', function () {
 //     return view('/auth/login');

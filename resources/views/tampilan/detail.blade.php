@@ -247,7 +247,7 @@
                     </div>
 
                     <!-- Konten Card (hanya tampil kalau editMode = true) -->
-                    <form x-show="editMode" method="POST" action="{{ route('steps.store') }}" enctype="multipart/form-data">
+                    <form x-show="editMode" method="POST" action="{{ route('plans.store') }}" enctype="multipart/form-data">
                         @csrf
                         <!-- button -->
                         <div class="flex space-x-2 mb-4">

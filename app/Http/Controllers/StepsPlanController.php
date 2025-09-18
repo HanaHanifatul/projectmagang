@@ -7,10 +7,9 @@ use App\Models\StepsPlan;
 
 class StepsPlanController extends Controller
 {
-    //menampilkan tahapan
+    //tampil tahapan
     public function index(){
-         // ambil semua steps plan
-        $stepsplans = StepsPlan::all();
+        $stepsplans = StepsPlan::all(); //ambil semua data lewat model
         return view('tampilan.detail', compact('stepsplans'));
     }
     //simpan data
