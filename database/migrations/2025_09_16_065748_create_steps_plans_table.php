@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id('step_plan_id'); // Primary Key custom
             $table->date('plan_start_date');
             $table->date('plan_end_date');
-            $table->string('plan_name');
             $table->string('plan_type');
-            //$table->integer('plan_triwulan');
+            $table->string('plan_name');
+            // $table->integer('plan_triwulan');
             $table->text('plan_desc');
             $table->string('plan_doc')->nullable();
             $table->timestamp('created_at')->useCurrent();

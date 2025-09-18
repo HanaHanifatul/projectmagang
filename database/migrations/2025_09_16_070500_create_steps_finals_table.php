@@ -18,8 +18,8 @@ return new class extends Migration
             //$table->string('final_name');
             //$table->integer('final_triwulan');
             $table->text('final_desc');
-            $table->string('final_doc')->nullable();
             $table->string('next_step')->nullable();
+            $table->string('final_doc')->nullable();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             
