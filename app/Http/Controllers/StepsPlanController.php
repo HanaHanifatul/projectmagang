@@ -25,9 +25,9 @@ class StepsPlanController extends Controller
         StepsPlan::create([
             'plan_type' => $request->plan_type,
             'plan_name' => $request->plan_name,
-            'plan_start_date' => now(), // sementara default
-            'plan_end_date' => now(),   // sementara default
-            'plan_desc' => '-',         // sementara default
+            'plan_start_date' => $request->plan_start_date, // sementara default
+            'plan_end_date' => $request->plan_start_date,   // sementara default
+            'plan_desc' => $request->plan_start_date,  // sementara default
             'publication_id' => 1,      // isi sesuai id publikasi terkait
         ]);
 

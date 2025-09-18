@@ -156,6 +156,7 @@
                                 </div>
                                 <div>
                                     <h2 class="text-lg font-semibold"></h2>
+                                    <span class="py-3 text-lg font-bold">{{ $plan->plan_name }}</span>
                                     <div class="flex gap-2 mt-1">
                                         <span class="px-2 py-0.5 bg-gray-200 rounded-lg text-xs">{{ $plan->plan_type }}</span>
                                         <span class="px-2 py-0.5 bg-emerald-600 text-white rounded-lg text-xs">Selesai</span>
@@ -181,8 +182,13 @@
                             <div>
                                 <h3 class="font-semibold mb-2">Rencana</h3>
                                 <p class="text-sm text-gray-600">Periode</p>
-                                <p class="text-sm mb-2">{{ $plan->plan_start_date->format('d F Y') }} - {{  $plan->plan_end_date->format('d F Y')}}</p>
-
+                                <p class="text-sm mb-2">
+                                    @if($plan->plan_start_date && $plan->plan_end_date)
+                                        {{ $plan->plan_start_date->format('d F Y') }} - {{ $plan->plan_end_date->format('d F Y') }}
+                                    @else
+                                        <span>-</span>
+                                    @endif
+                                </p>
                                 <p class="text-sm text-gray-600">Narasi</p>
                                 <p class="text-sm mb-2">{{ $plan->plan_desc }}</p>
 
