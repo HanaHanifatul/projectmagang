@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class StepsPlan extends Model
 {
@@ -14,8 +15,8 @@ class StepsPlan extends Model
     protected $fillable = [
         'plan_start_date',
         'plan_end_date',
-        'plan_name',
         'plan_type',
+        'plan_name',
         'plan_desc',
         'plan_doc',
         'publication_id'

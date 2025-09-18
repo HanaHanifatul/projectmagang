@@ -95,12 +95,12 @@
                                         <h2 class="text-lg font-semibold">Tambah Tahapan</h2>
                                         <p class="text-sm text-gray-500 mb-2">Tambahkan tahapan baru untuk publikasi/laporan</p>
                                         <!-- Form -->
-                                        <form method="POST">
+                                        <form method="POST" action="{{ route('tahapan.store') }}">
                                             @csrf
                                             <!-- Jenis Tahapan -->
                                             <div class="mb-3">
                                                 <label class="block text-sm font-medium text-gray-700">Jenis Tahapan</label>
-                                                <select name="nama_publikasi" 
+                                                <select name="plan_type" 
                                                     class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
                                                     <option value="">-- Pilih Jenis Tahapan --</option>
                                                     <option value="persiapan">Persiapan</option>
@@ -114,7 +114,7 @@
                                             <!-- Tambah Tahapan Survei -->
                                             <div class="mb-3">
                                                 <label class="block text-sm font-medium text-gray-700">Nama Tahapan</label>
-                                                <input type="text" name="tahapan" 
+                                                <input type="text" name="plan_name" 
                                                     class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                                     placeholder="Contoh: Perekrutan Anggota Pelatihan Anggota">
                                             </div>
@@ -145,32 +145,34 @@
                 </div>
 
                 <!-- Card -->
-                <div x-data="{ editMode: false, tab:'rencana'}" class="bg-white rounded-xl shadow p-6 border">
-                    <!-- Header Card (selalu ada) -->
-                    <div class="flex items-center justify-between mb-4">
-                        <!-- persiapan -->
-                        <div class="flex items-center gap-3">
-                            <div class="h-10 w-10 flex items-center justify-center rounded-full bg-emerald-600 text-white font-semibold">
-                                P
-                            </div>
-                            <div>
-                                <h2 class="text-lg font-semibold">Perekrutan Anggota</h2>
-                                <div class="flex gap-2 mt-1">
-                                    <span class="px-2 py-0.5 bg-gray-200 rounded-lg text-xs">Persiapan</span>
-                                    <span class="px-2 py-0.5 bg-emerald-600 text-white rounded-lg text-xs">Selesai</span>
-                                    <span class="px-2 py-0.5 bg-gray-200 rounded-lg text-xs">Q1</span>
+                @foreach ($stepsplans as $plan)
+                    <div x-data="{ editMode: false, tab:'rencana'}" class="bg-white rounded-xl shadow p-6 border">
+                        <!-- Header Card (selalu ada) -->
+                        <div class="flex items-center justify-between mb-4">
+                            <!-- persiapan -->
+                            <div class="flex items-center gap-3">
+                                <div class="h-10 w-10 flex items-center justify-center rounded-full bg-emerald-600 text-white font-semibold">
+                                    P
+                                </div>
+                                <div>
+                                    <h2 class="text-lg font-semibold"></h2>
+                                    <div class="flex gap-2 mt-1">
+                                        <span class="px-2 py-0.5 bg-gray-200 rounded-lg text-xs">{{ $plan->plan_type }}</span>
+                                        <span class="px-2 py-0.5 bg-emerald-600 text-white rounded-lg text-xs">Selesai</span>
+                                        <span class="px-2 py-0.5 bg-gray-200 rounded-lg text-xs">Q1</span>
+                                    </div>
                                 </div>
                             </div>
+                            <!-- icon ceklis -->
+                            <div class="text-green-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
                         </div>
-                        <!-- icon ceklis -->
-                        <div class="text-green-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                    </div>
+                    
 
                     <!-- Konten Card (hanya tampil kalau editMode = false) -->
                     <div x-show="!editMode" x-transition>
@@ -179,7 +181,7 @@
                             <div>
                                 <h3 class="font-semibold mb-2">Rencana</h3>
                                 <p class="text-sm text-gray-600">Periode</p>
-                                <p class="text-sm mb-2">15 Januari 2024 - 31 Januari 2024</p>
+                                <p class="text-sm mb-2">{{ $plan->plan_start_date->format('d F Y') }} - {{  $plan->plan_end_date->format('d F Y')}}</p>
 
                                 <p class="text-sm text-gray-600">Narasi</p>
                                 <p class="text-sm mb-2">Melakukan perekrutan anggota tim survei</p>
@@ -239,7 +241,8 @@
                     </div>
 
                     <!-- Konten Card (hanya tampil kalau editMode = true) -->
-                    <form x-show="editMode" >
+                    <form x-show="editMode" method="POST" action="{{ route('steps.store') }}" enctype="multipart/form-data">
+                        @csrf
                         <!-- button -->
                         <div class="flex space-x-2 mb-4">
                             <button type="button" 
@@ -278,7 +281,8 @@
                             </button>
                         </div>
                     </form>
-                </div>       
+                    </div>  
+                @endforeach     
             </div>
         </div>
     </main>

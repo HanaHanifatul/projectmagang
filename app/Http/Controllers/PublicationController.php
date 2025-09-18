@@ -9,6 +9,7 @@ class PublicationController extends Controller
     // Menampilkan semua publikasi dengan relasi user
     public function index()
     {
+        // $publications = Publication::with('stepsPlans')->get();
         $publications = Publication::with('user')->get();
         
         return view('publications.index', compact('publications'));
