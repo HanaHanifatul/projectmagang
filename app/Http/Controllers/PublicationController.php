@@ -14,7 +14,8 @@ class PublicationController extends Controller
     public function index()
     {
         $publications = Publication::with('stepsPlans')->get();
-        return view('publications.index', compact('publications'));
+        return redirect()->route('home')->with('success', 'Publikasi berhasil ditambahkan.');
+
     }
 
     /**
@@ -23,21 +24,20 @@ class PublicationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama_publikasi' => 'required|string',
-            'nama'           => 'required|string',
-            'pic'            => 'required|string',
+            'publication_name'   => 'required|string|max:255',
+            'publication_report' => 'required|string|max:255',
+            'publication_pic'    => 'required|string|max:255',
         ]);
-
-        dd(Auth::id(), $request->all());
 
         Publication::create([
-            'publication_report' => $request->nama_publikasi,
-            'publication_name'   => $request->nama,
-            'publication_pic'    => $request->pic,
-            'fk_user_id'         => Auth::id(),
+            'publication_name'   => $request->publication_name,
+            'publication_report' => $request->publication_report,
+            'publication_pic'    => $request->publication_pic,
+            'fk_user_id'         => Auth::id(), // ambil user yang login
         ]);
 
-        return redirect()->route('publications.index')->with('success', 'Publikasi berhasil ditambahkan.');
+        return redirect()->route('home')->with('success', 'Publikasi berhasil ditambahkan.');
+
     }
 
     /**
@@ -58,7 +58,7 @@ class PublicationController extends Controller
             'publication_pic'    => $request->pic,
         ]);
 
-        return redirect()->route('publications.index')->with('success', 'Publikasi berhasil diperbarui.');
+        return redirect()->route('home')->with('success', 'Publikasi berhasil ditambahkan.');
     }
 
     /**
@@ -69,7 +69,8 @@ class PublicationController extends Controller
         $publication = Publication::findOrFail($id);
         $publication->delete();
 
-        return redirect()->route('publications.index')->with('success', 'Publikasi berhasil dihapus.');
+        return redirect()->route('home')->with('success', 'Publikasi berhasil ditambahkan.');
+
     }
 
 public function export()

@@ -31,7 +31,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');     /
 Route::middleware(['auth'])->group(function () {
     // CRUD resource untuk publications
     Route::resource('publications', PublicationController::class)
-        ->except(['.store', 'edit', 'show']);
+        ->except(['.store', 'create','edit', 'show']);
 
     // Route tambahan untuk export
     Route::get('publications/export', [PublicationController::class, 'export'])
