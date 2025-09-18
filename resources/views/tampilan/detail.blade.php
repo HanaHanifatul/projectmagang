@@ -49,11 +49,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-6 gap-2 mb-4 items-center">
                     <!-- Search (2 kolom di layar besar) -->
                     <div class="{{ (auth()->check() && auth()->user()->role === 'ketua_tim') ? 'sm:col-span-4' : 'sm:col-span-5' }}">
-                        <input 
+                        <form action="{{ route('plans.index') }}" method="GET">
+                            <input 
                             type="text" 
+                            name="search"
                             placeholder="Cari Nama Tahapan..." 
+                            value="{{ request('search') }}"
                             class="w-full border px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
+                            >
+                        </form>
                     </div>
                     <!-- Tombol Unduh Excel -->
                     <div class="sm:col-span-1">
@@ -137,6 +141,7 @@
                         </div>
                     @endif
                 </div>
+            
 
                 <!-- Badges -->
                 <div class="flex gap-2 mb-6">
@@ -186,14 +191,26 @@
                                         @if($plan->plan_start_date && $plan->plan_end_date)
                                             {{ $plan->plan_start_date->format('d F Y') }} - {{ $plan->plan_end_date->format('d F Y') }}
                                         @else
-                                            <span>-</span>
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
                                         @endif
                                     </p>
                                     <p class="text-sm text-gray-600">Narasi</p>
-                                    <p class="text-sm mb-2">{{ $plan->plan_desc }}</p>
+                                    <p class="text-sm mb-2">
+                                        @if($plan->plan_doc)
+                                            {{ $plan->plan_desc }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
 
                                     <p class="text-sm text-gray-600">Dokumen</p>
-                                    <a href="#" class="text-blue-600 hover:underline text-sm">{{ $plan->plan_doc }}</a>
+                                    @if ($plan->plan_doc)
+                                        <a href="{{ Storage::url($plan->plan_doc) }}" target="_black" class="text-blue-600 hover:underline text-sm">
+                                            {{ $plan->plan_doc }}
+                                        </a>
+                                    @else
+                                        <p class="text-xs italic text-gray-500">Tidak ada dokumen</p>
+                                    @endif
                                 </div>
                                 <!-- Realisasi -->
                                 <div>
@@ -247,7 +264,8 @@
                         </div>
 
                         <!-- Konten Card (hanya tampil kalau editMode = true) -->
-                        <form x-show="editMode" method="POST" action="{{ route('plans.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
+                        <form x-data="{ fileSizeError:false, docTypeError:false, allowedTypes: ['image/jpeg', 'image/png', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'] }" 
+                        x-show="editMode"  method="POST" action="{{ route('plans.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
                             <!-- button -->
@@ -283,6 +301,8 @@
                                     Batal
                                 </button>
                                 <button type="submit"
+                                    :disabled="fileSizeError || docTypeError"
+                                    :class="(fileSizeError || docTypeError) ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'"
                                     class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
                                     Simpan
                                 </button>

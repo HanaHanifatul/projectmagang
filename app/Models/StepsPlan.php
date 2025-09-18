@@ -13,10 +13,10 @@ class StepsPlan extends Model
     protected $primaryKey = 'step_plan_id';
     
     protected $fillable = [
-        'plan_start_date',
-        'plan_end_date',
         'plan_type',
         'plan_name',
+        'plan_start_date',
+        'plan_end_date',
         'plan_desc',
         'plan_doc',
         'publication_id'
