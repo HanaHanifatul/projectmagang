@@ -22,20 +22,20 @@ Route::get('/laporan', function () {
 //     return view('/tampilan/detail');
 // });
 
-// Baca Rencana
+// Tampilkan halaman detail
 Route::get('/detail', [
     StepsPlanController::class, 'index'])
 ->name('plans.index');
 
-// Simpan Tahapan
-Route::post('/detail', [
+// Simpan Tahapan Baru (dari modal "Tambah Tahapan")
+Route::post('/tahapan/store', [
     StepsPlanController::class, 'store'])
 ->name('tahapan.store');
 
-// Simpan tahapan
-Route::post('/plans/store', [
-    StepsPlanController::class, 'store'
-])->name('plans.store');
+// Perbarui Rencana yang sudah ada (dari formulir "Edit Rencana")
+Route::put('/plans/{plan}', [
+    StepsPlanController::class, 'update'
+])->name('plans.update');
 
 // Route::get('/login', function () {
 //     return view('/auth/login');

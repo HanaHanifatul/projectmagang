@@ -175,118 +175,119 @@
                         </div>
                     
 
-                    <!-- Konten Card (hanya tampil kalau editMode = false) -->
-                    <div x-show="!editMode" x-transition>
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <!-- Rencana -->
-                            <div>
-                                <h3 class="font-semibold mb-2">Rencana</h3>
-                                <p class="text-sm text-gray-600">Periode</p>
-                                <p class="text-sm mb-2">
-                                    @if($plan->plan_start_date && $plan->plan_end_date)
-                                        {{ $plan->plan_start_date->format('d F Y') }} - {{ $plan->plan_end_date->format('d F Y') }}
-                                    @else
-                                        <span>-</span>
-                                    @endif
-                                </p>
-                                <p class="text-sm text-gray-600">Narasi</p>
-                                <p class="text-sm mb-2">{{ $plan->plan_desc }}</p>
+                        <!-- Konten Card (hanya tampil kalau editMode = false) -->
+                        <div x-show="!editMode" x-transition>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <!-- Rencana -->
+                                <div>
+                                    <h3 class="font-semibold mb-2">Rencana</h3>
+                                    <p class="text-sm text-gray-600">Periode</p>
+                                    <p class="text-sm mb-2">
+                                        @if($plan->plan_start_date && $plan->plan_end_date)
+                                            {{ $plan->plan_start_date->format('d F Y') }} - {{ $plan->plan_end_date->format('d F Y') }}
+                                        @else
+                                            <span>-</span>
+                                        @endif
+                                    </p>
+                                    <p class="text-sm text-gray-600">Narasi</p>
+                                    <p class="text-sm mb-2">{{ $plan->plan_desc }}</p>
 
-                                <p class="text-sm text-gray-600">Dokumen</p>
-                                <a href="#" class="text-blue-600 hover:underline text-sm">{{ $plan->plan_doc }}</a>
-                            </div>
-                            <!-- Realisasi -->
-                            <div>
-                                <h3 class="font-semibold mb-2">Realisasi</h3>
-                                <p class="text-sm text-gray-600">Periode Aktual</p>
-                                <p class="text-sm mb-2">15 Januari 2024 - 28 Januari 2024</p>
+                                    <p class="text-sm text-gray-600">Dokumen</p>
+                                    <a href="#" class="text-blue-600 hover:underline text-sm">{{ $plan->plan_doc }}</a>
+                                </div>
+                                <!-- Realisasi -->
+                                <div>
+                                    <h3 class="font-semibold mb-2">Realisasi</h3>
+                                    <p class="text-sm text-gray-600">Periode Aktual</p>
+                                    <p class="text-sm mb-2">15 Januari 2024 - 28 Januari 2024</p>
 
-                                <p class="text-sm text-gray-600">Narasi</p>
-                                <p class="text-sm mb-2">Berhasil merekrut 50 anggota tim survei</p>
+                                    <p class="text-sm text-gray-600">Narasi</p>
+                                    <p class="text-sm mb-2">Berhasil merekrut 50 anggota tim survei</p>
 
-                                <p class="text-sm text-gray-600">Kendala</p>
-                                <p class="text-sm mb-2">Kesulitan mencari kandidat yang sesuai kualifikasi</p>
+                                    <p class="text-sm text-gray-600">Kendala</p>
+                                    <p class="text-sm mb-2">Kesulitan mencari kandidat yang sesuai kualifikasi</p>
 
-                                <p class="text-sm text-gray-600">Solusi</p>
-                                <p class="text-sm mb-2">Memperluas jangkauan rekrutmen ke universitas</p>
+                                    <p class="text-sm text-gray-600">Solusi</p>
+                                    <p class="text-sm mb-2">Memperluas jangkauan rekrutmen ke universitas</p>
 
-                                <p class="text-sm text-gray-600">Tindak Lanjut</p>
-                                <p class="text-sm mb-2">Evaluasi kinerja anggota tim yang baru direkrut</p>
+                                    <p class="text-sm text-gray-600">Tindak Lanjut</p>
+                                    <p class="text-sm mb-2">Evaluasi kinerja anggota tim yang baru direkrut</p>
 
-                                <p class="text-sm text-gray-600">Bukti Pendukung Solusi</p>
-                                <div class="flex flex-col gap-1">
-                                    <a href="#" class="text-blue-600 hover:underline text-sm">📷 Foto_Kegiatan_Rekrutmen.jpg</a>
-                                    <a href="#" class="text-blue-600 hover:underline text-sm">📄 Dokumentasi_Proses.pdf</a>
+                                    <p class="text-sm text-gray-600">Bukti Pendukung Solusi</p>
+                                    <div class="flex flex-col gap-1">
+                                        <a href="#" class="text-blue-600 hover:underline text-sm">📷 Foto_Kegiatan_Rekrutmen.jpg</a>
+                                        <a href="#" class="text-blue-600 hover:underline text-sm">📄 Dokumentasi_Proses.pdf</a>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Tombol Edit -->
-                        <div class="flex justify-end mt-4 gap-2">
-                            @if(auth()->check()) 
-                                @if(auth()->user()->role === 'ketua_tim')
-                                    <button @click="editMode = true"
-                                        class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-red-500 hover:bg-red-600 hover:text-white">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                            <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
-                                        </svg>
-                                        Hapus
-                                    </button>
+                            <!-- Tombol Edit -->
+                            <div class="flex justify-end mt-4 gap-2">
+                                @if(auth()->check()) 
+                                    @if(auth()->user()->role === 'ketua_tim')
+                                        <button @click="editMode = true"
+                                            class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-red-500 hover:bg-red-600 hover:text-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                                <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
+                                            </svg>
+                                            Hapus
+                                        </button>
+                                    @endif
+                                    @if(auth()->user()->role === 'ketua_tim' || 'operator')
+                                        <button @click="editMode = true"
+                                            class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-gray-700 hover:bg-emerald-600 hover:text-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                                <path fill-rule="evenodd" d="M11.013 2.513a1.75 1.75 0 0 1 2.475 2.474L6.226 12.25a2.751 2.751 0 0 1-.892.596l-2.047.848a.75.75 0 0 1-.98-.98l.848-2.047a2.75 2.75 0 0 1 .596-.892l7.262-7.261Z" clip-rule="evenodd" />
+                                            </svg>
+                                            Edit
+                                        </button>
+                                    @endif
                                 @endif
-                                @if(auth()->user()->role === 'ketua_tim' || 'operator')
-                                    <button @click="editMode = true"
-                                        class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-gray-700 hover:bg-emerald-600 hover:text-white">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                            <path fill-rule="evenodd" d="M11.013 2.513a1.75 1.75 0 0 1 2.475 2.474L6.226 12.25a2.751 2.751 0 0 1-.892.596l-2.047.848a.75.75 0 0 1-.98-.98l.848-2.047a2.75 2.75 0 0 1 .596-.892l7.262-7.261Z" clip-rule="evenodd" />
-                                        </svg>
-                                        Edit
-                                    </button>
-                                @endif
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Konten Card (hanya tampil kalau editMode = true) -->
-                    <form x-show="editMode" method="POST" action="{{ route('plans.store') }}" enctype="multipart/form-data">
-                        @csrf
-                        <!-- button -->
-                        <div class="flex space-x-2 mb-4">
-                            <button type="button" 
-                                    class=" text-xs px-4 py-2 rounded"
-                                    :class="tab === 'rencana' ? 'bg-blue-800 text-white' : 'bg-gray-200 text-gray-500 hover:bg-white hover:text-blue-900'"
-                                    @click="tab = 'rencana'">
-                                Edit Rencana
-                            </button>
-                            <button type="button"
-                                    class=" text-xs px-4 py-2 rounded"
-                                    :class="tab === 'realisasi' ? 'bg-blue-800 text-white' : 'bg-gray-200 text-gray-500 hover:bg-white hover:text-blue-900'"
-                                    @click="tab = 'realisasi'">
-                                Edit Realisasi
-                            </button>
-                        </div>  
-
-                        <!-- Konten Tab -->
-                        <div>
-                            <div x-show="tab === 'rencana'">
-                                @include('detail.form-rencana')
-                            </div>
-                            <div x-show="tab === 'realisasi'">
-                                @include('detail.form-realisasi')
                             </div>
                         </div>
 
-                        <!-- Buttons -->
-                        <div class="flex justify-end space-x-2 mt-4">
-                            <button type="button" @click="editMode = false"
-                                class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
-                                Batal
-                            </button>
-                            <button type="submit"
-                                class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
-                                Simpan
-                            </button>
-                        </div>
-                    </form>
+                        <!-- Konten Card (hanya tampil kalau editMode = true) -->
+                        <form x-show="editMode" method="POST" action="{{ route('plans.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
+                            @csrf
+                            @method('PUT')
+                            <!-- button -->
+                            <div class="flex space-x-2 mb-4">
+                                <button type="button" 
+                                        class=" text-xs px-4 py-2 rounded"
+                                        :class="tab === 'rencana' ? 'bg-blue-800 text-white' : 'bg-gray-200 text-gray-500 hover:bg-white hover:text-blue-900'"
+                                        @click="tab = 'rencana'">
+                                    Edit Rencana
+                                </button>
+                                <button type="button"
+                                        class=" text-xs px-4 py-2 rounded"
+                                        :class="tab === 'realisasi' ? 'bg-blue-800 text-white' : 'bg-gray-200 text-gray-500 hover:bg-white hover:text-blue-900'"
+                                        @click="tab = 'realisasi'">
+                                    Edit Realisasi
+                                </button>
+                            </div>  
+
+                            <!-- Konten Tab -->
+                            <div>
+                                <div x-show="tab === 'rencana'">
+                                    @include('detail.form-rencana', ['plan' => $plan])
+                                </div>
+                                <div x-show="tab === 'realisasi'">
+                                    @include('detail.form-realisasi')
+                                </div>
+                            </div>
+
+                            <!-- Buttons -->
+                            <div class="flex justify-end space-x-2 mt-4">
+                                <button type="button" @click="editMode = false"
+                                    class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
+                                    Batal
+                                </button>
+                                <button type="submit"
+                                    class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                                    Simpan
+                                </button>
+                            </div>
+                        </form>
                     </div>  
                 @endforeach     
             </div>
