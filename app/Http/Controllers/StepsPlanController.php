@@ -9,21 +9,25 @@ class StepsPlanController extends Controller
 {
     //tampil data tahapan
     public function index(Request $request){
-        
         // ambil nilai dari input search
         $search = $request->input('search');
         $query = StepsPlan::query();
         
         //pencarian
         if($search){
-            $query->where('plan_name', 'LIKE', '%' . $search . '%');
-            $query->where('plan_type', 'LIKE', '%' . $search . '%');
+            $query->where(function ($q) use ($search){
+                $q->where('plan_name', 'LIKE', '%' . $search . '%')
+                  ->orwhere('plan_type', 'LIKE', '%' . $search . '%');
+            });
         }
-        $stepsplans = $query->get();
+        
+        // gunakan eager loading untuk memuat relasi 'stepsFinals'
+        $stepsplans = $query->with('stepsFinals')->get();
         
         // $stepsplans = StepsPlan::all(); //ambil semua data lewat model
         return view('tampilan.detail', compact('stepsplans'));
     }
+    
     //simpan data untuk formulir "Tambah Tahapan"
     public function store(Request $request){
         // validasi input

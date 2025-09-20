@@ -31,7 +31,7 @@
             } else {
                 fileSizeError = false;
                 docTypeError = false;
-            }disini
+            }
         "
         class="w-full border rounded px-3 py-2 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-gray-600 file:text-white">
 

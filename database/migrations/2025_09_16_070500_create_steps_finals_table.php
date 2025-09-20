@@ -15,8 +15,6 @@ return new class extends Migration
             $table->id('step_final_id'); // Primary Key custom
             $table->date('actual_started');
             $table->date('actual_ended');
-            //$table->string('final_name');
-            //$table->integer('final_triwulan');
             $table->text('final_desc');
             $table->string('next_step')->nullable();
             $table->string('final_doc')->nullable();

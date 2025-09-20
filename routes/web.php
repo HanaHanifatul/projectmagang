@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\StepsFinalController;
 use App\Http\Controllers\StepsPlanController;
 
 // Route::get('/', function () {
@@ -37,10 +38,23 @@ Route::put('/plans/{plan}', [
     StepsPlanController::class, 'update'
 ])->name('plans.update');
 
+// Perbarui Rencana yang sudah ada (dari formulir "Edit Realisasi")
+Route::put('/finals/{plan}', [
+    StepsFinalController::class, 'update'
+])->name('finals.update');
+
 // Route::get('/login', function () {
 //     return view('/auth/login');
 // });
 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login'); // tampilkan form
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');   // proses login
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');     // logout
+Route::get('/login', [
+    AuthController::class, 'showLoginForm'])
+->name('login'); // tampilkan form
+
+Route::post('/login', [
+    AuthController::class, 'login'])
+->name('login.post');   // proses login
+
+Route::post('/logout', [
+    AuthController::class, 'logout'])
+->name('logout');     // logout

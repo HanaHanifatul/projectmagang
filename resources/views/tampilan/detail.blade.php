@@ -151,7 +151,18 @@
 
                 <!-- Card -->
                 @foreach ($stepsplans as $plan)
-                    <div x-data="{ editMode: false, tab:'rencana'}" class="bg-white rounded-xl shadow p-6 border">
+                    @php
+                        // Mengambil data realisasi (akan null jika belum ada)
+                        $final = $plan->stepsFinals;
+
+                        // Inisialisasi $struggle. Jika $final null, ini akan tetap null.
+                        $struggle = null;
+                        if ($final) {
+                            $struggle = $final->struggles->first();
+                        }
+                    @endphp
+
+                    <div x-data="{ editMode: false, tab:'rencana', fileSizeError:false, docTypeError:false, allowedTypes: ['image/jpeg', 'image/png', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']}" class="bg-white rounded-xl shadow p-6 border">
                         <!-- Header Card (selalu ada) -->
                         <div class="flex items-center justify-between mb-4">
                             <!-- persiapan -->
@@ -196,7 +207,7 @@
                                     </p>
                                     <p class="text-sm text-gray-600">Narasi</p>
                                     <p class="text-sm mb-2">
-                                        @if($plan->plan_doc)
+                                        @if($plan->plan_desc)
                                             {{ $plan->plan_desc }}
                                         @else
                                             <span class="text-gray-500 italic text-xs">Belum Diisi</span>
@@ -204,36 +215,76 @@
                                     </p>
 
                                     <p class="text-sm text-gray-600">Dokumen</p>
-                                    @if ($plan->plan_doc)
-                                        <a href="{{ Storage::url($plan->plan_doc) }}" target="_black" class="text-blue-600 hover:underline text-sm">
-                                            {{ $plan->plan_doc }}
-                                        </a>
-                                    @else
-                                        <p class="text-xs italic text-gray-500">Tidak ada dokumen</p>
-                                    @endif
+                                        @if ($plan->plan_doc)
+                                            <a href="{{ Storage::url($plan->plan_doc) }}" target="_black" class="text-blue-600 hover:underline text-sm">
+                                                {{ $plan->plan_doc }}
+                                            </a>
+                                        @else
+                                            <p class="text-xs italic text-gray-500">Tidak ada dokumen</p>
+                                        @endif
                                 </div>
                                 <!-- Realisasi -->
                                 <div>
                                     <h3 class="font-semibold mb-2">Realisasi</h3>
                                     <p class="text-sm text-gray-600">Periode Aktual</p>
-                                    <p class="text-sm mb-2">15 Januari 2024 - 28 Januari 2024</p>
+                                    <p class="text-sm mb-2">
+                                        @if($final)
+                                            {{ $final->actual_started->format('d F Y') }} - {{ $final->actual_ended->format('d F Y') }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
 
                                     <p class="text-sm text-gray-600">Narasi</p>
-                                    <p class="text-sm mb-2">Berhasil merekrut 50 anggota tim survei</p>
+                                    <p class="text-sm mb-2">
+                                        @if( optional($final)->final_desc)
+                                            {{ $final->final_desc }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
 
                                     <p class="text-sm text-gray-600">Kendala</p>
-                                    <p class="text-sm mb-2">Kesulitan mencari kandidat yang sesuai kualifikasi</p>
+                                    <p class="text-sm mb-2">
+                                        @if( optional($struggle)->struggle_desc)
+                                            {{ $struggle->struggle_desc }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
 
                                     <p class="text-sm text-gray-600">Solusi</p>
-                                    <p class="text-sm mb-2">Memperluas jangkauan rekrutmen ke universitas</p>
+                                    <p class="text-sm mb-2">
+                                         @if( optional($struggle)->solution_desc)
+                                            {{ $struggle->solution_desc }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
 
                                     <p class="text-sm text-gray-600">Tindak Lanjut</p>
-                                    <p class="text-sm mb-2">Evaluasi kinerja anggota tim yang baru direkrut</p>
+                                    <p class="text-sm mb-2">
+                                        @if( optional($final)->next_step)
+                                            {{ $final->next_step }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
 
                                     <p class="text-sm text-gray-600">Bukti Pendukung Solusi</p>
                                     <div class="flex flex-col gap-1">
-                                        <a href="#" class="text-blue-600 hover:underline text-sm">📷 Foto_Kegiatan_Rekrutmen.jpg</a>
-                                        <a href="#" class="text-blue-600 hover:underline text-sm">📄 Dokumentasi_Proses.pdf</a>
+                                        @if (optional($final)->final_doc)
+                                            <a href="{{ Storage::url($final->final_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                                                📄 Dokumen Realisasi
+                                            </a>
+                                        @else
+                                            <p class="text-xs italic text-gray-500">Tidak ada dokumen</p>
+                                        @endif
+                                        @if (optional($struggle)->solution_doc)
+                                            <a href="{{ Storage::url($struggle->solution_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                                                📷 Dokumen Solusi
+                                            </a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -264,10 +315,7 @@
                         </div>
 
                         <!-- Konten Card (hanya tampil kalau editMode = true) -->
-                        <form x-data="{ fileSizeError:false, docTypeError:false, allowedTypes: ['image/jpeg', 'image/png', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'] }" 
-                        x-show="editMode"  method="POST" action="{{ route('plans.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
+                        <div x-show="editMode">
                             <!-- button -->
                             <div class="flex space-x-2 mb-4">
                                 <button type="button" 
@@ -286,28 +334,51 @@
 
                             <!-- Konten Tab -->
                             <div>
-                                <div x-show="tab === 'rencana'">
+                                <form x-show="tab === 'rencana'" method="POST" action="{{ route('plans.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
                                     @include('detail.form-rencana', ['plan' => $plan])
-                                </div>
-                                <div x-show="tab === 'realisasi'">
-                                    @include('detail.form-realisasi')
-                                </div>
+                                    <!-- Buttons -->
+                                    <div class="flex justify-end space-x-2 mt-4">
+                                        <button type="button" @click="editMode = false"
+                                            class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
+                                            Batal
+                                        </button>
+                                        <button type="submit"
+                                            :disabled="fileSizeError || docTypeError"
+                                            :class="(fileSizeError || docTypeError) ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'"
+                                            class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                                            Simpan
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <form x-show="tab === 'realisasi'"  method="POST" action="{{ route('finals.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
+                                    @php
+                                        $final = $plan->stepsFinals ?? new \App\Models\StepsFinal();
+                                        $struggle = $final->struggles->first() ?? new \App\Models\Struggle();
+                                    @endphp
+                                    @include('detail.form-realisasi', ['final' => $final, 'struggle' => $struggle])
+                                    <!-- Buttons -->
+                                    <div class="flex justify-end space-x-2 mt-4">
+                                        <button type="button" @click="editMode = false"
+                                            class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
+                                            Batal
+                                        </button>
+                                        <button type="submit"
+                                            :disabled="fileSizeError || docTypeError"
+                                            :class="(fileSizeError || docTypeError) ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'"
+                                            class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                                            Simpan
+                                        </button>
+                                    </div>
+                                </form>
                             </div>
 
-                            <!-- Buttons -->
-                            <div class="flex justify-end space-x-2 mt-4">
-                                <button type="button" @click="editMode = false"
-                                    class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
-                                    Batal
-                                </button>
-                                <button type="submit"
-                                    :disabled="fileSizeError || docTypeError"
-                                    :class="(fileSizeError || docTypeError) ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'"
-                                    class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
-                                    Simpan
-                                </button>
-                            </div>
-                        </form>
+                            
+                        </div>
                     </div>  
                 @endforeach     
             </div>
