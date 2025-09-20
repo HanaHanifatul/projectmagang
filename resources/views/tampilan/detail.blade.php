@@ -108,9 +108,9 @@
                                                     class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
                                                     <option value="">-- Pilih Jenis Tahapan --</option>
                                                     <option value="persiapan">Persiapan</option>
-                                                    <option value="pengumpulan_data">Pengumpulan Data</option>
-                                                    <option value="pengolahan_data">Pengolahan Data</option>
-                                                    <option value="analisis_data">Analisis Data</option>
+                                                    <option value="pengumpulan data">Pengumpulan Data</option>
+                                                    <option value="pengolahan data">Pengolahan Data</option>
+                                                    <option value="analisis data">Analisis Data</option>
                                                     <option value="diseminasi">Diseminasi</option>
                                                 </select>
                                             </div>
@@ -170,9 +170,9 @@
                                 @php
                                     $colors = [
                                         'persiapan' => 'bg-blue-800',
-                                        'pengumpulan_data' => 'bg-yellow-600',
-                                        'pengolahan_data' => 'bg-orange-600',
-                                        'analisis_data' => 'bg-purple-600',
+                                        'pengumpulan data' => 'bg-yellow-600',
+                                        'pengolahan data' => 'bg-orange-600',
+                                        'analisis data' => 'bg-purple-600',
                                         'diseminasi' => 'bg-green-600',
                                     ];
                                     $bgColorClass = $colors[$plan->plan_type] ?? 'bg-gray-600';
@@ -307,13 +307,42 @@
                             <div class="flex justify-end mt-4 gap-2">
                                 @if(auth()->check()) 
                                     @if(auth()->user()->role === 'ketua_tim')
-                                        <button @click="editMode = true"
-                                            class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-red-500 hover:bg-red-600 hover:text-white">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                                <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
-                                            </svg>
-                                            Hapus
-                                        </button>
+                                        <div x-data="{ showConfirm: false }">
+                                            <button type="button"
+                                                @click="showConfirm = true"
+                                                class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-red-500 hover:bg-red-600 hover:text-white">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                                    <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
+                                                </svg>
+                                                Hapus
+                                            </button>
+
+                                            <!-- Modal -->
+                                            <div
+                                                x-show="showConfirm"
+                                                x-transition 
+                                                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                                <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+                                                    <h2 class="text-lg font-semibold text-gray-800">Hapus Tahapan</h2>
+                                                    <p class="text-xs text-gray-500">Apakah Anda yakin ingin menghapus tahapan "{{ $plan->plan_type }}" ini ? </p>
+                                                    <!-- Tombol Simpan -->
+                                                    <div class="flex justify-end mt-4 gap-2">
+                                                        <button  @click="showConfirm = false" 
+                                                            class="text-xs bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
+                                                            Batal
+                                                        </button>
+                                                        <form action="{{ route('plans.destroy', $plan->step_plan_id) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="bg-red-600 text-white text-xs px-4 py-2 rounded-lg hover:bg-red-800">
+                                                                Hapus
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div>
                                     @endif
                                     @if(auth()->user()->role === 'ketua_tim' || 'operator')
                                         <button @click="editMode = true"

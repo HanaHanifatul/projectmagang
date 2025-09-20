@@ -74,4 +74,13 @@ class StepsPlanController extends Controller
 
         return redirect()->back()->with('success', 'Rencana berhasil diperbarui.');
     }
+
+    // Untuk menghapus tahapan
+    public function destroy(StepsPlan $plan){
+        //Hapus data
+        $plan->delete();
+
+        //Redirect kembali dengan pesan sukses
+        return redirect()->back()->with('succes', 'Tahapan berhasil dihapus.');
+    }
 }

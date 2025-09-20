@@ -43,6 +43,11 @@ Route::put('/finals/{plan}', [
     StepsFinalController::class, 'update'
 ])->name('finals.update');
 
+// Hapus tahapan
+Route::delete('/plans/{plan}', [
+    StepsPlanController::class, 'destroy'
+])->name('plans.destroy');
+
 // Route::get('/login', function () {
 //     return view('/auth/login');
 // });
