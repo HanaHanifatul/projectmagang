@@ -9,6 +9,10 @@ class StepsPlanController extends Controller
 {
     //tampil data tahapan
     public function index(Request $request){
+        //Penghitungan total rencana dan realisasi
+        $total_rencana = StepsPlan::count();
+        $total_realisasi = StepsPlan::has('stepsFinals')->count();
+        
         // ambil nilai dari input search
         $search = $request->input('search');
         $query = StepsPlan::query();
@@ -25,7 +29,7 @@ class StepsPlanController extends Controller
         $stepsplans = $query->with('stepsFinals')->get();
         
         // $stepsplans = StepsPlan::all(); //ambil semua data lewat model
-        return view('tampilan.detail', compact('stepsplans'));
+        return view('tampilan.detail', compact('stepsplans', 'total_rencana', 'total_realisasi'));
     }
     
     //simpan data untuk formulir "Tambah Tahapan"

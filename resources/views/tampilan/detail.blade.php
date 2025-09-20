@@ -145,8 +145,8 @@
 
                 <!-- Badges -->
                 <div class="flex gap-2 mb-6">
-                    <span class="px-3 py-1 bg-blue-800 text-white rounded-full text-sm">6 Tahapan</span>
-                    <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-sm">5 Selesai</span>
+                    <span class="px-3 py-1 bg-blue-800 text-white rounded-full text-sm">{{ $total_rencana }} Tahapan</span>
+                    <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-sm">{{ $total_realisasi }} Selesai</span>
                 </div>
 
                 <!-- Card -->
@@ -167,15 +167,29 @@
                         <div class="flex items-center justify-between mb-4">
                             <!-- persiapan -->
                             <div class="flex items-center gap-3">
-                                <div class="h-10 w-10 flex items-center justify-center rounded-full bg-emerald-600 text-white font-semibold">
-                                    P
+                                @php
+                                    $colors = [
+                                        'persiapan' => 'bg-blue-800',
+                                        'pengumpulan_data' => 'bg-yellow-600',
+                                        'pengolahan_data' => 'bg-orange-600',
+                                        'analisis_data' => 'bg-purple-600',
+                                        'diseminasi' => 'bg-green-600',
+                                    ];
+                                    $bgColorClass = $colors[$plan->plan_type] ?? 'bg-gray-600';
+                                @endphp
+                                <div class="h-10 w-10 flex items-center justify-center rounded-full {{ $bgColorClass }} text-white font-semibold">
+                                    {{ strtoupper($plan->plan_type[0]) }}
                                 </div>
                                 <div>
                                     <h2 class="text-lg font-semibold"></h2>
                                     <span class="py-3 text-lg font-bold">{{ $plan->plan_name }}</span>
                                     <div class="flex gap-2 mt-1">
                                         <span class="px-2 py-0.5 bg-gray-200 rounded-lg text-xs">{{ $plan->plan_type }}</span>
-                                        <span class="px-2 py-0.5 bg-emerald-600 text-white rounded-lg text-xs">Selesai</span>
+                                        @if($final)
+                                            <span class="px-2 py-0.5 bg-emerald-600 text-white rounded-lg text-xs">Selesai</span>
+                                        @else
+                                            <span class="px-2 py-0.5 bg-blue-800 text-white rounded-lg text-xs">Rencana</span>
+                                        @endif
                                         <span class="px-2 py-0.5 bg-gray-200 rounded-lg text-xs">Q1</span>
                                     </div>
                                 </div>
@@ -216,7 +230,7 @@
 
                                     <p class="text-sm text-gray-600">Dokumen</p>
                                         @if ($plan->plan_doc)
-                                            <a href="{{ Storage::url($plan->plan_doc) }}" target="_black" class="text-blue-600 hover:underline text-sm">
+                                            <a href="{{ Storage::url($plan->plan_doc) }}" target="_black" class="text-blue-600 hover:underline text-sm break-all">
                                                 {{ $plan->plan_doc }}
                                             </a>
                                         @else
@@ -387,3 +401,4 @@
 
 </body>
 </html>
+
