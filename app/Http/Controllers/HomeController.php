@@ -8,6 +8,8 @@ class HomeController extends Controller
 {
     public function index()
         {
-            return view('tampilan.homeketua');
+            $publications = Publication::all();
+            return view('tampilan.homeketua', compact('publications'));
+            // return view('tampilan.homeketua');
         }
 }
