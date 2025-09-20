@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\PublicationController;
+use App\Http\Controllers\StepsFinalController;
+use App\Http\Controllers\StepsPlanController;
 
 // Route::get('/', function () {
 //     return view('/tampilan/homeketua');
@@ -18,22 +19,47 @@ Route::get('/laporan', function () {
     return view('/tampilan/laporan');
 });
 
-Route::get('/detail', function () {
-    return view('/tampilan/detail');
-});
+// Route::get('/detail', function () {
+//     return view('/tampilan/detail');
+// });
 
+// Tampilkan halaman detail
+Route::get('/detail', [
+    StepsPlanController::class, 'index'])
+->name('plans.index');
 
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login'); // tampilkan form
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');   // proses login
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');     // logout
+// Simpan Tahapan Baru (dari modal "Tambah Tahapan")
+Route::post('/tahapan/store', [
+    StepsPlanController::class, 'store'])
+->name('tahapan.store');
 
-// Group route dengan middleware auth
-Route::middleware(['auth'])->group(function () {
-    // CRUD resource untuk publications
-    Route::resource('publications', PublicationController::class)
-        ->except(['.store', 'create','edit', 'show']);
+// Perbarui Rencana yang sudah ada (dari formulir "Edit Rencana")
+Route::put('/plans/{plan}', [
+    StepsPlanController::class, 'update'
+])->name('plans.update');
 
-    // Route tambahan untuk export
-    Route::get('publications/export', [PublicationController::class, 'export'])
-        ->name('publications.export');
-});
+// Perbarui Rencana yang sudah ada (dari formulir "Edit Realisasi")
+Route::put('/finals/{plan}', [
+    StepsFinalController::class, 'update'
+])->name('finals.update');
+
+// Hapus tahapan
+Route::delete('/plans/{plan}', [
+    StepsPlanController::class, 'destroy'
+])->name('plans.destroy');
+
+// Route::get('/login', function () {
+//     return view('/auth/login');
+// });
+
+Route::get('/login', [
+    AuthController::class, 'showLoginForm'])
+->name('login'); // tampilkan form
+
+Route::post('/login', [
+    AuthController::class, 'login'])
+->name('login.post');   // proses login
+
+Route::post('/logout', [
+    AuthController::class, 'logout'])
+->name('logout');     // logout

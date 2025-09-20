@@ -13,10 +13,10 @@ class Publication extends Model
     protected $primaryKey = 'publication_id';
     
     protected $fillable = [
-        'publication_name',
-        'fk_user_id',
         'publication_report',
+        'publication_name',
         'publication_pic',
+        'fk_user_id',
     ];
 
     // Relasi: Publication dimiliki oleh satu User

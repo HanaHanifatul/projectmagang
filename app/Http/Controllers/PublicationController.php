@@ -13,9 +13,28 @@ class PublicationController extends Controller
      */
     public function index()
     {
-        $publications = Publication::with('stepsPlans')->get();
-        return redirect()->route('home')->with('success', 'Publikasi berhasil ditambahkan.');
+        // $publications = Publication::with('stepsPlans')->get();
+        $publications = Publication::with('user')->get();
+        
+        return view('publications.index', compact('publications'));
+    }
 
+    // Menampilkan detail publikasi dengan semua relasinya
+    public function show($id)
+    {
+        $publication = Publication::with([
+            'user',
+            'stepsPlans.stepsFinals.struggles'
+        ])->findOrFail($id);
+
+        return view('publications.show', compact('publication'));
+    }
+
+    // Menampilkan form untuk membuat publikasi baru
+    public function create()
+    {
+        $users = User::all();
+        return view('publications.create', compact('users'));
     }
 
     /**
@@ -69,13 +88,7 @@ class PublicationController extends Controller
         $publication = Publication::findOrFail($id);
         $publication->delete();
 
-        return redirect()->route('home')->with('success', 'Publikasi berhasil ditambahkan.');
-
+        return redirect()->route('publications.index')
+                        ->with('success', 'Publikasi berhasil dihapus!');
     }
-
-public function export()
-{
-    // contoh: kalau pakai Laravel Excel
-    return Excel::download(new PublicationsExport, 'publications.xlsx');
-}
 }

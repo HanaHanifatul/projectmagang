@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class StepsFinal extends Model
 {
@@ -13,9 +14,8 @@ class StepsFinal extends Model
     protected $primaryKey = 'step_final_id';
     
     protected $fillable = [
-        'actual_start_realized',
-        'final_end_realized',
-        'final_name',
+        'actual_started',
+        'actual_ended',
         'final_desc',
         'final_doc',
         'next_step',
@@ -23,8 +23,8 @@ class StepsFinal extends Model
     ];
 
     protected $casts = [
-        'actual_start_realized' => 'date',
-        'final_end_realized' => 'date'
+        'actual_started' => 'date',
+        'actual_ended' => 'date'
     ];
 
     // Relasi: Steps Final dimiliki oleh satu Steps Plan

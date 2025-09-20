@@ -49,11 +49,15 @@
                 <div class="grid grid-cols-1 sm:grid-cols-6 gap-2 mb-4 items-center">
                     <!-- Search (2 kolom di layar besar) -->
                     <div class="{{ (auth()->check() && auth()->user()->role === 'ketua_tim') ? 'sm:col-span-4' : 'sm:col-span-5' }}">
-                        <input 
+                        <form action="{{ route('plans.index') }}" method="GET">
+                            <input 
                             type="text" 
+                            name="search"
                             placeholder="Cari Nama Tahapan..." 
+                            value="{{ request('search') }}"
                             class="w-full border px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        >
+                            >
+                        </form>
                     </div>
                     <!-- Tombol Unduh Excel -->
                     <div class="sm:col-span-1">
@@ -95,18 +99,18 @@
                                         <h2 class="text-lg font-semibold">Tambah Tahapan</h2>
                                         <p class="text-sm text-gray-500 mb-2">Tambahkan tahapan baru untuk publikasi/laporan</p>
                                         <!-- Form -->
-                                        <form method="POST">
+                                        <form method="POST" action="{{ route('tahapan.store') }}">
                                             @csrf
                                             <!-- Jenis Tahapan -->
                                             <div class="mb-3">
                                                 <label class="block text-sm font-medium text-gray-700">Jenis Tahapan</label>
-                                                <select name="nama_publikasi" 
+                                                <select name="plan_type" 
                                                     class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
                                                     <option value="">-- Pilih Jenis Tahapan --</option>
                                                     <option value="persiapan">Persiapan</option>
-                                                    <option value="pengumpulan_data">Pengumpulan Data</option>
-                                                    <option value="pengolahan_data">Pengolahan Data</option>
-                                                    <option value="analisis_data">Analisis Data</option>
+                                                    <option value="pengumpulan data">Pengumpulan Data</option>
+                                                    <option value="pengolahan data">Pengolahan Data</option>
+                                                    <option value="analisis data">Analisis Data</option>
                                                     <option value="diseminasi">Diseminasi</option>
                                                 </select>
                                             </div>
@@ -114,7 +118,7 @@
                                             <!-- Tambah Tahapan Survei -->
                                             <div class="mb-3">
                                                 <label class="block text-sm font-medium text-gray-700">Nama Tahapan</label>
-                                                <input type="text" name="tahapan" 
+                                                <input type="text" name="plan_name" 
                                                     class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
                                                     placeholder="Contoh: Perekrutan Anggota Pelatihan Anggota">
                                             </div>
@@ -137,151 +141,293 @@
                         </div>
                     @endif
                 </div>
+            
 
                 <!-- Badges -->
                 <div class="flex gap-2 mb-6">
-                    <span class="px-3 py-1 bg-blue-800 text-white rounded-full text-sm">6 Tahapan</span>
-                    <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-sm">5 Selesai</span>
+                    <span class="px-3 py-1 bg-blue-800 text-white rounded-full text-sm">{{ $total_rencana }} Tahapan</span>
+                    <span class="px-3 py-1 bg-emerald-600 text-white rounded-full text-sm">{{ $total_realisasi }} Selesai</span>
                 </div>
 
                 <!-- Card -->
-                <div x-data="{ editMode: false, tab:'rencana'}" class="bg-white rounded-xl shadow p-6 border">
-                    <!-- Header Card (selalu ada) -->
-                    <div class="flex items-center justify-between mb-4">
-                        <!-- persiapan -->
-                        <div class="flex items-center gap-3">
-                            <div class="h-10 w-10 flex items-center justify-center rounded-full bg-emerald-600 text-white font-semibold">
-                                P
-                            </div>
-                            <div>
-                                <h2 class="text-lg font-semibold">Perekrutan Anggota</h2>
-                                <div class="flex gap-2 mt-1">
-                                    <span class="px-2 py-0.5 bg-gray-200 rounded-lg text-xs">Persiapan</span>
-                                    <span class="px-2 py-0.5 bg-emerald-600 text-white rounded-lg text-xs">Selesai</span>
-                                    <span class="px-2 py-0.5 bg-gray-200 rounded-lg text-xs">Q1</span>
+                @foreach ($stepsplans as $plan)
+                    @php
+                        // Mengambil data realisasi (akan null jika belum ada)
+                        $final = $plan->stepsFinals;
+
+                        // Inisialisasi $struggle. Jika $final null, ini akan tetap null.
+                        $struggle = null;
+                        if ($final) {
+                            $struggle = $final->struggles->first();
+                        }
+                    @endphp
+
+                    <div x-data="{ editMode: false, tab:'rencana', fileSizeError:false, docTypeError:false, allowedTypes: ['image/jpeg', 'image/png', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']}" class="bg-white rounded-xl shadow p-6 border">
+                        <!-- Header Card (selalu ada) -->
+                        <div class="flex items-center justify-between mb-4">
+                            <!-- persiapan -->
+                            <div class="flex items-center gap-3">
+                                @php
+                                    $colors = [
+                                        'persiapan' => 'bg-blue-800',
+                                        'pengumpulan data' => 'bg-yellow-600',
+                                        'pengolahan data' => 'bg-orange-600',
+                                        'analisis data' => 'bg-purple-600',
+                                        'diseminasi' => 'bg-green-600',
+                                    ];
+                                    $bgColorClass = $colors[$plan->plan_type] ?? 'bg-gray-600';
+                                @endphp
+                                <div class="h-10 w-10 flex items-center justify-center rounded-full {{ $bgColorClass }} text-white font-semibold">
+                                    {{ strtoupper($plan->plan_type[0]) }}
+                                </div>
+                                <div>
+                                    <h2 class="text-lg font-semibold"></h2>
+                                    <span class="py-3 text-lg font-bold">{{ $plan->plan_name }}</span>
+                                    <div class="flex gap-2 mt-1">
+                                        <span class="px-2 py-0.5 bg-gray-200 rounded-lg text-xs">{{ $plan->plan_type }}</span>
+                                        @if($final)
+                                            <span class="px-2 py-0.5 bg-emerald-600 text-white rounded-lg text-xs">Selesai</span>
+                                        @else
+                                            <span class="px-2 py-0.5 bg-blue-800 text-white rounded-lg text-xs">Rencana</span>
+                                        @endif
+                                        <span class="px-2 py-0.5 bg-gray-200 rounded-lg text-xs">Q1</span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <!-- icon ceklis -->
-                        <div class="text-green-700">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-                                <path fill-rule="evenodd"
-                                    d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                    </div>
-
-                    <!-- Konten Card (hanya tampil kalau editMode = false) -->
-                    <div x-show="!editMode" x-transition>
-                        <div class="grid md:grid-cols-2 gap-6">
-                            <!-- Rencana -->
-                            <div>
-                                <h3 class="font-semibold mb-2">Rencana</h3>
-                                <p class="text-sm text-gray-600">Periode</p>
-                                <p class="text-sm mb-2">15 Januari 2024 - 31 Januari 2024</p>
-
-                                <p class="text-sm text-gray-600">Narasi</p>
-                                <p class="text-sm mb-2">Melakukan perekrutan anggota tim survei</p>
-
-                                <p class="text-sm text-gray-600">Dokumen</p>
-                                <a href="#" class="text-blue-600 hover:underline text-sm">📄 Kriteria_Rekrutmen.pdf</a>
+                            <!-- icon ceklis -->
+                            <div class="text-green-700">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
+                                    <path fill-rule="evenodd"
+                                        d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
+                                        clip-rule="evenodd" />
+                                </svg>
                             </div>
-                            <!-- Realisasi -->
-                            <div>
-                                <h3 class="font-semibold mb-2">Realisasi</h3>
-                                <p class="text-sm text-gray-600">Periode Aktual</p>
-                                <p class="text-sm mb-2">15 Januari 2024 - 28 Januari 2024</p>
+                        </div>
+                    
 
-                                <p class="text-sm text-gray-600">Narasi</p>
-                                <p class="text-sm mb-2">Berhasil merekrut 50 anggota tim survei</p>
+                        <!-- Konten Card (hanya tampil kalau editMode = false) -->
+                        <div x-show="!editMode" x-transition>
+                            <div class="grid md:grid-cols-2 gap-6">
+                                <!-- Rencana -->
+                                <div>
+                                    <h3 class="font-semibold mb-2">Rencana</h3>
+                                    <p class="text-sm text-gray-600">Periode</p>
+                                    <p class="text-sm mb-2">
+                                        @if($plan->plan_start_date && $plan->plan_end_date)
+                                            {{ $plan->plan_start_date->format('d F Y') }} - {{ $plan->plan_end_date->format('d F Y') }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
+                                    <p class="text-sm text-gray-600">Narasi</p>
+                                    <p class="text-sm mb-2">
+                                        @if($plan->plan_desc)
+                                            {{ $plan->plan_desc }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
 
-                                <p class="text-sm text-gray-600">Kendala</p>
-                                <p class="text-sm mb-2">Kesulitan mencari kandidat yang sesuai kualifikasi</p>
+                                    <p class="text-sm text-gray-600">Dokumen</p>
+                                        @if ($plan->plan_doc)
+                                            <a href="{{ Storage::url($plan->plan_doc) }}" target="_black" class="text-blue-600 hover:underline text-sm break-all">
+                                                {{ $plan->plan_doc }}
+                                            </a>
+                                        @else
+                                            <p class="text-xs italic text-gray-500">Tidak ada dokumen</p>
+                                        @endif
+                                </div>
+                                <!-- Realisasi -->
+                                <div>
+                                    <h3 class="font-semibold mb-2">Realisasi</h3>
+                                    <p class="text-sm text-gray-600">Periode Aktual</p>
+                                    <p class="text-sm mb-2">
+                                        @if($final)
+                                            {{ $final->actual_started->format('d F Y') }} - {{ $final->actual_ended->format('d F Y') }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
 
-                                <p class="text-sm text-gray-600">Solusi</p>
-                                <p class="text-sm mb-2">Memperluas jangkauan rekrutmen ke universitas</p>
+                                    <p class="text-sm text-gray-600">Narasi</p>
+                                    <p class="text-sm mb-2">
+                                        @if( optional($final)->final_desc)
+                                            {{ $final->final_desc }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
 
-                                <p class="text-sm text-gray-600">Tindak Lanjut</p>
-                                <p class="text-sm mb-2">Evaluasi kinerja anggota tim yang baru direkrut</p>
+                                    <p class="text-sm text-gray-600">Kendala</p>
+                                    <p class="text-sm mb-2">
+                                        @if( optional($struggle)->struggle_desc)
+                                            {{ $struggle->struggle_desc }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
 
-                                <p class="text-sm text-gray-600">Bukti Pendukung Solusi</p>
-                                <div class="flex flex-col gap-1">
-                                    <a href="#" class="text-blue-600 hover:underline text-sm">📷 Foto_Kegiatan_Rekrutmen.jpg</a>
-                                    <a href="#" class="text-blue-600 hover:underline text-sm">📄 Dokumentasi_Proses.pdf</a>
+                                    <p class="text-sm text-gray-600">Solusi</p>
+                                    <p class="text-sm mb-2">
+                                         @if( optional($struggle)->solution_desc)
+                                            {{ $struggle->solution_desc }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
+
+                                    <p class="text-sm text-gray-600">Tindak Lanjut</p>
+                                    <p class="text-sm mb-2">
+                                        @if( optional($final)->next_step)
+                                            {{ $final->next_step }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
+
+                                    <p class="text-sm text-gray-600">Bukti Pendukung Solusi</p>
+                                    <div class="flex flex-col gap-1">
+                                        @if (optional($final)->final_doc)
+                                            <a href="{{ Storage::url($final->final_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                                                📄 Dokumen Realisasi
+                                            </a>
+                                        @else
+                                            <p class="text-xs italic text-gray-500">Tidak ada dokumen</p>
+                                        @endif
+                                        @if (optional($struggle)->solution_doc)
+                                            <a href="{{ Storage::url($struggle->solution_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                                                📷 Dokumen Solusi
+                                            </a>
+                                        @endif
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <!-- Tombol Edit -->
-                        <div class="flex justify-end mt-4 gap-2">
-                            @if(auth()->check()) 
-                                @if(auth()->user()->role === 'ketua_tim')
-                                    <button @click="editMode = true"
-                                        class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-red-500 hover:bg-red-600 hover:text-white">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                            <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
-                                        </svg>
-                                        Hapus
-                                    </button>
+                            <!-- Tombol Edit -->
+                            <div class="flex justify-end mt-4 gap-2">
+                                @if(auth()->check()) 
+                                    @if(auth()->user()->role === 'ketua_tim')
+                                        <div x-data="{ showConfirm: false }">
+                                            <button type="button"
+                                                @click="showConfirm = true"
+                                                class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-red-500 hover:bg-red-600 hover:text-white">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                                    <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
+                                                </svg>
+                                                Hapus
+                                            </button>
+
+                                            <!-- Modal -->
+                                            <div
+                                                x-show="showConfirm"
+                                                x-transition 
+                                                class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                                <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+                                                    <h2 class="text-lg font-semibold text-gray-800">Hapus Tahapan</h2>
+                                                    <p class="text-xs text-gray-500">Apakah Anda yakin ingin menghapus tahapan "{{ $plan->plan_type }}" ini ? </p>
+                                                    <!-- Tombol Simpan -->
+                                                    <div class="flex justify-end mt-4 gap-2">
+                                                        <button  @click="showConfirm = false" 
+                                                            class="text-xs bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
+                                                            Batal
+                                                        </button>
+                                                        <form action="{{ route('plans.destroy', $plan->step_plan_id) }}" method="POST">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit"
+                                                                class="bg-red-600 text-white text-xs px-4 py-2 rounded-lg hover:bg-red-800">
+                                                                Hapus
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div> 
+                                        </div>
+                                    @endif
+                                    @if(auth()->user()->role === 'ketua_tim' || 'operator')
+                                        <button @click="editMode = true"
+                                            class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-gray-700 hover:bg-emerald-600 hover:text-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                                <path fill-rule="evenodd" d="M11.013 2.513a1.75 1.75 0 0 1 2.475 2.474L6.226 12.25a2.751 2.751 0 0 1-.892.596l-2.047.848a.75.75 0 0 1-.98-.98l.848-2.047a2.75 2.75 0 0 1 .596-.892l7.262-7.261Z" clip-rule="evenodd" />
+                                            </svg>
+                                            Edit
+                                        </button>
+                                    @endif
                                 @endif
-                                @if(auth()->user()->role === 'ketua_tim' || 'operator')
-                                    <button @click="editMode = true"
-                                        class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-gray-700 hover:bg-emerald-600 hover:text-white">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                            <path fill-rule="evenodd" d="M11.013 2.513a1.75 1.75 0 0 1 2.475 2.474L6.226 12.25a2.751 2.751 0 0 1-.892.596l-2.047.848a.75.75 0 0 1-.98-.98l.848-2.047a2.75 2.75 0 0 1 .596-.892l7.262-7.261Z" clip-rule="evenodd" />
-                                        </svg>
-                                        Edit
-                                    </button>
-                                @endif
-                            @endif
-                        </div>
-                    </div>
-
-                    <!-- Konten Card (hanya tampil kalau editMode = true) -->
-                    <form x-show="editMode" >
-                        <!-- button -->
-                        <div class="flex space-x-2 mb-4">
-                            <button type="button" 
-                                    class=" text-xs px-4 py-2 rounded"
-                                    :class="tab === 'rencana' ? 'bg-blue-800 text-white' : 'bg-gray-200 text-gray-500 hover:bg-white hover:text-blue-900'"
-                                    @click="tab = 'rencana'">
-                                Edit Rencana
-                            </button>
-                            <button type="button"
-                                    class=" text-xs px-4 py-2 rounded"
-                                    :class="tab === 'realisasi' ? 'bg-blue-800 text-white' : 'bg-gray-200 text-gray-500 hover:bg-white hover:text-blue-900'"
-                                    @click="tab = 'realisasi'">
-                                Edit Realisasi
-                            </button>
-                        </div>  
-
-                        <!-- Konten Tab -->
-                        <div>
-                            <div x-show="tab === 'rencana'">
-                                @include('detail.form-rencana')
-                            </div>
-                            <div x-show="tab === 'realisasi'">
-                                @include('detail.form-realisasi')
                             </div>
                         </div>
 
-                        <!-- Buttons -->
-                        <div class="flex justify-end space-x-2 mt-4">
-                            <button type="button" @click="editMode = false"
-                                class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
-                                Batal
-                            </button>
-                            <button type="submit"
-                                class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
-                                Simpan
-                            </button>
+                        <!-- Konten Card (hanya tampil kalau editMode = true) -->
+                        <div x-show="editMode">
+                            <!-- button -->
+                            <div class="flex space-x-2 mb-4">
+                                <button type="button" 
+                                        class=" text-xs px-4 py-2 rounded"
+                                        :class="tab === 'rencana' ? 'bg-blue-800 text-white' : 'bg-gray-200 text-gray-500 hover:bg-white hover:text-blue-900'"
+                                        @click="tab = 'rencana'">
+                                    Edit Rencana
+                                </button>
+                                <button type="button"
+                                        class=" text-xs px-4 py-2 rounded"
+                                        :class="tab === 'realisasi' ? 'bg-blue-800 text-white' : 'bg-gray-200 text-gray-500 hover:bg-white hover:text-blue-900'"
+                                        @click="tab = 'realisasi'">
+                                    Edit Realisasi
+                                </button>
+                            </div>  
+
+                            <!-- Konten Tab -->
+                            <div>
+                                <form x-show="tab === 'rencana'" method="POST" action="{{ route('plans.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
+                                    @include('detail.form-rencana', ['plan' => $plan])
+                                    <!-- Buttons -->
+                                    <div class="flex justify-end space-x-2 mt-4">
+                                        <button type="button" @click="editMode = false"
+                                            class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
+                                            Batal
+                                        </button>
+                                        <button type="submit"
+                                            :disabled="fileSizeError || docTypeError"
+                                            :class="(fileSizeError || docTypeError) ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'"
+                                            class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                                            Simpan
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <form x-show="tab === 'realisasi'"  method="POST" action="{{ route('finals.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
+                                    @csrf
+                                    @method('PUT')
+                                    @php
+                                        $final = $plan->stepsFinals ?? new \App\Models\StepsFinal();
+                                        $struggle = $final->struggles->first() ?? new \App\Models\Struggle();
+                                    @endphp
+                                    @include('detail.form-realisasi', ['final' => $final, 'struggle' => $struggle])
+                                    <!-- Buttons -->
+                                    <div class="flex justify-end space-x-2 mt-4">
+                                        <button type="button" @click="editMode = false"
+                                            class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
+                                            Batal
+                                        </button>
+                                        <button type="submit"
+                                            :disabled="fileSizeError || docTypeError"
+                                            :class="(fileSizeError || docTypeError) ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'"
+                                            class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
+                                            Simpan
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            
                         </div>
-                    </form>
-                </div>       
+                    </div>  
+                @endforeach     
             </div>
         </div>
     </main>
 
 </body>
 </html>
+
