@@ -66,3 +66,11 @@ Route::post('/logout', [
 ->name('logout');     // logout
 
 Route::resource('publications', PublicationController::class);
+
+// route contoh buat ngambil id di detail
+// detail publikasi + semua steps-nya
+Route::get('/publications/{publication}/steps', [StepsPlanController::class, 'index'])
+    ->name('steps.index');
+
+// simpan step baru
+Route::post('/publications/{publication}/steps', [StepsPlanController::class, 'store'])->name('steps.store');

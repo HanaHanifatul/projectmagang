@@ -20,22 +20,28 @@
         placeholder="Deskripsi rencana untuk tahapan ini">{{  old('final_desc', optional($final)->final_desc ?? '') }}
     </textarea>
 </div>
-<!-- Kendala Realisasi -->
-<div>
-    <label class="block text-sm font-medium text-gray-700">Kendala Realisasi</label>
-    <textarea name="struggle_desc" rows="3" required
-        class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500"
-        placeholder="Kendala yang terjadi selama realisasi">{{ old('struggle_desc', optional($struggle)->struggle_desc ?? '')  }}
-    </textarea>
-</div>
-<!-- Solusi Realisasi -->
-<div>
-    <label class="block text-sm font-medium text-gray-700">Solusi Realisasi</label>
-    <textarea name="solution_desc" rows="3" required
-        class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500"
-        placeholder="Solusi untuk mengatasi kendala">{{ old('solution_desc', optional($struggle)->solution_desc ?? '')  }}
-    </textarea>
-</div>
+
+<!-- Kendala (dinamis) -->
+    <div id="struggles-wrapper" class="space-y-4">
+        <div class="struggle-item border p-3 rounded-lg">
+            <label>Kendala</label>
+            <textarea name="struggles[0][struggle_desc]" rows="3" required
+                class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500"
+                placeholder="Kendala yang terjadi selama realisasi">{{ old('struggle_desc', optional($struggle)->struggle_desc ?? '')  }}
+            </textarea>
+
+            <label>Solusi</label>
+            <textarea name="struggles[0][solution_desc]" rows="3" required
+                class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500"
+                placeholder="Solusi untuk mengatasi kendala">{{ old('solution_desc', optional($struggle)->solution_desc ?? '')  }}
+            </textarea>
+            <label>Bukti Solusi</label>
+            <input type="file" name="struggles[0][solution_doc]" accept=".png,.jpg,.jpeg,.pdf"
+                class="w-full border rounded px-3 py-2">
+        </div>
+    </div>
+
+    <button type="button" id="add-struggle" class="mt-2 mb-3 bg-gray-600 text-white px-3 py-1 rounded hover:bg-gray-700">+ Tambah Kendala</button>
     <!-- Tindak Lanjut Realisasi -->
 <div>
     <label class="block text-sm font-medium text-gray-700">Tindak Lanjut Realisasi</label>
@@ -79,3 +85,22 @@
         </div>
     @endif
 </div>
+
+<script>
+    let struggleIndex = 1;
+    document.getElementById('add-struggle').addEventListener('click', function () {
+        const wrapper = document.getElementById('struggles-wrapper');
+        const div = document.createElement('div');
+        div.classList.add('struggle-item', 'border', 'p-3', 'rounded-lg');
+        div.innerHTML = `
+            <label>Kendala</label>
+            <textarea name="struggles[${struggleIndex}][struggle_desc]" rows="2" class="w-full border rounded px-3 py-2"></textarea>
+            <label>Solusi</label>
+            <textarea name="struggles[${struggleIndex}][solution_desc]" rows="2" class="w-full border rounded px-3 py-2"></textarea>
+            <label>Bukti Solusi</label>
+            <input type="file" name="struggles[${struggleIndex}][solution_doc]" accept=".png,.jpg,.jpeg,.pdf" class="w-full border rounded px-3 py-2">
+        `;
+        wrapper.appendChild(div);
+        struggleIndex++;
+    });
+</script>

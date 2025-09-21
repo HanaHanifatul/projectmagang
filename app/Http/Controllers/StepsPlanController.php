@@ -8,29 +8,31 @@ use App\Models\StepsPlan;
 class StepsPlanController extends Controller
 {
     //tampil data tahapan
-    public function index(Request $request){
-        //Penghitungan total rencana dan realisasi
-        $total_rencana = StepsPlan::count();
-        $total_realisasi = StepsPlan::has('stepsFinals')->count();
-        
-        // ambil nilai dari input search
-        $search = $request->input('search');
-        $query = StepsPlan::query();
-        
-        //pencarian
-        if($search){
-            $query->where(function ($q) use ($search){
-                $q->where('plan_name', 'LIKE', '%' . $search . '%')
-                  ->orwhere('plan_type', 'LIKE', '%' . $search . '%');
-            });
-        }
-        
-        // gunakan eager loading untuk memuat relasi 'stepsFinals'
-        $stepsplans = $query->with('stepsFinals')->get();
-        
-        // $stepsplans = StepsPlan::all(); //ambil semua data lewat model
-        return view('tampilan.detail', compact('stepsplans', 'total_rencana', 'total_realisasi'));
+    public function index(Request $request, $publication_id)
+{
+    // ambil input search dari query string (?search=...)
+    $search = $request->input('search');
+
+    // query dasar: hanya ambil steps dari publikasi tertentu
+    $query = StepsPlan::where('publication_id', $publication_id)->with('stepsFinals');
+
+    // filter kalau ada search
+    if ($search) {
+        $query->where(function ($q) use ($search) {
+            $q->where('plan_name', 'LIKE', '%' . $search . '%')
+              ->orWhere('plan_type', 'LIKE', '%' . $search . '%');
+        });
     }
+
+    // eksekusi query
+    $stepsplans = $query->get();
+
+    $total_rencana   = $stepsplans->count();
+    $total_realisasi = $stepsplans->whereNotNull('stepsFinals')->count();
+
+    return view('tampilan.detail', compact('stepsplans', 'total_rencana', 'total_realisasi', 'publication_id', 'search'));
+}
+
     
     //simpan data untuk formulir "Tambah Tahapan"
     public function store(Request $request){

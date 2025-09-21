@@ -20,7 +20,7 @@ class PublicationController extends Controller
         ])->get();
 
     // return view('publications.index', compact('publications'));
-    return redirect()->route('home');
+    return view('tampilan.homeketua', compact('publications'));
     }
 
     // Menampilkan detail publikasi dengan semua relasinya

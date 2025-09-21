@@ -49,7 +49,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-6 gap-2 mb-4 items-center">
                     <!-- Search (2 kolom di layar besar) -->
                     <div class="{{ (auth()->check() && auth()->user()->role === 'ketua_tim') ? 'sm:col-span-4' : 'sm:col-span-5' }}">
-                        <form action="{{ route('plans.index') }}" method="GET">
+                       <form method="GET" action="{{ route('plans.index', $publication_id) }}">
                             <input 
                             type="text" 
                             name="search"

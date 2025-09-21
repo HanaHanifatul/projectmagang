@@ -153,89 +153,11 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Baris Pertama -->
+                    <!-- Isi Tabel -->
+                    @foreach($publications as $index => $publication)
                     <tr>
                         <!-- No -->
-                        <td class="px-4 py-4 align-top">1</td>
-                        <!-- Nama Publikasi -->
-                        <td class="px-4 py-4 align-top font-semibold text-gray-700">Laporan Statistik Kependudukan</td>
-                        <!-- Nama Kegiatan -->
-                        <td class="px-4 py-4 align-top font-semibold text-gray-700">Sakernas</td>
-                        <!-- PIC -->
-                        <td class="px-4 py-4 align-top font-semibold text-gray-700">Tim Sosial</td>
-                        <!-- Tahapan -->
-                        <td class="px-4 py-4 align-top">
-                            <div class="text-sm font-medium text-gray-700">5/6 Tahapan</div>
-                            <div class="flex items-center gap-2 mt-1">
-                            <span class="px-2 py-0.5 text-xs bg-gray-100 border rounded-full">50% selesai</span>
-                            </div>
-                            <p class="text-xs text-gray-500 mt-1">Perekrutan Anggota, Pelatihan Anggota, +4 lainnya</p>
-                        </td>
-                        <!-- Rencana Kegiatan -->
-                        <td class="px-4 py-4 text-center">
-                            <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">3 Rencana</div>
-                            <p class="text-xs text-gray-500 mt-1">100% selesai</p>
-                        </td>
-                        <td class="px-4 py-4 text-center">
-                            <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">3 Rencana</div>
-                            <p class="text-xs text-gray-500 mt-1">67% selesai</p>
-                        </td>
-                        <td class="px-4 py-4 text-center text-gray-400">-</td>
-                        <td class="px-4 py-4 text-center text-gray-400">-</td>
-                        <!-- Realisasi Kegiatan -->
-                        <td class="px-4 py-4 text-center">
-                            <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">3 Selesai</div>
-                            <p class="text-xs text-gray-500 mt-1">3 sesuai rencana</p>
-                        </td>
-                        <td class="px-4 py-4 text-center">
-                            <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">1 Selesai</div>
-                            <p class="text-xs text-gray-500 mt-1">1 sesuai rencana</p>
-                        </td>
-                        <td class="px-4 py-4 text-center">
-                            <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">1 Selesai</div>
-                            <p class="text-xs text-orange-500 mt-1">+1 lintas triwulan</p>
-                        </td>
-                        <td class="px-4 py-4 text-center text-gray-400">Belum Realisasi</td>
-                        <!-- Aksi -->
-                        <td class="px-4 py-4 text-center relative" x-data="{ open: false}">
-                            {{-- tombol trigger --}}
-                            <button 
-                                @click="open = !open"
-                                {{-- icon --}}
-                                class="p-2 rounded-xl hover:bg-emerald-600 hover:text-white focus:outline-none">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                    <path d="M2 8a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM6.5 8a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM12.5 6.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z" />
-                                </svg>
-                            </button>
-                            {{-- Dropdown menu --}}
-                            <div
-                                x-show="open"
-                                @click.outside= "open=false"
-                                class="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg z-10">
-                                <a href="/detail" class="flex gap-1 sm:text-xs w-full text-left px-4 py-2 text-sm text-black hover:bg-emerald-600 hover:text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
-                                        <path fill-rule="evenodd" d="M1.38 8.28a.87.87 0 0 1 0-.566 7.003 7.003 0 0 1 13.238.006.87.87 0 0 1 0 .566A7.003 7.003 0 0 1 1.379 8.28ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clip-rule="evenodd" />
-                                    </svg>
-                                    Detail
-                                </a>
-                                @if(auth()->check() && auth()->user()->role === 'ketua_tim')
-                                    <button class="flex gap-1 sm:text-xs w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-600 hover:text-white">
-                                        {{-- icon --}}
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                            <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
-                                        </svg>
-                                        Hapus
-                                    </button>
-                                @endif
-                            </div>
-                        </td>
-                    </tr>
-                    <!-- Baris Kedua -->
-                    @foreach($publications as $publication)
-                    <tr>
-                        <!-- No -->
-                        <td class="px-4 py-4 align-top">2</td>
+                        <td class="px-4 py-4 align-top">{{ $index + 1 }}</td>
                         <!-- Nama Publikasi -->
                         <td class="px-4 py-4 align-top font-semibold text-gray-700">{{ $publication->publication_name }}</td>
                         <!-- Nama Kegiatan -->
@@ -291,7 +213,7 @@
                                 x-show="open"
                                 @click.outside= "open=false"
                                 class="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg z-10">
-                                <a href="/detail" class="flex gap-1 sm:text-xs w-full text-left px-4 py-2 text-sm text-black hover:bg-emerald-600 hover:text-white">
+                                <a href="{{ route('steps.index', $publication->publication_id) }}" class="flex gap-1 sm:text-xs w-full text-left px-4 py-2 text-sm text-black hover:bg-emerald-600 hover:text-white">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                         <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
                                         <path fill-rule="evenodd" d="M1.38 8.28a.87.87 0 0 1 0-.566 7.003 7.003 0 0 1 13.238.006.87.87 0 0 1 0 .566A7.003 7.003 0 0 1 1.379 8.28ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clip-rule="evenodd" />
