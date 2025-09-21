@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Publication;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
 
 class PublicationController extends Controller
 {
@@ -13,10 +14,13 @@ class PublicationController extends Controller
      */
     public function index()
     {
-        // $publications = Publication::with('stepsPlans')->get();
-        $publications = Publication::with('user')->get();
-        
-        return view('publications.index', compact('publications'));
+        $publications = Publication::with([
+            'user',
+            'stepsPlans.stepsFinals.struggles'
+        ])->get();
+
+    // return view('publications.index', compact('publications'));
+    return redirect()->route('home');
     }
 
     // Menampilkan detail publikasi dengan semua relasinya
@@ -64,17 +68,17 @@ class PublicationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'nama_publikasi' => 'required|string',
-            'nama'           => 'required|string',
-            'pic'            => 'required|string',
+                $request->validate([
+            'publication_name'   => 'required|string|max:255',
+            'publication_report' => 'required|string|max:255',
+            'publication_pic'    => 'required|string|max:255',
         ]);
 
         $publication = Publication::findOrFail($id);
         $publication->update([
-            'publication_report' => $request->nama_publikasi,
-            'publication_name'   => $request->nama,
-            'publication_pic'    => $request->pic,
+            'publication_name'   => $request->publication_name,
+            'publication_report' => $request->publication_report,
+            'publication_pic'    => $request->publication_pic,
         ]);
 
         return redirect()->route('home')->with('success', 'Publikasi berhasil ditambahkan.');
@@ -91,4 +95,12 @@ class PublicationController extends Controller
         return redirect()->route('publications.index')
                         ->with('success', 'Publikasi berhasil dihapus!');
     }
+
+        public function edit($id)
+    {
+        $publication = Publication::findOrFail($id);
+        $users = User::all(); // kalau masih mau pilih user
+        return view('publications.edit', compact('publication', 'users'));
+    }
+
 }

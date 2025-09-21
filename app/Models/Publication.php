@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class Publication extends Model
 {
@@ -20,10 +21,10 @@ class Publication extends Model
     ];
 
     // Relasi: Publication dimiliki oleh satu User
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class, 'user_id', 'user_id');
-    // }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'user_id');
+    }
 
     // Relasi: Publication memiliki banyak Steps Plans
     public function stepsPlans()

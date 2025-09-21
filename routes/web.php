@@ -5,6 +5,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StepsFinalController;
 use App\Http\Controllers\StepsPlanController;
+use App\Http\Controllers\PublicationController;
 
 // Route::get('/', function () {
 //     return view('/tampilan/homeketua');
@@ -63,3 +64,5 @@ Route::post('/login', [
 Route::post('/logout', [
     AuthController::class, 'logout'])
 ->name('logout');     // logout
+
+Route::resource('publications', PublicationController::class);
