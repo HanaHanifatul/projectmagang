@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Publication;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Publication;
+use App\Models\StepsPlan;
+
 
 class PublicationController extends Controller
 {
@@ -50,11 +53,17 @@ class PublicationController extends Controller
             'publication_name'   => 'required|string|max:255',
             'publication_report' => 'required|string|max:255',
             'publication_pic'    => 'required|string|max:255',
+            'publication_report_other' => 'nullable|string|max:255'
         ]);
+
+        // Cek kalau user pilih "other"
+        $publicationReport = $request->publication_report === 'other'
+            ? $request->publication_report_other
+            : $request->publication_report;
 
         Publication::create([
             'publication_name'   => $request->publication_name,
-            'publication_report' => $request->publication_report,
+            'publication_report' => $publicationReport,
             'publication_pic'    => $request->publication_pic,
             'fk_user_id'         => Auth::id(), // ambil user yang login
         ]);
@@ -90,17 +99,18 @@ class PublicationController extends Controller
     public function destroy($id)
     {
         $publication = Publication::findOrFail($id);
+
+        // Hapus semua StepsPlan yang terkait
+        $publication->stepsPlans()->delete();
+
+        // Hapus publication
         $publication->delete();
 
         return redirect()->route('publications.index')
-                        ->with('success', 'Publikasi berhasil dihapus!');
+                        ->with('success', 'Publikasi dan semua tahapan terkait berhasil dihapus!');
     }
 
-        public function edit($id)
-    {
-        $publication = Publication::findOrFail($id);
-        $users = User::all(); // kalau masih mau pilih user
-        return view('publications.edit', compact('publication', 'users'));
-    }
+
+
 
 }

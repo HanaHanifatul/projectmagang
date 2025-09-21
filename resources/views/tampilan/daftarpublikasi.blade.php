@@ -49,27 +49,37 @@
                         <!-- Nama Laporan -->
                         <div class="mb-3">
                             <label class="block text-sm font-medium text-gray-700">Nama Laporan/Publikasi</label>
-                            <select name="publication_report" 
+                            <select id="publication_report" name="publication_report" 
                                 class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
                                 <option value="">-- Pilih Nama Laporan --</option>
-                                <option value="L1">Laporan Statistik Kependudukan dan Ketenagakerjaan</option>
-                                <option value="L2">Laporan Statistik Statistik Kesejahteraan Rakyat</option>
-                                <option value="L3">Laporan Statistik Ketahanan Sosial</option>
-                                <option value="L4">Laporan Statistik Tanaman Pangan</option>
-                                <option value="L5">Laporan Statistik Peternakan, Perikanan, dan Kehutanan</option>
-                                <option value="L6">Laporan Statistik Industri</option>
-                                <option value="L7">Laporan Statistik Distribusi</option>
-                                <option value="L7">Laporan Statistik Harga</option>
-                                <option value="L8">Laporan Statistik Keuangan, Teknologi Informasi, dan Pariwisata</option>
-                                <option value="L9">Laporan Neraca Produksi</option>
-                                <option value="L10">Laporan Neraca Pengeluaran</option>
-                                <option value="L11">Laporan Analisis dan Pengembangan Statistik</option>
-                                <option value="L12">Tingkat Penyelenggaraan Pembinaan Statistik Sektoral sesuai Standar</option>
-                                <option value="L13">Indeks Pelayanan Publik - Penilaian mandiri</option>
-                                <option value="L14">Nilai SAKIP oleh Inspektorat</option>
-                                <option value="L15">Indeks Implementasi BerAKHLAK</option>
+                                <option value="Laporan Statistik Kependudukan dan Ketenagakerjaan">Laporan Statistik Kependudukan dan Ketenagakerjaan</option>
+                                <option value="Laporan Statistik Statistik Kesejahteraan Rakyat">Laporan Statistik Statistik Kesejahteraan Rakyat</option>
+                                <option value="Laporan Statistik Ketahanan Sosial">Laporan Statistik Ketahanan Sosial</option>
+                                <option value="Laporan Statistik Tanaman Pangan">Laporan Statistik Tanaman Pangan</option>
+                                <option value="Laporan Statistik Peternakan, Perikanan, dan Kehutanan">Laporan Statistik Peternakan, Perikanan, dan Kehutanan</option>
+                                <option value="Laporan Statistik Industri">Laporan Statistik Industri</option>
+                                <option value="Laporan Statistik Distribusi">Laporan Statistik Distribusi</option>
+                                <option value="Laporan Statistik Harga">Laporan Statistik Harga</option>
+                                <option value="Laporan Statistik Keuangan, Teknologi Informasi, dan Pariwisata">Laporan Statistik Keuangan, Teknologi Informasi, dan Pariwisata</option>
+                                <option value="Laporan Neraca Produksi">Laporan Neraca Produksi</option>
+                                <option value="Laporan Neraca Pengeluaran">Laporan Neraca Pengeluaran</option>
+                                <option value="Laporan Analisis dan Pengembangan Statistik">Laporan Analisis dan Pengembangan Statistik</option>
+                                <option value="Tingkat Penyelenggaraan Pembinaan Statistik Sektoral sesuai Standar">Tingkat Penyelenggaraan Pembinaan Statistik Sektoral sesuai Standar</option>
+                                <option value="Indeks Pelayanan Publik - Penilaian Mandiri">Indeks Pelayanan Publik - Penilaian Mandiri</option>
+                                <option value="Nilai SAKIP oleh Inspektorat">Nilai SAKIP oleh Inspektorat</option>
+                                <option value="Indeks Implementasi BerAKHLAK">Indeks Implementasi BerAKHLAK</option>
+                                <option value="other"> -- Tambahkan Lainnya -- </option>
                             </select>
                         </div>
+
+                         <!-- Input tambahan untuk "other" -->
+                        <div class="mb-3" id="other_input" style="display: none;">
+                            <label class="block text-sm font-medium text-gray-700">Nama Laporan Lainnya</label>
+                            <input type="text" name="publication_report_other" 
+                                class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                placeholder="Tulis nama laporan lain di sini...">
+                        </div>
+
                         <!-- Nama kegiatan -->
                         <div class="mb-3">
                             <label class="block text-sm font-medium text-gray-700">Nama Kegiatan</label>
@@ -83,12 +93,12 @@
                             <select name="publication_pic" 
                                 class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
                                 <option value="">-- Pilih PIC --</option>
-                                <option value="umum">Tim Umum</option>
-                                <option value="produksi">Tim Produksi</option>
-                                <option value="distribusi">Tim Distribusi</option>
-                                <option value="neraca">Tim Neraca</option>
-                                <option value="sosial">Tim Sosial</option>
-                                <option value="ipds">Tim IPDS</option>
+                                <option value="Umum">Tim Umum</option>
+                                <option value="Produksi">Tim Produksi</option>
+                                <option value="Distribusi">Tim Distribusi</option>
+                                <option value="Neraca">Tim Neraca</option>
+                                <option value="Sosial">Tim Sosial</option>
+                                <option value="IPDS">Tim IPDS</option>
                             </select>
                         </div>
 
@@ -242,3 +252,18 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const select = document.getElementById("publication_report");
+        const otherInput = document.getElementById("other_input");
+
+        select.addEventListener("change", function () {
+            if (this.value === "other") {
+                otherInput.style.display = "block";
+            } else {
+                otherInput.style.display = "none";
+            }
+        });
+    });
+</script>
