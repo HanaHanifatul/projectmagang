@@ -110,7 +110,19 @@ class PublicationController extends Controller
                         ->with('success', 'Publikasi dan semua tahapan terkait berhasil dihapus!');
     }
 
+    public function search(Request $request)
+{
+    $query = $request->input('query');
+    // $publications = Publication::where('nama', 'like', '%' . $query . '%')->get();
 
+    $publications = Publication::when($query, function ($q) use ($query) {
+        $q->where('publication_report', 'like', "%{$query}%")
+          ->orWhere('publication_name', 'like', "%{$query}%");
+    })->get();
 
+    // $html = view('publications.partials.rows', compact('publications'))->render();
+
+    return response()->json($publications);
+}
 
 }

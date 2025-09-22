@@ -123,7 +123,7 @@
     <div class="mb-4 mt-1 border rounded-lg">
         <input 
             type="text"
-            id="seach"
+            id="search"
             placeholder="Cari Berdasarkan Nama Publikasi/Laporan"
             class="w-full  px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
     </div>
@@ -162,8 +162,9 @@
                         <th class="px-3 py-2"></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="publication-table-body">
                     <!-- Isi Tabel -->
+                    @if($publications->count())
                     @foreach($publications as $index => $publication)
                     <tr>
                         <!-- No -->
@@ -247,12 +248,18 @@
                         </td>
                     </tr>
                     @endforeach
+                    @else
+                    <tr>
+                        <td colspan="14" class="text-center text-gray-500 py-4">Tidak ada data ditemukan</td>
+                    </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
     </div>
 </div>
 
+<!-- skrip untuk modal tambah publikasi -->
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         const select = document.getElementById("publication_report");
@@ -267,3 +274,47 @@
         });
     });
 </script>
+
+<!-- skrip ajak fitur search -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const searchInput = document.getElementById("search");
+    const tbody = document.querySelector("table tbody");
+
+    searchInput.addEventListener("keyup", function () {
+        const query = this.value;
+
+        fetch(`{{ route('publications.search') }}?query=${query}`)
+           .then(response => response.json())
+.then(data => {
+    tbody.innerHTML = "";
+
+    if (data.length > 0) {
+        data.forEach((item, index) => {
+            tbody.innerHTML += `
+                <tr>
+                    <td class="px-4 py-4">${index + 1}</td>
+                    <td class="px-4 py-4">${item.publication_report}</td>
+                    <td class="px-4 py-4">${item.publication_name}</td>
+                    <td class="px-4 py-4">${item.publication_pic}</td>
+                    <td class="px-4 py-4">-</td>
+                </tr>
+            `;
+        });
+    } else {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="14" class="text-center text-gray-500 py-4">
+                    Tidak ada data ditemukan
+                </td>
+            </tr>
+        `;
+    }
+})
+
+            .catch(err => console.error(err));
+    });
+});
+</script>
+
+

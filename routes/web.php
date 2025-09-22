@@ -6,7 +6,6 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StepsFinalController;
 use App\Http\Controllers\StepsPlanController;
 use App\Http\Controllers\PublicationController;
-use App\Models\StepsPlan;
 
 // Route::get('/', function () {
 //     return view('/tampilan/homeketua');
@@ -26,7 +25,7 @@ Route::get('/laporan', function () {
 // });
 
 // Tampilkan halaman detail
-Route::get('/detail/{publication_id}', [
+Route::get('/detail', [
     StepsPlanController::class, 'index'])
 ->name('plans.index');
 
@@ -50,7 +49,6 @@ Route::delete('/plans/{plan}', [
     StepsPlanController::class, 'destroy'
 ])->name('plans.destroy');
 
-
 // Route::get('/login', function () {
 //     return view('/auth/login');
 // });
@@ -67,7 +65,11 @@ Route::post('/logout', [
     AuthController::class, 'logout'])
 ->name('logout');     // logout
 
+// route untuk search
+Route::get('/publications/search', [PublicationController::class, 'search'])->name('publications.search');
+
 Route::resource('publications', PublicationController::class);
+
 
 // route contoh buat ngambil id di detail
 // detail publikasi + semua steps-nya
@@ -76,3 +78,4 @@ Route::get('/publications/{publication}/steps', [StepsPlanController::class, 'in
 
 // simpan step baru
 Route::post('/publications/{publication}/steps', [StepsPlanController::class, 'store'])->name('steps.store');
+
