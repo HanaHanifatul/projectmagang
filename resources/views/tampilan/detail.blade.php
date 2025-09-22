@@ -259,7 +259,7 @@
                                         @endif
                                     </p>
 
-                                    <p class="text-sm text-gray-600">Kendala</p>
+                                    {{-- <p class="text-sm text-gray-600">Kendala</p>
                                     <p class="text-sm mb-2">
                                         @if( optional($struggle)->struggle_desc)
                                             {{ $struggle->struggle_desc }}
@@ -284,7 +284,24 @@
                                         @else
                                             <span class="text-gray-500 italic text-xs">Belum Diisi</span>
                                         @endif
-                                    </p>
+                                    </p> --}}
+
+                                    <p class="text-sm text-gray-600">Kendala & Solusi</p>
+                                    @forelse(optional($final)->struggles ?? [] as $s)
+                                        <div class="border p-2 rounded mb-2">
+                                            <p class="text-sm">Kendala: {{ $s->struggle_desc }}</p>
+                                            <p class="text-sm">Solusi: {{ $s->solution_desc }}</p>
+                                            @if($s->solution_doc)
+                                                <a href="{{ asset('storage/'.$s->solution_doc) }}" target="_blank" class="text-blue-500 underline">
+                                                    Lihat Bukti Solusi
+                                                </a>
+                                            @endif
+                                        </div>
+                                    @empty
+                                        <p class="text-sm mb-2">
+                                            <span class="text-gray-500 italic text-xs">Belum diisi</span>
+                                        </p>
+                                    @endforelse
 
                                     <p class="text-sm text-gray-600">Bukti Pendukung Solusi</p>
                                     <div class="flex flex-col gap-1">
@@ -294,11 +311,6 @@
                                             </a>
                                         @else
                                             <p class="text-xs italic text-gray-500">Tidak ada dokumen</p>
-                                        @endif
-                                        @if (optional($struggle)->solution_doc)
-                                            <a href="{{ Storage::url($struggle->solution_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm">
-                                                📷 Dokumen Solusi
-                                            </a>
                                         @endif
                                     </div>
                                 </div>
