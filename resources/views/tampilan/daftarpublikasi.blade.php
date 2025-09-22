@@ -169,9 +169,9 @@
                         <!-- No -->
                         <td class="px-4 py-4 align-top">{{ $index + 1 }}</td>
                         <!-- Nama Publikasi -->
-                        <td class="px-4 py-4 align-top font-semibold text-gray-700">{{ $publication->publication_name }}</td>
-                        <!-- Nama Kegiatan -->
                         <td class="px-4 py-4 align-top font-semibold text-gray-700">{{ $publication->publication_report }}</td>
+                        <!-- Nama Kegiatan -->
+                        <td class="px-4 py-4 align-top font-semibold text-gray-700">{{ $publication->publication_name }}</td>
                         <!-- PIC -->
                         <td class="px-4 py-4 align-top font-semibold text-gray-700">{{ $publication->publication_pic }}</td>
                         <!-- Tahapan -->

@@ -6,6 +6,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\StepsFinalController;
 use App\Http\Controllers\StepsPlanController;
 use App\Http\Controllers\PublicationController;
+use App\Models\StepsPlan;
 
 // Route::get('/', function () {
 //     return view('/tampilan/homeketua');
@@ -25,7 +26,7 @@ Route::get('/laporan', function () {
 // });
 
 // Tampilkan halaman detail
-Route::get('/detail', [
+Route::get('/detail/{publication_id}', [
     StepsPlanController::class, 'index'])
 ->name('plans.index');
 
@@ -48,6 +49,7 @@ Route::put('/finals/{plan}', [
 Route::delete('/plans/{plan}', [
     StepsPlanController::class, 'destroy'
 ])->name('plans.destroy');
+
 
 // Route::get('/login', function () {
 //     return view('/auth/login');

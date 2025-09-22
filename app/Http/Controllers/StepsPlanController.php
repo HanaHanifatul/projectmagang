@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Publication;
 use Illuminate\Http\Request;
 use App\Models\StepsPlan;
 
@@ -9,29 +10,32 @@ class StepsPlanController extends Controller
 {
     //tampil data tahapan
     public function index(Request $request, $publication_id)
-{
-    // ambil input search dari query string (?search=...)
-    $search = $request->input('search');
+    {
+        // ambil input search dari query string (?search=...)
+        $search = $request->input('search');
 
-    // query dasar: hanya ambil steps dari publikasi tertentu
-    $query = StepsPlan::where('publication_id', $publication_id)->with('stepsFinals');
+        // query dasar: hanya ambil steps dari publikasi tertentu
+        $query = StepsPlan::where('publication_id', $publication_id)->with('stepsFinals');
 
-    // filter kalau ada search
-    if ($search) {
-        $query->where(function ($q) use ($search) {
-            $q->where('plan_name', 'LIKE', '%' . $search . '%')
-              ->orWhere('plan_type', 'LIKE', '%' . $search . '%');
-        });
+        // filter kalau ada search
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('plan_name', 'LIKE', '%' . $search . '%')
+                ->orWhere('plan_type', 'LIKE', '%' . $search . '%');
+            });
+        }
+
+        // eksekusi query
+        $stepsplans = $query->get();
+
+        // Menghitung total rencana dan realisasi
+        $total_rencana   = $stepsplans->count();
+        $total_realisasi = $stepsplans->whereNotNull('stepsFinals')->count();
+
+        $publication = Publication::findOrFail($publication_id);
+
+        return view('tampilan.detail', compact('stepsplans', 'total_rencana', 'total_realisasi', 'publication_id', 'search', 'publication'));
     }
-
-    // eksekusi query
-    $stepsplans = $query->get();
-
-    $total_rencana   = $stepsplans->count();
-    $total_realisasi = $stepsplans->whereNotNull('stepsFinals')->count();
-
-    return view('tampilan.detail', compact('stepsplans', 'total_rencana', 'total_realisasi', 'publication_id', 'search'));
-}
 
     
     //simpan data untuk formulir "Tambah Tahapan"
@@ -39,14 +43,15 @@ class StepsPlanController extends Controller
         // validasi input
         $request->validate([
             'plan_type' => 'required|string',
-            'plan_name' => 'required|string|max:256'
+            'plan_name' => 'required|string|max:256',
+            'publication_id' => 'required|exists:publications,publication_id'
         ]);
 
         // Simpan ke database
         StepsPlan::create([
             'plan_type' => $request->plan_type,
             'plan_name' => $request->plan_name,
-            'publication_id' => 1,      // isi sesuai id publikasi terkait
+            'publication_id' => $request->publication_id,      // isi sesuai id publikasi terkait
         ]);
 
         return redirect()->back()->with('success', 'Tahapan berhasil ditambahkan.');

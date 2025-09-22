@@ -37,8 +37,8 @@
                 <!-- Judul -->
                 <div class="flex items-center justify-between mb-6">
                     <div>
-                        <h1 class="text-2xl font-bold mb-2">Laporan Statistik Kependudukan</h1>
-                        <p class="text-xs sm:text-sm text-gray-600 mb-2">Sakernas</p>
+                        <h1 class="text-2xl font-bold mb-2">{{ $publication->publication_report }}</h1>
+                        <p class="text-xs sm:text-sm text-gray-600 mb-2">{{ $publication->publication_name }}</p>
                     </div>
                     <div class="text-right">
                         <p class="text-2xl font-semibold text-blue-800">83%</p>
@@ -49,7 +49,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-6 gap-2 mb-4 items-center">
                     <!-- Search (2 kolom di layar besar) -->
                     <div class="{{ (auth()->check() && auth()->user()->role === 'ketua_tim') ? 'sm:col-span-4' : 'sm:col-span-5' }}">
-                       <form method="GET" action="{{ route('plans.index', $publication_id) }}">
+                       <form method="GET" action="{{ route('plans.index', $publication->publication_id) }}">
                             <input 
                             type="text" 
                             name="search"
@@ -101,6 +101,8 @@
                                         <!-- Form -->
                                         <form method="POST" action="{{ route('tahapan.store') }}">
                                             @csrf
+                                            <!-- publication -->
+                                            <input type="hidden" name="publication_id" value="{{ $publication->publication_id }}">
                                             <!-- Jenis Tahapan -->
                                             <div class="mb-3">
                                                 <label class="block text-sm font-medium text-gray-700">Jenis Tahapan</label>
@@ -141,7 +143,6 @@
                         </div>
                     @endif
                 </div>
-            
 
                 <!-- Badges -->
                 <div class="flex gap-2 mb-6">
