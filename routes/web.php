@@ -25,7 +25,7 @@ Route::get('/laporan', function () {
 // });
 
 // Tampilkan halaman detail
-Route::get('/detail', [
+Route::get('/detail/{publication_id}', [
     StepsPlanController::class, 'index'])
 ->name('plans.index');
 
@@ -78,4 +78,3 @@ Route::get('/publications/{publication}/steps', [StepsPlanController::class, 'in
 
 // simpan step baru
 Route::post('/publications/{publication}/steps', [StepsPlanController::class, 'store'])->name('steps.store');
-
