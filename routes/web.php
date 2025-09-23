@@ -11,9 +11,12 @@ use App\Http\Controllers\PublicationController;
 //     return view('/tampilan/homeketua');
 // })->middleware('auth');
 
-Route::get('/', 
-    [HomeController::class, 'index']
-)->name('home');
+// Route::get('/', 
+//     [HomeController::class, 'index']
+// )->name('home');
+
+Route::get('/', [PublicationController::class, 'index'])->name('daftarpublikasi');
+
 
 
 Route::get('/laporan', function () {
