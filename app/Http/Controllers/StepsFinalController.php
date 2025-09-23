@@ -52,7 +52,7 @@ class StepsFinalController extends Controller
         // simpan struggles
         if ($request->has('struggles')) {
             // Hapus struggles lama sebelum menyimpan yang baru
-            $final->struggles()->delete();
+            // $final->struggles()->delete();
         
             foreach ($request->struggles as $i => $struggleData) {
                 $struggle = new Struggle();
