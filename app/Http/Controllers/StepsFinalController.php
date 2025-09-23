@@ -33,7 +33,7 @@ class StepsFinalController extends Controller
         $request->validate([
             'struggles.*.struggle_desc'  => 'required|string',
             'struggles.*.solution_desc'  => 'required|string',
-            'struggles.*.solution_doc'   => 'sometimes|file|mimes:pdf,jpg,png,jpeg,docx|max:2048',
+            'struggles.*.solution_doc'   => 'required|file|mimes:pdf,jpg,png,jpeg,docx|max:2048',
         ]);
 
         // dd($validatedStruggle);
