@@ -22,6 +22,58 @@ class PublicationController extends Controller
             'stepsPlans.stepsFinals.struggles'
         ])->get();
 
+    // looping tiap publikasi untuk bikin rekap
+    foreach ($publications as $publication) {
+        // inisialisasi jumlah per triwulan
+        $rekapPlans = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+        $rekapFinals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+        $lintasTriwulan = 0;
+        $progressKumulatif = 0;
+
+        foreach ($publication->stepsPlans as $plan) {
+            // hitung berdasarkan tanggal rencana
+            $q = getQuarter($plan->plan_start_date);
+            if ($q) $rekapPlans[$q]++;
+
+            // kalau sudah ada realisasi, hitung juga
+            if ($plan->stepsFinals) {
+                $fq = getQuarter($plan->stepsFinals->actual_started);
+                if ($fq) $rekapFinals[$fq]++;
+
+                // cek apakah realisasi lintas triwulan
+                if ($fq && $q && $fq != $q) {
+                    $lintasTriwulan++;
+                }
+            }
+        }
+
+        // hitung progress kumulatif
+        $totalPlans = array_sum($rekapPlans);
+        $totalFinals = array_sum($rekapFinals);
+        if ($totalPlans > 0) {
+            $progressKumulatif = ($totalFinals / $totalPlans) * 100;
+        } else {
+            $progressKumulatif = 0;
+        }
+
+        // hitung progress per triwulan
+        $progressTriwulan = [];
+        foreach ([1, 2, 3, 4] as $q) {
+            if ($rekapPlans[$q] > 0) {
+                $progressTriwulan[$q] = ($rekapFinals[$q] / $rekapPlans[$q]) * 100;
+            } else {
+                $progressTriwulan[$q] = 0;
+            }
+        }
+
+        // inject hasil rekap ke model publikasi
+        $publication->rekapPlans = $rekapPlans;
+        $publication->rekapFinals = $rekapFinals;
+        $publication->lintasTriwulan = $lintasTriwulan;
+        $publication->progressKumulatif = $progressKumulatif;
+        $publication->progressTriwulan = $progressTriwulan;
+    }
+
     // return view('publications.index', compact('publications'));
     return view('tampilan.homeketua', compact('publications'));
     }

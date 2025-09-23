@@ -177,36 +177,117 @@
                         <td class="px-4 py-4 align-top font-semibold text-gray-700">{{ $publication->publication_pic }}</td>
                         <!-- Tahapan -->
                         <td class="px-4 py-4 align-top">
-                            <div class="text-sm font-medium text-gray-700">2/4 Tahapan</div>
+                            <div class="text-sm font-medium text-gray-700"> {{ array_sum($publication->rekapPlans) }}/{{ array_sum($publication->rekapFinals) }} Tahapan</div>
                             <div class="flex items-center gap-2 mt-1">
-                            <span class="px-2 py-0.5 text-xs bg-gray-100 border rounded-full">25% selesai</span>
+                            <span class="px-2 py-0.5 text-xs bg-gray-100 border rounded-full">{{ $publication->progressKumulatif }}% selesai</span>
                             </div>
-                            <p class="text-xs text-gray-500 mt-1">Penyusunan Kuesioner, Wawancara Rumah Tangga, +2 lainnya</p>
+                            <!-- <p class="text-xs text-gray-500 mt-1">Penyusunan Kuesioner, Wawancara Rumah Tangga, +2 lainnya</p> -->
                         </td>
                         <!-- Rencana Kegiatan-->
+                         <!-- Rencana Triwulan I -->
                         <td class="px-4 py-4 text-center">
-                            <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">1 Rencana</div>
-                            <p class="text-xs text-gray-500 mt-1">100% selesai</p>
+                            @if(($publication->rekapPlans[1] ?? 0) > 0)
+                                <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">
+                                    {{ $publication->rekapPlans[1] }} Rencana
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    {{ number_format($publication->progressTriwulan[1] ?? 0, 0) }}% selesai
+                                </p>
+                            @else
+                                <div class="px-3 py-1 text-black inline-block"> - </div>
+                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
+                            @endif
                         </td>
+                         <!-- Rencana Triwulan II -->
                         <td class="px-4 py-4 text-center">
-                            <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">2 Rencana</div>
-                            <p class="text-xs text-gray-500 mt-1">50% selesai</p>
+                            @if(($publication->rekapPlans[2] ?? 0) > 0)
+                                <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block"> {{ $publication->rekapPlans[2] }} Rencana </div>
+                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
+                            @else
+                                <div class="px-3 py-1 text-black inline-block"> - </div>
+                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
+                            @endif
                         </td>
+                         <!-- Rencana Triwulan III -->
                         <td class="px-4 py-4 text-center">
-                            <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">1 Rencana</div>
-                            <p class="text-xs text-gray-500 mt-1">0% selesai</p>
+                            @if(($publication->rekapPlans[3] ?? 0) > 0)
+                                <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block"> {{ $publication->rekapPlans[3] }} Rencana </div>
+                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
+                            @else
+                                <div class="px-3 py-1 text-black inline-block"> - </div>
+                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
+                            @endif
                         </td>
-                        <td class="px-4 py-4 text-center text-gray-400">-</td>
+                         <!-- Rencana Triwulan IV -->
+                        <td class="px-4 py-4 text-center">
+                            @if(($publication->rekapPlans[4] ?? 0) > 0)
+                                <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block"> {{ $publication->rekapPlans[4] }} Rencana </div>
+                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
+                            @else
+                               <div class="px-3 py-1 text-black inline-block"> - </div>
+                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
+                            @endif
+                        </td>
                         <!-- Realisasi Kegiatan -->
+                         <!-- Realisasi Triwulan I -->
                         <td class="px-4 py-4 text-center">
-                            <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">1 Selesai</div>
-                            <p class="text-xs text-gray-500 mt-1">1 sesuai rencana</p>
+                            @if(($publication->rekapFinals[1] ?? 0) > 0)
+                                @if($publication->lintasTriwulan > 0)
+                                    <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[1] }} Selesai </div>
+                                    <p class="text-xs text-orange-500 mt-1">
+                                        +{{ $publication->lintasTriwulan }} lintas triwulan
+                                    </p>
+                                @endif
+                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
+                            @else
+                                <div class="px-3 py-1 text-black inline-block"> - </div>
+                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
+                            @endif
                         </td>
-                        <td class="px-4 py-4 text-center text-gray-400">Belum Realisasi</td>
-                        <td class="px-4 py-4 text-center text-gray-400">Belum Realisasi</td>
+                         <!-- Realisasi Triwulan II -->
                         <td class="px-4 py-4 text-center">
-                            <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">1 Selesai</div>
-                            <p class="text-xs text-orange-500 mt-1">+1 lintas triwulan</p>
+                            @if(($publication->rekapFinals[2] ?? 0) > 0)
+                                @if($publication->lintasTriwulan > 0)
+                                    <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[2] }} Selesai </div>
+                                    <p class="text-xs text-orange-500 mt-1">
+                                        +{{ $publication->lintasTriwulan }} lintas triwulan
+                                    </p>
+                                @endif
+                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
+                            @else
+                                <div class="px-3 py-1 text-black inline-block"> - </div>
+                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
+                            @endif
+                        </td>
+                         <!-- Realisasi Triwulan III -->
+                        <td class="px-4 py-4 text-center">
+                            @if(($publication->rekapFinals[3] ?? 0) > 0)
+                                @if($publication->lintasTriwulan > 0)
+                                    <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[3] }} Selesai </div>
+                                    <p class="text-xs text-orange-500 mt-1">
+                                        +{{ $publication->lintasTriwulan }} lintas triwulan
+                                    </p>
+                                @endif
+                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
+                            @else
+                                <div class="px-3 py-1 text-black inline-block"> - </div>
+                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
+                            @endif
+                        </td>
+                        <!-- Realisasi Triwulan IV -->
+                        <td class="px-4 py-4 text-center">
+                            @if(($publication->rekapFinals[4] ?? 0) > 0)
+                                @if($publication->lintasTriwulan > 0)
+                                    <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[4] }} Selesai </div>
+                                    <p class="text-xs text-orange-500 mt-1">
+                                        +{{ $publication->lintasTriwulan }} lintas triwulan
+                                    </p>
+                                @endif
+                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
+                            @else
+                                <div class="px-3 py-1 text-black inline-block"> - </div>
+                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
+                            @endif
                         </td>
                         <!-- Aksi -->
                         <td class="px-4 py-4 text-center relative" x-data="{ open: false}">
