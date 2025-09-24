@@ -60,25 +60,42 @@ class StepsPlanController extends Controller
     // Perbarui data untuk formulir "Edit Rencana"
     public function update(Request $request, StepsPlan $plan){
         // dd($request->hasFile('plan_doc'));
+        // Cek apakah ada file lama
+        $existingPlanDoc = $plan->plan_doc;
+
+        // Atur validasi file
+        $fileValidation = $existingPlanDoc ? 'nullable|file|mimes:pdf,jpg,png,jpeg,docx|max:2048' : 'required|file|mimes:pdf,jpg,png,jpeg,docx|max:2048';
         
         $validated = $request->validate([
             'plan_start_date' => 'required|date',
             'plan_end_date'   => 'required|date|after_or_equal:plan_start_date',
             'plan_desc'       => 'required|string',
-            'plan_doc'        => 'nullable|file|mimes:pdf,jpg,png,jpeg,docx|max:2048',
+            'plan_doc'        => $fileValidation,
         ]);
         
         // Upload dokumen jika ada
+        // if ($request->hasFile('plan_doc')) {
+        //     // dd($request->hasFile('plan_doc'));
+        //     $path = $request->file('plan_doc')->store('documents', 'public');
+        //     $validated['plan_doc'] = $path;
+        //     // dd($validated);
+        // }
+
+        // Upload dokumen jika ada atau gunakan dokumen lama
         if ($request->hasFile('plan_doc')) {
-            // dd($request->hasFile('plan_doc'));
+            // Hapus dokumen lama jika ada
+            if ($existingPlanDoc) {
+                \Storage::disk('public')->delete($existingPlanDoc);
+            }
             $path = $request->file('plan_doc')->store('documents', 'public');
             $validated['plan_doc'] = $path;
-            // dd($validated);
+        } else {
+            // Gunakan dokumen lama jika tidak ada upload baru
+            $validated['plan_doc'] = $existingPlanDoc;
         }
         
         // Perbarui data
         $plan->update($validated);
-
         return redirect()->back()->with('success', 'Rencana berhasil diperbarui.');
     }
 

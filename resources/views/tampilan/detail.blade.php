@@ -177,12 +177,14 @@
                     plan_start_date: '{{ $plan->plan_start_date ? $plan->plan_start_date->format('Y-m-d') : '' }}',
                     plan_end_date: '{{ $plan->plan_end_date ? $plan->plan_end_date->format('Y-m-d') : '' }}',
                     plan_desc: `{{ trim(old('plan_desc', $plan->plan_desc ?? '')) }}`,
+                    hasPlanDoc: {{ $plan->plan_doc ? 'true' : 'false' }},
                     
                     // Variabel untuk form Realisasi
                     actual_started: '{{ optional($plan->stepsFinals->actual_started ?? null)->format('Y-m-d') ?? '' }}',
                     actual_ended: '{{ optional($plan->stepsFinals->actual_ended ?? null)->format('Y-m-d') ?? '' }}',
                     final_desc: '{{ old('final_desc', optional($final)->final_desc) }}',
                     next_step: '{{ old('next_step', optional($final)->next_step) }}',
+                    hasFinalDoc: {{ optional($final)->final_doc ? 'true' : 'false' }},
                                       
                     validateDates(type) {
                         if (type === 'rencana') {
@@ -193,15 +195,48 @@
                         this.updateFormValidity();
                     },
 
-                    // Fungsi validasi form
+                    {{-- // Fungsi validasi form
                     updateFormValidity() {
                         // Validasi hanya untuk form yang aktif dan elemen statis
                         if (this.tab === 'rencana') {
-                            this.formIsInvalid = !this.plan_start_date || !this.plan_end_date || !this.plan_desc.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError;
+                            let isDocMissing = !this.hasPlanDoc && !this.fileSizeError && !this.docTypeError;
+                            this.formIsInvalid = !this.plan_start_date || !this.plan_end_date || !this.plan_desc.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isAnyStruggleEmpty || isFinalDocMissing;
                         } else if (this.tab === 'realisasi') {
-                            this.formIsInvalid = !this.actual_started || !this.actual_ended || !this.final_desc.trim() || !this.next_step.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError;
+                            let isFinalDocMissing = !this.hasFinalDoc  && !this.fileSizeError && !this.docTypeError;
+                            this.formIsInvalid = !this.actual_started || !this.actual_ended || !this.final_desc.trim() || !this.next_step.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isAnyStruggleEmpty || isFinalDocMissing;
                         }
-                    }
+                    } --}}
+
+                   // Logika validasi form utama
+        updateFormValidity() {
+            let isDocMissing = false;
+            let isAnyStruggleEmpty = false;
+
+            if (this.tab === 'rencana') {
+                isDocMissing = !this.hasPlanDoc && !this.fileSizeError && !this.docTypeError;
+                this.formIsInvalid = !this.plan_start_date || !this.plan_end_date || !this.plan_desc.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isDocMissing;
+            } else if (this.tab === 'realisasi') {
+                isDocMissing = !this.hasFinalDoc && !this.fileSizeError && !this.docTypeError;
+                // Logika struggle bisa ditambahkan di sini jika Anda ingin validasi sisi klien
+                this.formIsInvalid = !this.actual_started || !this.actual_ended || !this.final_desc.trim() || !this.next_step.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isDocMissing || isAnyStruggleEmpty;
+            }
+        },
+        
+        handleFileChange(event, hasExistingDocVariable) {
+            if (event.target.files.length > 0) {
+                this.fileSizeError = event.target.files[0].size > 2097152;
+                this.docTypeError = !this.allowedTypes.includes(event.target.files[0].type);
+                // Tambahkan logika untuk memperbarui hasDocVariable
+                this[hasExistingDocVariable] = true;
+            } else {
+                this.fileSizeError = false;
+                this.docTypeError = false;
+                // Atur kembali hasDocVariable jika file tidak dipilih
+                this[hasExistingDocVariable] = false;
+            }
+            this.updateFormValidity();
+        },
+
                     }" x-init="updateFormValidity()" class="bg-white rounded-xl shadow p-6 border">
                         <!-- Header Card (selalu ada) -->
                         <div class="flex items-center justify-between mb-4">

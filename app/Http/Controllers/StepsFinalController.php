@@ -18,6 +18,12 @@ class StepsFinalController extends Controller
     {
         // dd($request->all());
         // dd($request->input('struggles')); 
+
+        $final = StepsFinal::firstOrNew(['step_plan_id' => $plan->step_plan_id]);
+        $existingFinalDoc = $final->final_doc;
+
+        // Validasi final_doc (required hanya jika belum ada)
+        $finalDocValidation = $existingFinalDoc ? 'nullable|file|mimes:pdf,jpg,png,jpeg,docx|max:2048' : 'required|file|mimes:pdf,jpg,png,jpeg,docx|max:2048';
         
         // Validasi input untuk StepsFinal
         $validatedFinal = $request->validate([
@@ -25,7 +31,7 @@ class StepsFinalController extends Controller
             'actual_ended'   => 'required|date|after_or_equal:actual_started',
             'final_desc'     => 'required|string',
             'next_step'      => 'required|string',
-            'final_doc'      => 'nullable|file|mimes:pdf,jpg,png,jpeg,docx|max:2048',
+            'final_doc'      => $finalDocValidation,
         ]);
 
         // dd($validatedFinal);
@@ -50,14 +56,25 @@ class StepsFinalController extends Controller
         // $final->fill($validatedFinal);
         // $final->save();
 
-        $final = StepsFinal::firstOrNew(['step_plan_id' => $plan->step_plan_id]);
+        
+        // if ($request->hasFile('final_doc')) {
+        //     // Hapus file lama jika ada sebelum menyimpan yang baru
+        //     if ($final->final_doc) {
+        //         \Storage::disk('public')->delete($final->final_doc);
+        //     }
+        //     $path = $request->file('final_doc')->store('documents', 'public');
+        //     $validatedFinal['final_doc'] = $path;
+        // }
+
+        // Cek dan simpan file dokumen realisasi
         if ($request->hasFile('final_doc')) {
-            // Hapus file lama jika ada sebelum menyimpan yang baru
-            if ($final->final_doc) {
-                \Storage::disk('public')->delete($final->final_doc);
+            if ($existingFinalDoc) {
+                \Storage::disk('public')->delete($existingFinalDoc);
             }
             $path = $request->file('final_doc')->store('documents', 'public');
             $validatedFinal['final_doc'] = $path;
+        } else {
+            $validatedFinal['final_doc'] = $existingFinalDoc;
         }
 
         $final->fill($validatedFinal);
