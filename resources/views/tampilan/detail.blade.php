@@ -163,7 +163,46 @@
                         }
                     @endphp
 
-                    <div x-data="{ editMode: false, tab:'rencana', fileSizeError:false, docTypeError:false, allowedTypes: ['image/jpeg', 'image/png', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document']}" class="bg-white rounded-xl shadow p-6 border">
+                    <div x-data="{ 
+                    // State utama Alpine.js
+                    editMode: false, 
+                    tab:'rencana', 
+                    DatesAreInvalid: false,
+                    formIsInvalid: false,
+                    fileSizeError:false, 
+                    docTypeError:false, 
+                    allowedTypes: ['image/jpeg', 'image/png', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
+
+                    // State utama Alpine.js
+                    plan_start_date: '{{ $plan->plan_start_date ? $plan->plan_start_date->format('Y-m-d') : '' }}',
+                    plan_end_date: '{{ $plan->plan_end_date ? $plan->plan_end_date->format('Y-m-d') : '' }}',
+                    plan_desc: `{{ trim(old('plan_desc', $plan->plan_desc ?? '')) }}`,
+                    
+                    // Variabel untuk form Realisasi
+                    actual_started: '{{ optional($plan->stepsFinals->actual_started ?? null)->format('Y-m-d') ?? '' }}',
+                    actual_ended: '{{ optional($plan->stepsFinals->actual_ended ?? null)->format('Y-m-d') ?? '' }}',
+                    final_desc: '{{ old('final_desc', optional($final)->final_desc) }}',
+                    next_step: '{{ old('next_step', optional($final)->next_step) }}',
+                                      
+                    validateDates(type) {
+                        if (type === 'rencana') {
+                            this.datesAreInvalid = (this.plan_start_date && this.plan_end_date) && new Date(this.plan_end_date) < new Date(this.plan_start_date);
+                        } else { // type === 'realisasi'
+                            this.datesAreInvalid = (this.actual_started && this.actual_ended) && new Date(this.actual_ended) < new Date(this.actual_started);
+                        }
+                        this.updateFormValidity();
+                    },
+
+                    // Fungsi validasi form
+                    updateFormValidity() {
+                        // Validasi hanya untuk form yang aktif dan elemen statis
+                        if (this.tab === 'rencana') {
+                            this.formIsInvalid = !this.plan_start_date || !this.plan_end_date || !this.plan_desc.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError;
+                        } else if (this.tab === 'realisasi') {
+                            this.formIsInvalid = !this.actual_started || !this.actual_ended || !this.final_desc.trim() || !this.next_step.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError;
+                        }
+                    }
+                    }" x-init="updateFormValidity()" class="bg-white rounded-xl shadow p-6 border">
                         <!-- Header Card (selalu ada) -->
                         <div class="flex items-center justify-between mb-4">
                             <!-- persiapan -->
@@ -390,28 +429,7 @@
 
                             <!-- Konten Tab -->
                             <div>
-                                <form x-show="tab === 'rencana'" method="POST" action="{{ route('plans.update', $plan->step_plan_id) }}" enctype="multipart/form-data"
-                                    {{-- Pengaturan --}}
-                                    x-data="{
-                                        plan_start_date: '{{ $plan->plan_start_date ? $plan->plan_start_date->format('Y-m-d') : '' }}',
-                                        plan_end_date: '{{ $plan->plan_end_date ? $plan->plan_end_date->format('Y-m-d') : '' }}',
-                                        plan_desc: `{{ trim(old('plan_desc', $plan->plan_desc ?? '')) }}`,
-                                        datesAreInvalid: false,
-                                        formIsInvalid: false,
-                                        validateDates(){
-                                            if (this.plan_start_date && this.plan_end_date) {
-                                                this.datesAreInvalid = new Date(this.plan_end_date) < new Date(this.plan_start_date);
-                                            } else {
-                                                this.datesAreInvalid = false;
-                                            }
-                                            this.updateFormValidity();
-                                        },
-                                        updateFormValidity() {
-                                            this.formIsInvalid = !this.plan_start_date || !this.plan_end_date || !this.plan_desc || this.datesAreInvalid || fileSizeError || docTypeError;
-                                        }
-                                    }"
-                                    x-init="updateFormValidity()"
-                                    >
+                                <form x-show="tab === 'rencana'" class="rencana-form" method="POST" action="{{ route('plans.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
                                     @include('detail.form-rencana', ['plan' => $plan])
@@ -430,7 +448,7 @@
                                     </div>
                                 </form>
 
-                                <form x-show="tab === 'realisasi'"  method="POST" action="{{ route('finals.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
+                                <form x-show="tab === 'realisasi'" class="realisasi-form" method="POST" action="{{ route('finals.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
                                     @csrf
                                     @method('PUT')
                                     @php
@@ -445,8 +463,8 @@
                                             Batal
                                         </button>
                                         <button type="submit"
-                                            :disabled="fileSizeError || docTypeError"
-                                            :class="(fileSizeError || docTypeError) ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'"
+                                            :disabled="formIsInvalid"
+                                            :class="formIsInvalid ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'"
                                             class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
                                             Simpan
                                         </button>

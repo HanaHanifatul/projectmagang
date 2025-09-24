@@ -3,22 +3,26 @@
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <div>
         <label class="block text-sm font-medium text-gray-700">Tanggal Mulai Realisasi</label>
-        <input type="date" name="actual_started" value="{{ old('actual_started', optional($final->actual_started)->format('Y-m-d')  ?? '') }}" required
+        <input type="date" name="actual_started" x-model="actual_started" @input="validateDates('realisasi')"
             class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500">
     </div>
     <div>
         <label class="block text-sm font-medium text-gray-700">Tanggal Akhir Realisasi</label>
-        <input type="date" name="actual_ended"  value="{{ old('actual_ended', optional($final->actual_ended)->format('Y-m-d')  ?? '') }}" required
+        <input type="date" name="actual_ended"  x-model="actual_ended" @input="validateDates('realisasi')"
             class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500">
     </div>
+    <!-- Message Error -->
+    <p x-show="datesAreInvalid" class="text-sm text-red-500 mt-1">
+        Tanggal tidak sesuai
+    </p>
 </div>
 
 <!-- Narasi Realisasi -->
 <div>
     <label class="block text-sm font-medium text-gray-700">Narasi Realisasi</label>
-    <textarea name="final_desc" rows="3" required
+    <textarea name="final_desc" rows="3" x-model="final_desc" @input="updateFormValidity()"
         class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500"
-        placeholder="Deskripsi rencana untuk tahapan ini">{{  trim(old('final_desc', optional($final)->final_desc ?? '')) }}
+        placeholder="Deskripsi rencana untuk tahapan ini">
     </textarea>
 </div>
 
@@ -31,13 +35,6 @@
                     <!-- Tulisan di kiri -->
                     <span class="block text-lg font-medium text-gray-700">Kendala dan Solusi {{ $i+1 }}</span>
 
-                    <!-- Button hapus di kanan -->
-                    {{-- <button type="button"
-                        class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-red-500 hover:bg-red-600 hover:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                            <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
-                        </svg>
-                    </button> --}}
                 </div>
                 <label class="block text-sm font-medium text-gray-700">Kendala</label>
                 <textarea name="struggles[{{ $i }}][struggle_desc]" rows="3" required
@@ -92,16 +89,16 @@
 <!-- Tindak Lanjut Realisasi -->
 <div>
     <label class="block text-sm font-medium text-gray-700">Tindak Lanjut Realisasi</label>
-    <textarea name="next_step" rows="3" required
+    <textarea name="next_step" rows="3" x-model="next_step" @input="updateFormValidity()"
         class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500"
-        placeholder="Tindak lanjut realisasi...">{{  old('next_step', optional($final)->next_step ?? '') }}
+        placeholder="Tindak lanjut realisasi...">
     </textarea>
 </div>
 
 <!-- Dokumen Pendukung -->
 <div>
     <label class="block text-sm font-medium text-gray-700">Bukti Pendukung</label>
-    <input type="file" name="final_doc" 
+    <input type="file" name="final_doc" x-on:change="updateFormValidity()"
         @change="
             if ($event.target.files.length > 0) {
                 fileSizeError = $event.target.files[0].size > 2097152;
@@ -159,11 +156,11 @@
                     </button>
                 </div>
                 <label class="block text-sm font-medium text-gray-700">Kendala</label>
-                <textarea name="struggles[${struggleIndex}][struggle_desc]" rows="2" class="w-full border rounded px-3 py-2"></textarea>
+                <textarea name="struggles[${struggleIndex}][struggle_desc]" rows="2" required class="w-full border rounded px-3 py-2"></textarea>
                 <label class="block text-sm font-medium text-gray-700">Solusi</label>
-                <textarea name="struggles[${struggleIndex}][solution_desc]" rows="2" class="w-full border rounded px-3 py-2"></textarea>
+                <textarea name="struggles[${struggleIndex}][solution_desc]" rows="2" required class="w-full border rounded px-3 py-2"></textarea>
                 <label class="block text-sm font-medium text-gray-700">Bukti Solusi</label>
-                <input type="file" name="struggles[${struggleIndex}][solution_doc]" accept=".png,.jpg,.jpeg,.pdf" 
+                <input type="file" name="struggles[${struggleIndex}][solution_doc]" accept=".png,.jpg,.jpeg,.pdf"
                 class="w-full border rounded px-3 py-2 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-gray-600 file:text-white">
             `;
             wrapper.appendChild(div);

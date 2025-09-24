@@ -4,12 +4,12 @@
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
             <label class="block text-sm font-medium text-gray-700">Tanggal Mulai Rencana</label>
-            <input type="date" name="plan_start_date" x-model="plan_start_date" @input="validateDates()" required
+            <input type="date" name="plan_start_date" x-model="plan_start_date" @input="validateDates('rencana')" required
                 class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500">
         </div>
         <div>
             <label class="block text-sm font-medium text-gray-700">Tanggal Selesai Rencana</label>
-            <input type="date" name="plan_end_date" x-model="plan_end_date" @input="validateDates()" value="{{ old('plan_end_date', $plan->plan_end_date ? $plan->plan_end_date->format('Y-m-d') : '') }}" required
+            <input type="date" name="plan_end_date" x-model="plan_end_date" @input="validateDates('rencana')" value="{{ old('plan_end_date', $plan->plan_end_date ? $plan->plan_end_date->format('Y-m-d') : '') }}" required
                 class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500">
         </div>
         <!-- Message Error -->
@@ -20,16 +20,16 @@
     <!-- Narasi rencana -->
     <div>
         <label class="block text-sm font-medium text-gray-700">Narasi Rencana</label>
-        <textarea name="plan_desc" rows="3" required
+        <textarea name="plan_desc" rows="3" 
             x-model="plan_desc" @input="updateFormValidity()"
             class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500"
-            placeholder="Deskripsi rencana untuk tahapan ini">{{  old('plan_desc', $plan->plan_desc)  }}
+            placeholder="Deskripsi rencana untuk tahapan ini">
         </textarea>
     </div>
     <!-- Dokumen Pendukung -->
     <div>
         <label class="block text-sm font-medium text-gray-700">Dokumen Pendukung Rencana</label>
-        <input type="file" name="plan_doc" value="{{ old('plan_doc', $plan->plan_doc) }}"
+        <input type="file" name="plan_doc" 
             @change="
                 if ($event.target.files.length > 0) {
                     fileSizeError = $event.target.files[0].size > 2097152;
