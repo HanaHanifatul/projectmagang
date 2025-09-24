@@ -61,6 +61,7 @@ class AuthController extends Controller
         'password' => Hash::make($request->password),
     ]);
 
-    return redirect()->route('home')->with('success', 'Password berhasil diubah.');
+    return back()->with('success', 'Password berhasil diperbarui.');
     }
+
 }

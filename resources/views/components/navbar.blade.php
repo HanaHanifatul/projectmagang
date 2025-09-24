@@ -61,14 +61,20 @@
                                 @click.away="open = false"
                                 x-transition
                                 class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5">
-                                @if(Auth::check() && Auth::user()->role !== 'admin')
+                                <!-- tampilkan nama user yang login -->
+                                @auth
+                                    <p class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                                        Halo, <strong>{{ auth()->user()->name }}</strong>!
+                                    </p>
+                                @endauth
+                                @if(auth()->check() && auth()->user()->role !== 'admin')
                                     <a href="{{ route('password.change') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ubah Password</a>
                                 @endif
-                                @if(Auth::check() && Auth::user()->role === 'admin')
+                                @if(auth()->check() && auth()->user()->role === 'admin')
                                     <a href="/admin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Halaman Admin</a>
                                 @endif
                                 @guest
-                                    <a href="/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Masuk</a>    
+                                    <a href="/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Masuk</a>
                                 @endguest
                                 @auth
                                     <form action="{{ route('logout') }}" method="POST" class="border-t">
@@ -144,19 +150,46 @@
                         </svg>
                     </button>
                 </div>
-                <div class="mt-3 space-y-1 px-2">
-                    <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">Your profile</a>
-                    <a href="#" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">Settings</a>
-                     @if(Auth::check() && Auth::user()->role == 'admin')
-                        <a href="/admin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin Page</a>
-                    @endif
-                    @guest
-                        <a href="/login" class="block rounded-md px-3 py-2 text-base font-medium text-gray-400 hover:bg-white/5 hover:text-white">Login</a>
-                    @endguest
+               <div class="mt-3 space-y-1 px-2">
+                    {{-- Tampilkan nama user yang login --}}
                     @auth
-                        <form action="{{ route('logout') }}" method="POST" class="">
+                        <p class="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">
+                            Halo, <strong>{{ auth()->user()->name }}</strong>!
+                        </p>
+                    @endauth
+
+                    {{-- Ubah password jika bukan admin --}}
+                    @if(auth()->check() && auth()->user()->role !== 'admin')
+                        <a href="{{ route('password.change') }}" 
+                        class="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">
+                        Ubah Password
+                        </a>
+                    @endif
+
+                    {{-- Halaman Admin jika role admin --}}
+                    @if(auth()->check() && auth()->user()->role === 'admin')
+                        <a href="/admin" 
+                        class="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">
+                        Halaman Admin
+                        </a>
+                    @endif
+
+                    {{-- Jika belum login --}}
+                    @guest
+                        <a href="/login" 
+                        class="block rounded-md px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">
+                        Masuk
+                        </a>
+                    @endguest
+
+                    {{-- Jika sudah login, tampilkan tombol logout --}}
+                    @auth
+                        <form action="{{ route('logout') }}" method="POST">
                             @csrf
-                            <button type="submit" class="block w-full text-left px-3 py-2 font-medium text-gray-400 hover:bg-white/5 hover:text-white">Logout</button>
+                            <button type="submit" 
+                                class="block w-full text-left px-3 py-2 text-base font-medium text-gray-700 hover:bg-gray-100">
+                                Keluar
+                            </button>
                         </form>
                     @endauth
                 </div>
