@@ -277,7 +277,6 @@
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                         <path fill-rule="evenodd" d="M11.013 2.513a1.75 1.75 0 0 1 2.475 2.474L6.226 12.25a2.751 2.751 0 0 1-.892.596l-2.047.848a.75.75 0 0 1-.98-.98l.848-2.047a2.75 2.75 0 0 1 .596-.892l7.262-7.261Z" clip-rule="evenodd" />
                                     </svg>
-                                    Edit
                                 </button>
                                 <div x-show="open" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                                     <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
@@ -353,7 +352,7 @@
                                     <p class="text-sm text-gray-600">Dokumen</p>
                                         @if ($plan->plan_doc)
                                             <a href="{{ Storage::url($plan->plan_doc) }}" target="_black" class="text-blue-600 hover:underline text-sm break-all">
-                                                {{ $plan->plan_doc }}
+                                                {{-- {{ $plan->plan_doc }} --}} 📄 Bukti Rencana
                                             </a>
                                         @else
                                             <p class="text-xs italic text-gray-500">Tidak ada dokumen</p>
@@ -413,8 +412,8 @@
                                             <p class="text-sm">Kendala: {{ $s->struggle_desc }}</p>
                                             <p class="text-sm">Solusi: {{ $s->solution_desc }}</p>
                                             @if($s->solution_doc)
-                                                <a href="{{ asset('storage/'.$s->solution_doc) }}" target="_blank" class="text-blue-500 underline">
-                                                    Lihat Bukti Solusi
+                                                <a href="{{ asset('storage/'.$s->solution_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                                                    📄 Bukti Solusi
                                                 </a>
                                             @endif
                                         </div>
