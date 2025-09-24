@@ -30,7 +30,7 @@
     <div>
         <label class="block text-sm font-medium text-gray-700">Dokumen Pendukung Rencana</label>
         <input type="file" name="plan_doc" 
-            @change="
+            {{-- @change="
                 if ($event.target.files.length > 0) {
                     fileSizeError = $event.target.files[0].size > 2097152;
                     docTypeError = !allowedTypes.includes($event.target.files[0].type);
@@ -38,7 +38,9 @@
                     fileSizeError = false;
                     docTypeError = false;
                 }
-            "
+                updateFormValidity();
+            " --}}
+            @change="handleFileChange($event, 'hasPlanDoc')"
             class="w-full border rounded px-3 py-2 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-gray-600 file:text-white">
 
         <!-- Message Error -->
