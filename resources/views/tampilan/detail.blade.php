@@ -390,7 +390,28 @@
 
                             <!-- Konten Tab -->
                             <div>
-                                <form x-show="tab === 'rencana'" method="POST" action="{{ route('plans.update', $plan->step_plan_id) }}" enctype="multipart/form-data">
+                                <form x-show="tab === 'rencana'" method="POST" action="{{ route('plans.update', $plan->step_plan_id) }}" enctype="multipart/form-data"
+                                    {{-- Pengaturan --}}
+                                    x-data="{
+                                        plan_start_date: '{{ $plan->plan_start_date ? $plan->plan_start_date->format('Y-m-d') : '' }}',
+                                        plan_end_date: '{{ $plan->plan_end_date ? $plan->plan_end_date->format('Y-m-d') : '' }}',
+                                        plan_desc: `{{ trim(old('plan_desc', $plan->plan_desc ?? '')) }}`,
+                                        datesAreInvalid: false,
+                                        formIsInvalid: false,
+                                        validateDates(){
+                                            if (this.plan_start_date && this.plan_end_date) {
+                                                this.datesAreInvalid = new Date(this.plan_end_date) < new Date(this.plan_start_date);
+                                            } else {
+                                                this.datesAreInvalid = false;
+                                            }
+                                            this.updateFormValidity();
+                                        },
+                                        updateFormValidity() {
+                                            this.formIsInvalid = !this.plan_start_date || !this.plan_end_date || !this.plan_desc || this.datesAreInvalid || fileSizeError || docTypeError;
+                                        }
+                                    }"
+                                    x-init="updateFormValidity()"
+                                    >
                                     @csrf
                                     @method('PUT')
                                     @include('detail.form-rencana', ['plan' => $plan])
@@ -401,8 +422,8 @@
                                             Batal
                                         </button>
                                         <button type="submit"
-                                            :disabled="fileSizeError || docTypeError"
-                                            :class="(fileSizeError || docTypeError) ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'"
+                                            :disabled="formIsInvalid"
+                                            :class="formIsInvalid ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-800 hover:bg-blue-700'"
                                             class="text-xs sm:text-sm bg-blue-800 hover:bg-blue-700 text-white px-3 py-1 rounded">
                                             Simpan
                                         </button>
