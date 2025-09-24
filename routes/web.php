@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
@@ -11,12 +12,10 @@ use App\Http\Controllers\PublicationController;
 //     return view('/tampilan/homeketua');
 // })->middleware('auth');
 
-// Route::get('/', 
-//     [HomeController::class, 'index']
-// )->name('home');
+Route::get('/', 
+    [HomeController::class, 'index'])->name('home');
 
 Route::get('/', [PublicationController::class, 'index'])->name('daftarpublikasi');
-
 
 
 Route::get('/laporan', function () {
@@ -81,3 +80,9 @@ Route::get('/publications/{publication}/steps', [StepsPlanController::class, 'in
 
 // simpan step baru
 Route::post('/publications/{publication}/steps', [StepsPlanController::class, 'store'])->name('steps.store');
+
+// admin route
+Route::get('/admin', [AdminController::class, 'index'])->name('adminpage');
+Route::get('/admin/search', [AdminController::class, 'search'])->name('admin.search');
+Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store');
+Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
