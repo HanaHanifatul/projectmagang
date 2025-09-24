@@ -61,19 +61,19 @@
                                 @click.away="open = false"
                                 x-transition
                                 class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5">
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your profile</a>
-                                <a href="#" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</a>
-                                @if(Auth::check() && Auth::user()->role == 'admin')
-                                @csrf
-                                    <a href="/admin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Admin Page</a>
+                                @if(Auth::check() && Auth::user()->role !== 'admin')
+                                    <a href="{{ route('password.change') }}" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Ubah Password</a>
+                                @endif
+                                @if(Auth::check() && Auth::user()->role === 'admin')
+                                    <a href="/admin" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Halaman Admin</a>
                                 @endif
                                 @guest
-                                    <a href="/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Login</a>    
+                                    <a href="/login" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Masuk</a>    
                                 @endguest
                                 @auth
                                     <form action="{{ route('logout') }}" method="POST" class="border-t">
                                         @csrf
-                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                                        <button type="submit" class="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Keluar</button>
                                     </form>
                                 @endauth    
                             </div>

@@ -69,7 +69,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="block text-sm font-medium text-gray-700">Email</label>
-                            <input type="email" name="email" class="w-full border rounded px-3 py-2 mt-1">
+                            <input type="text" name="email" class="w-full border rounded px-3 py-2 mt-1">
                         </div>
                         <div class="mb-3">
                             <label class="block text-sm font-medium text-gray-700">Role</label>

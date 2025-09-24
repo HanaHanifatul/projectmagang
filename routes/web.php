@@ -86,3 +86,7 @@ Route::get('/admin', [AdminController::class, 'index'])->name('adminpage');
 Route::get('/admin/search', [AdminController::class, 'search'])->name('admin.search');
 Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store');
 Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
+
+// ubah sandi
+Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('password.change');
+Route::post('/change-password', [AuthController::class, 'updatePassword'])->name('password.update');
