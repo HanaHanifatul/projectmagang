@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\StepsFinalController;
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StepsPlanController;
+use App\Http\Controllers\StepsFinalController;
 use App\Http\Controllers\PublicationController;
+use App\Http\Controllers\PublicationExportController;
 
 // Route::get('/', function () {
 //     return view('/tampilan/homeketua');
@@ -90,3 +91,8 @@ Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.d
 // ubah sandi
 Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('password.change');
 Route::post('/change-password', [AuthController::class, 'updatePassword'])->name('password.update');
+
+// export
+Route::get('/export/publication/{id}', [
+    PublicationExportController::class, 'export'
+])->name('publication.export');
