@@ -1,5 +1,6 @@
 <!-- Form Button Edit Rencana -->
 <div>
+    <input type="hidden" name="edit_type" value="simple">
     <!-- Tanggal -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>

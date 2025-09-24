@@ -99,6 +99,53 @@ class StepsPlanController extends Controller
         return redirect()->back()->with('success', 'Rencana berhasil diperbarui.');
     }
 
+
+    // public function update(Request $request, StepsPlan $plan)
+    // {
+    //     if ($request->input('edit_type') === 'full') {
+    //         // validasi form rencana lengkap
+    //         $existingPlanDoc = $plan->plan_doc;
+    //         $fileValidation = $existingPlanDoc ? 'nullable|file|mimes:pdf,jpg,png,jpeg,docx|max:2048'
+    //                                         : 'required|file|mimes:pdf,jpg,png,jpeg,docx|max:2048';
+
+    //         $validated = $request->validate([
+    //             'plan_type' => 'required|string',
+    //             'plan_name' => 'required|string|max:256',
+    //             'plan_start_date' => 'required|date',
+    //             'plan_end_date'   => 'required|date|after_or_equal:plan_start_date',
+    //             'plan_desc'       => 'nullable|string',
+    //             'plan_doc'        => $fileValidation,
+    //         ]);
+
+    //         if ($request->hasFile('plan_doc')) {
+    //             if ($existingPlanDoc) {
+    //                 \Storage::disk('public')->delete($existingPlanDoc);
+    //             }
+    //             $validated['plan_doc'] = $request->file('plan_doc')->store('documents', 'public');
+    //         } else {
+    //             $validated['plan_doc'] = $existingPlanDoc;
+    //         }
+
+    //     } else {
+    //         // validasi edit tahapan sederhana
+    //         $validated = $request->validate([
+    //             'plan_type' => 'required|string',
+    //             'plan_name' => 'required|string|max:256',
+    //         ]);
+
+    //         // field lain tetap null kalau memang tidak diisi
+    //         $validated['plan_start_date'] = null;
+    //         $validated['plan_end_date']   = null;
+    //         $validated['plan_desc']       = null;
+    //         $validated['plan_doc']        = null;
+    //     }
+
+    //     $plan->update($validated);
+
+    //     return redirect()->back()->with('success', 'Rencana berhasil diperbarui.');
+    // }
+
+
     // Untuk menghapus tahapan
     public function destroy(StepsPlan $plan){
         //Hapus data

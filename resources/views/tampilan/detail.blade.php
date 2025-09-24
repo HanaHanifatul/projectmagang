@@ -208,34 +208,34 @@
                     } --}}
 
                    // Logika validasi form utama
-        updateFormValidity() {
-            let isDocMissing = false;
-            let isAnyStruggleEmpty = false;
+                    updateFormValidity() {
+                        let isDocMissing = false;
+                        let isAnyStruggleEmpty = false;
 
-            if (this.tab === 'rencana') {
-                isDocMissing = !this.hasPlanDoc && !this.fileSizeError && !this.docTypeError;
-                this.formIsInvalid = !this.plan_start_date || !this.plan_end_date || !this.plan_desc.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isDocMissing;
-            } else if (this.tab === 'realisasi') {
-                isDocMissing = !this.hasFinalDoc && !this.fileSizeError && !this.docTypeError;
-                // Logika struggle bisa ditambahkan di sini jika Anda ingin validasi sisi klien
-                this.formIsInvalid = !this.actual_started || !this.actual_ended || !this.final_desc.trim() || !this.next_step.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isDocMissing || isAnyStruggleEmpty;
-            }
-        },
-        
-        handleFileChange(event, hasExistingDocVariable) {
-            if (event.target.files.length > 0) {
-                this.fileSizeError = event.target.files[0].size > 2097152;
-                this.docTypeError = !this.allowedTypes.includes(event.target.files[0].type);
-                // Tambahkan logika untuk memperbarui hasDocVariable
-                this[hasExistingDocVariable] = true;
-            } else {
-                this.fileSizeError = false;
-                this.docTypeError = false;
-                // Atur kembali hasDocVariable jika file tidak dipilih
-                this[hasExistingDocVariable] = false;
-            }
-            this.updateFormValidity();
-        },
+                        if (this.tab === 'rencana') {
+                            isDocMissing = !this.hasPlanDoc && !this.fileSizeError && !this.docTypeError;
+                            this.formIsInvalid = !this.plan_start_date || !this.plan_end_date || !this.plan_desc.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isDocMissing;
+                        } else if (this.tab === 'realisasi') {
+                            isDocMissing = !this.hasFinalDoc && !this.fileSizeError && !this.docTypeError;
+                            // Logika struggle bisa ditambahkan di sini jika Anda ingin validasi sisi klien
+                            this.formIsInvalid = !this.actual_started || !this.actual_ended || !this.final_desc.trim() || !this.next_step.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isDocMissing || isAnyStruggleEmpty;
+                        }
+                    },
+                    
+                    handleFileChange(event, hasExistingDocVariable) {
+                        if (event.target.files.length > 0) {
+                            this.fileSizeError = event.target.files[0].size > 2097152;
+                            this.docTypeError = !this.allowedTypes.includes(event.target.files[0].type);
+                            // Tambahkan logika untuk memperbarui hasDocVariable
+                            this[hasExistingDocVariable] = true;
+                        } else {
+                            this.fileSizeError = false;
+                            this.docTypeError = false;
+                            // Atur kembali hasDocVariable jika file tidak dipilih
+                            this[hasExistingDocVariable] = false;
+                        }
+                        this.updateFormValidity();
+                    },
 
                     }" x-init="updateFormValidity()" class="bg-white rounded-xl shadow p-6 border">
                         <!-- Header Card (selalu ada) -->
@@ -269,13 +269,60 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- icon ceklis -->
-                            <div class="text-green-700">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5">
-                                    <path fill-rule="evenodd"
-                                        d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z"
-                                        clip-rule="evenodd" />
-                                </svg>
+                            <!-- Modal Edit Tahapan -->
+                            <div x-data="{ open: false }">
+                                <button 
+                                    @click="open = true"
+                                    class="text-xs sm:text-sm flex gap-1 px-4 py-2 rounded-lg bg-gray-200 text-gray-700 hover:bg-emerald-600 hover:text-white">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                        <path fill-rule="evenodd" d="M11.013 2.513a1.75 1.75 0 0 1 2.475 2.474L6.226 12.25a2.751 2.751 0 0 1-.892.596l-2.047.848a.75.75 0 0 1-.98-.98l.848-2.047a2.75 2.75 0 0 1 .596-.892l7.262-7.261Z" clip-rule="evenodd" />
+                                    </svg>
+                                    Edit
+                                </button>
+                                <div x-show="open" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+                                        <h2 class="text-lg font-semibold">Edit Tahapan</h2>
+                                        <p class="text-sm text-gray-500 mb-2">Mengedit tahapan publikasi/laporan</p>
+                                        <form action="{{ route('plans.update', $plan->step_plan_id) }}" method="POST">
+                                            @csrf
+                                            @method('PUT')
+                                            <!-- Jenis Tahapan -->
+                                            <div class="mb-3">
+                                                <label class="block text-sm font-medium text-gray-700">Jenis Tahapan</label>
+                                                <select name="plan_type" required
+                                                    class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
+                                                    <option value="">-- Pilih Jenis Tahapan --</option>
+                                                    {{-- Menandai opsi yang dipilih --}}
+                                                    <option value="persiapan" @if(old('plan_type', $plan->plan_type) == 'persiapan') selected @endif>Persiapan</option>
+                                                    <option value="pengumpulan data" @if(old('plan_type', $plan->plan_type) == 'pengumpulan data') selected @endif>Pengumpulan Data</option>
+                                                    <option value="pengolahan data" @if(old('plan_type', $plan->plan_type) == 'pengolahan data') selected @endif>Pengolahan Data</option>
+                                                    <option value="analisis data" @if(old('plan_type', $plan->plan_type) == 'analisis data') selected @endif>Analisis Data</option>
+                                                    <option value="diseminasi" @if(old('plan_type', $plan->plan_type) == 'diseminasi') selected @endif>Diseminasi</option>
+                                                </select>
+                                            </div>
+
+                                            <!-- Nama Tahapan -->
+                                            <div class="mb-3">
+                                                <label class="block text-sm font-medium text-gray-700">Nama Tahapan</label>
+                                                <input type="text" name="plan_name" value="{{ old('plan_name', $plan->plan_name) }}" required
+                                                    class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                                    placeholder="Contoh: Perekrutan Anggota Pelatihan Anggota">
+                                            </div>
+
+                                            <!-- Tombol Simpan -->
+                                            <div class="flex justify-end mt-4 gap-2">
+                                                <button type="button" @click="open = false" 
+                                                    class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
+                                                    Batal
+                                                </button>
+                                                <button type="submit" 
+                                                    class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
+                                                    Simpan
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     
