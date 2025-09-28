@@ -165,7 +165,7 @@
                 <tbody id="publication-table-body">
                     <!-- Isi Tabel -->
                     @if($publications->count())
-                    @foreach($publications as $index => $publication)
+                     @foreach($publications as $index => $publication)
                     <tr>
                         <!-- No -->
                         <td class="px-4 py-4 align-top">{{ $index + 1 }}</td>
@@ -177,7 +177,7 @@
                         <td class="px-4 py-4 align-top font-semibold text-gray-700">{{ $publication->publication_pic }}</td>
                         <!-- Tahapan -->
                         <td class="px-4 py-4 align-top">
-                            <div class="text-sm font-medium text-gray-700"> {{ array_sum($publication->rekapPlans) }}/{{ array_sum($publication->rekapFinals) }} Tahapan</div>
+                            <div class="text-sm font-medium text-gray-700"> {{ array_sum($publication->rekapFinals) }}/{{ array_sum($publication->rekapPlans) }} Tahapan</div>
                             <div class="flex items-center gap-2 mt-1">
                             <span class="px-2 py-0.5 text-xs bg-gray-100 border rounded-full">{{ $publication->progressKumulatif }}% selesai</span>
                             </div>
@@ -201,8 +201,12 @@
                          <!-- Rencana Triwulan II -->
                         <td class="px-4 py-4 text-center">
                             @if(($publication->rekapPlans[2] ?? 0) > 0)
-                                <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block"> {{ $publication->rekapPlans[2] }} Rencana </div>
-                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
+                                <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">
+                                    {{ $publication->rekapPlans[2] }} Rencana
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    {{ number_format($publication->progressTriwulan[2] ?? 0, 0) }}% selesai
+                                </p>
                             @else
                                 <div class="px-3 py-1 text-black inline-block"> - </div>
                                 <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
@@ -211,8 +215,12 @@
                          <!-- Rencana Triwulan III -->
                         <td class="px-4 py-4 text-center">
                             @if(($publication->rekapPlans[3] ?? 0) > 0)
-                                <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block"> {{ $publication->rekapPlans[3] }} Rencana </div>
-                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
+                                <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">
+                                    {{ $publication->rekapPlans[3] }} Rencana
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    {{ number_format($publication->progressTriwulan[3] ?? 0, 0) }}% selesai
+                                </p>
                             @else
                                 <div class="px-3 py-1 text-black inline-block"> - </div>
                                 <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
@@ -221,8 +229,12 @@
                          <!-- Rencana Triwulan IV -->
                         <td class="px-4 py-4 text-center">
                             @if(($publication->rekapPlans[4] ?? 0) > 0)
-                                <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block"> {{ $publication->rekapPlans[4] }} Rencana </div>
-                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
+                               <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">
+                                    {{ $publication->rekapPlans[4] }} Rencana
+                                </div>
+                                <p class="text-xs text-gray-500 mt-1">
+                                    {{ number_format($publication->progressTriwulan[4] ?? 0, 0) }}% selesai
+                                </p>
                             @else
                                <div class="px-3 py-1 text-black inline-block"> - </div>
                                 <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
@@ -237,11 +249,11 @@
                                     <p class="text-xs text-orange-500 mt-1">
                                         +{{ $publication->lintasTriwulan }} lintas triwulan
                                     </p>
+                                @else
+                                    <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[1] }} Selesai </div>
                                 @endif
-                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
                             @else
                                 <div class="px-3 py-1 text-black inline-block"> - </div>
-                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
                             @endif
                         </td>
                          <!-- Realisasi Triwulan II -->
@@ -252,11 +264,11 @@
                                     <p class="text-xs text-orange-500 mt-1">
                                         +{{ $publication->lintasTriwulan }} lintas triwulan
                                     </p>
+                                @else
+                                    <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[2] }} Selesai </div>
                                 @endif
-                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
                             @else
                                 <div class="px-3 py-1 text-black inline-block"> - </div>
-                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
                             @endif
                         </td>
                          <!-- Realisasi Triwulan III -->
@@ -267,11 +279,11 @@
                                     <p class="text-xs text-orange-500 mt-1">
                                         +{{ $publication->lintasTriwulan }} lintas triwulan
                                     </p>
+                                @else
+                                    <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[3] }} Selesai </div>
                                 @endif
-                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
                             @else
                                 <div class="px-3 py-1 text-black inline-block"> - </div>
-                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
                             @endif
                         </td>
                         <!-- Realisasi Triwulan IV -->
@@ -282,50 +294,66 @@
                                     <p class="text-xs text-orange-500 mt-1">
                                         +{{ $publication->lintasTriwulan }} lintas triwulan
                                     </p>
+                                @else
+                                    <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[4] }} Selesai </div>
                                 @endif
-                                <p class="text-xs text-gray-500 mt-1">100% selesai</p>
                             @else
                                 <div class="px-3 py-1 text-black inline-block"> - </div>
-                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>
                             @endif
                         </td>
                         <!-- Aksi -->
-                        <td class="px-4 py-4 text-center relative" x-data="{ open: false}">
-                            {{-- tombol trigger --}}
-                            <button 
-                                @click="open = !open"
-                                {{-- icon --}}
-                                class="p-2 rounded-xl hover:bg-emerald-600 hover:text-white focus:outline-none">
+                        <td class="px-4 py-4 text-center">
+                            <!-- Tombol Detail -->
+                            <a href="{{ route('steps.index', $publication->publication_id) }}" 
+                            class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                    <path d="M2 8a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM6.5 8a1.5 1.5 0 1 1 3 0 1.5 1.5 0 0 1-3 0ZM12.5 6.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3Z" />
+                                    <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+                                    <path fill-rule="evenodd" d="M1.38 8.28a.87.87 0 0 1 0-.566 7.003 7.003 0 0 1 13.238.006.87.87 0 0 1 0 .566A7.003 7.003 0 0 1 1.379 8.28ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clip-rule="evenodd" />
                                 </svg>
-                            </button>
-                            {{-- Dropdown menu --}}
-                            <div
-                                x-show="open"
-                                @click.outside= "open=false"
-                                class="absolute right-0 mt-2 w-32 bg-white border rounded-lg shadow-lg z-10">
-                                <a href="{{ route('steps.index', $publication->publication_id) }}" class="flex gap-1 sm:text-xs w-full text-left px-4 py-2 text-sm text-black hover:bg-emerald-600 hover:text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
-                                        <path fill-rule="evenodd" d="M1.38 8.28a.87.87 0 0 1 0-.566 7.003 7.003 0 0 1 13.238.006.87.87 0 0 1 0 .566A7.003 7.003 0 0 1 1.379 8.28ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clip-rule="evenodd" />
+                                Detail
+                            </a>
+
+                            @if(auth()->check() && auth()->user()->role === 'ketua_tim')
+                                <div x-data="{
+                                    open: false, 
+                                    editOpen: false, 
+                                    editId: null, 
+                                    editReport: '', 
+                                    editReportOther: '', 
+                                    editOther: false, 
+                                    editName: '', 
+                                    editPic: '' 
+                                }">
+
+                                <!-- Tombol Edit -->
+                                <button onclick="openEditModal({{ $publication->publication_id }}, '{{ $publication->publication_report }}', '{{ $publication->publication_name }}', '{{ $publication->publication_pic }}')"
+                                    class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-lg mb-1">
+                                    <!-- Ikon Pensil -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                        fill="none" viewBox="0 0 24 24" stroke-width="1.5" 
+                                        stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" 
+                                            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13l-3.247.974.974-3.247a4.5 4.5 0 011.13-1.897l10.32-10.32z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" 
+                                            d="M19.5 7.125L16.875 4.5" />
                                     </svg>
-                                    Detail
-                                </a>
-                                @if(auth()->check() && auth()->user()->role === 'ketua_tim')
-                                    <form action="{{ route('publications.destroy', $publication) }}" method="POST" onsubmit="return confirm('Yakin hapus publikasi ini?')">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="flex gap-1 sm:text-xs w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-600 hover:text-white">
-                                            {{-- icon --}}
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                                <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
-                                            </svg>
-                                            Hapus
-                                        </button>
-                                    </form>
-                                @endif
-                            </div>
+                                    Edit
+                                </button>                              
+
+                                <!-- Tombol Hapus -->
+                                <form action="{{ route('publications.destroy', $publication) }}" method="POST" 
+                                    onsubmit="return confirm('Yakin hapus publikasi ini?')">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" 
+                                        class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-red-600 hover:bg-red-700 rounded-lg mb-1">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                            <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd"/>
+                                        </svg>
+                                        Hapus
+                                    </button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                     @endforeach
@@ -336,7 +364,95 @@
                     @endif
                 </tbody>
             </table>
-        </div>
+            
+           <!-- Modal Edit Global -->
+            <div id="editModal" 
+                class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+
+            <div class="bg-white rounded-xl shadow-lg w-full max-w-lg p-6 relative" 
+                x-data="{ editReport: '', editOther: false, editReportOther: '' }">
+
+                <!-- Tombol close -->
+                <button type="button" onclick="closeEditModal()" 
+                        class="absolute top-2 right-2 text-gray-500 hover:text-gray-700">
+                ✖
+                </button>
+
+                <h2 class="text-lg font-semibold mb-4">Edit Publikasi</h2>
+
+                <form id="editForm" method="POST">
+                @csrf
+                @method('PUT')
+
+                <!-- Nama Laporan -->
+                <div class="mb-3">
+                    <label class="block text-sm font-medium text-gray-700">Nama Laporan/Publikasi</label>
+                    <select id="edit_publication_report" name="publication_report" 
+                            x-model="editReport"
+                            @change="editReport === 'other' ? editOther = true : editOther = false"
+                            class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm 
+                                focus:border-emerald-500 focus:ring-emerald-500 text-sm">
+
+                    <option value="">-- Pilih Nama Laporan --</option>
+                    <option value="Laporan Statistik Kependudukan dan Ketenagakerjaan">Laporan Statistik Kependudukan dan Ketenagakerjaan</option>
+                    <option value="Laporan Statistik Statistik Kesejahteraan Rakyat">Laporan Statistik Statistik Kesejahteraan Rakyat</option>
+                    <option value="Laporan Statistik Ketahanan Sosial">Laporan Statistik Ketahanan Sosial</option>
+                    <option value="Laporan Statistik Tanaman Pangan">Laporan Statistik Tanaman Pangan</option>
+                    <option value="Laporan Statistik Peternakan, Perikanan, dan Kehutanan">Laporan Statistik Peternakan, Perikanan, dan Kehutanan</option>
+                    <option value="Laporan Statistik Industri">Laporan Statistik Industri</option>
+                    <option value="Laporan Statistik Distribusi">Laporan Statistik Distribusi</option>
+                    <option value="Laporan Statistik Harga">Laporan Statistik Harga</option>
+                    <option value="Laporan Statistik Keuangan, Teknologi Informasi, dan Pariwisata">Laporan Statistik Keuangan, Teknologi Informasi, dan Pariwisata</option>
+                    <option value="Laporan Neraca Produksi">Laporan Neraca Produksi</option>
+                    <option value="Laporan Neraca Pengeluaran">Laporan Neraca Pengeluaran</option>
+                    <option value="Laporan Analisis dan Pengembangan Statistik">Laporan Analisis dan Pengembangan Statistik</option>
+                    <option value="Tingkat Penyelenggaraan Pembinaan Statistik Sektoral sesuai Standar">Tingkat Penyelenggaraan Pembinaan Statistik Sektoral sesuai Standar</option>
+                    <option value="Indeks Pelayanan Publik - Penilaian Mandiri">Indeks Pelayanan Publik - Penilaian Mandiri</option>
+                    <option value="Nilai SAKIP oleh Inspektorat">Nilai SAKIP oleh Inspektorat</option>
+                    <option value="Indeks Implementasi BerAKHLAK">Indeks Implementasi BerAKHLAK</option>
+                    <option value="other"> -- Tambahkan Lainnya -- </option>
+                    </select>
+                </div>
+
+                <!-- Input tambahan jika pilih "other" -->
+                <div class="mb-3" x-show="editOther" x-transition>
+                    <label class="block text-sm font-medium text-gray-700">Nama Laporan Lainnya</label>
+                    <input type="text" name="publication_report_other" 
+                        x-model="editReportOther"
+                        class="w-full border rounded-lg px-3 py-2 mt-1 
+                                focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        placeholder="Tulis nama laporan lain di sini...">
+                </div>
+
+                <!-- Nama Kegiatan -->
+                <div class="mb-3">
+                    <label class="block text-sm font-medium">Nama Kegiatan</label>
+                    <input type="text" id="edit_name" name="publication_name" 
+                        class="w-full border rounded-lg p-2">
+                </div>
+
+                <!-- PIC -->
+                <div class="mb-3">
+                    <label class="block text-sm font-medium">PIC</label>
+                    <select id="edit_pic" name="publication_pic" 
+                            class="w-full border rounded-lg p-2">
+                    <option value="Umum">Tim Umum</option>
+                    <option value="Produksi">Tim Produksi</option>
+                    <option value="Distribusi">Tim Distribusi</option>
+                    <option value="Neraca">Tim Neraca</option>
+                    <option value="Sosial">Tim Sosial</option>
+                    <option value="IPDS">Tim IPDS</option>
+                    </select>
+                </div>
+
+                <button type="submit" 
+                        class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg mt-3">
+                    Update
+                </button>
+                </form>
+            </div>
+            </div>
+
     </div>
 </div>
 
@@ -356,46 +472,219 @@
     });
 </script>
 
-<!-- skrip ajak fitur search -->
+
+<!-- skrip ajax fitur search -->
 <script>
-document.addEventListener("DOMContentLoaded", function () {
-    const searchInput = document.getElementById("search");
-    const tbody = document.querySelector("table tbody");
+window.userRole = "{{ auth()->check() ? auth()->user()->role : '' }}"; //ambil role
 
-    searchInput.addEventListener("keyup", function () {
-        const query = this.value;
+function openEditModal(id, report, name, pic) {
+    let modal = document.getElementById('editModal');
+    modal.classList.remove('hidden');
+    modal.classList.add('flex'); // biar pakai flex (center)
 
-        fetch(`{{ route('publications.search') }}?query=${query}`)
-           .then(response => response.json())
-.then(data => {
-    tbody.innerHTML = "";
+    // isi field non-alpine
+    document.getElementById('edit_name').value = name;
+    document.getElementById('edit_pic').value = pic;
 
-    if (data.length > 0) {
-        data.forEach((item, index) => {
-            tbody.innerHTML += `
+    // update action form
+    document.getElementById('editForm').action = `/publications/${id}`;
+
+    // isi alpine variable untuk select laporan
+    let alpineComp = Alpine.$data(document.querySelector('#editModal .bg-white'));
+    alpineComp.editReport = report;
+    alpineComp.editOther = (report === 'other');
+    alpineComp.editReportOther = (report !== 'other') ? '' : '';
+}
+
+function closeEditModal() {
+    let modal = document.getElementById('editModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+}
+
+
+document.getElementById('search').addEventListener('keyup', function() {
+    let query = this.value;
+    let tbody = document.getElementById('publication-table-body');
+
+    fetch(`/publications/search?query=${query}`)
+        .then(res => res.json())
+        .then(data => {
+            // kalau kosong, tampilkan pesan
+            if (data.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="14" class="text-center text-gray-500 py-4">
+                            Tidak ada data ditemukan
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            // isi tabel dengan data JSON
+            tbody.innerHTML = data.map((item, index) => `
                 <tr>
-                    <td class="px-4 py-4">${index + 1}</td>
-                    <td class="px-4 py-4">${item.publication_report}</td>
-                    <td class="px-4 py-4">${item.publication_name}</td>
-                    <td class="px-4 py-4">${item.publication_pic}</td>
-                    <td class="px-4 py-4">-</td>
-                </tr>
-            `;
-        });
-    } else {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="14" class="text-center text-gray-500 py-4">
-                    Tidak ada data ditemukan
-                </td>
-            </tr>
-        `;
-    }
-})
+                    <!-- No -->
+                    <td class="px-4 py-4 align-top">${index + 1}</td>
 
-            .catch(err => console.error(err));
-    });
+                    <!-- Nama Publikasi -->
+                    <td class="px-4 py-4 align-top font-semibold text-gray-700">${item.publication_report}</td>
+
+                    <!-- Nama Kegiatan -->
+                    <td class="px-4 py-4 align-top font-semibold text-gray-700">${item.publication_name}</td>
+
+                    <!-- PIC -->
+                    <td class="px-4 py-4 align-top font-semibold text-gray-700">${item.publication_pic}</td>
+
+                    <!-- Tahapan -->
+                    <td class="px-4 py-4 align-top">
+                        <div class="text-sm font-medium text-gray-700">
+                            ${(Object.values(item.rekapFinals ?? {}).reduce((a,b)=>a+b,0))}/
+                            ${(Object.values(item.rekapPlans ?? {}).reduce((a,b)=>a+b,0))} Tahapan
+                        </div>
+                        <div class="flex items-center gap-2 mt-1">
+                            <span class="px-2 py-0.5 text-xs bg-gray-100 border rounded-full">
+                                ${Math.round(item.progressKumulatif ?? 0)}% selesai
+                            </span>
+                        </div>
+                    </td>
+
+                    <!-- Rencana Triwulan I -->
+                    <td class="px-4 py-4 text-center">
+                        ${(item.rekapPlans?.[1] ?? 0) > 0
+                            ? `<div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">${item.rekapPlans[1]} Rencana</div>
+                               <p class="text-xs text-gray-500 mt-1">${Math.round(item.progressTriwulan?.[1] ?? 0)}% selesai</p>`
+                            : `<div class="px-3 py-1 text-black inline-block"> - </div>
+                               <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>`
+                        }
+                    </td>
+
+                    <!-- Rencana Triwulan II -->
+                    <td class="px-4 py-4 text-center">
+                        ${(item.rekapPlans?.[2] ?? 0) > 0
+                            ? `<div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">${item.rekapPlans[2]} Rencana</div>
+                               <p class="text-xs text-gray-500 mt-1">${Math.round(item.progressTriwulan?.[2] ?? 0)}% selesai</p>`
+                            : `<div class="px-3 py-1 text-black inline-block"> - </div>
+                               <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>`
+                        }
+                    </td>
+
+                    <!-- Rencana Triwulan III -->
+                    <td class="px-4 py-4 text-center">
+                        ${(item.rekapPlans?.[3] ?? 0) > 0
+                            ? `<div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">${item.rekapPlans[3]} Rencana</div>
+                               <p class="text-xs text-gray-500 mt-1">${Math.round(item.progressTriwulan?.[3] ?? 0)}% selesai</p>`
+                            : `<div class="px-3 py-1 text-black inline-block"> - </div>
+                               <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>`
+                        }
+                    </td>
+
+                    <!-- Rencana Triwulan IV -->
+                    <td class="px-4 py-4 text-center">
+                        ${(item.rekapPlans?.[4] ?? 0) > 0
+                            ? `<div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">${item.rekapPlans[4]} Rencana</div>
+                               <p class="text-xs text-gray-500 mt-1">${Math.round(item.progressTriwulan?.[4] ?? 0)}% selesai</p>`
+                            : `<div class="px-3 py-1 text-black inline-block"> - </div>
+                               <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>`
+                        }
+                    </td>
+
+                    <!-- Realisasi Triwulan I -->
+                    <td class="px-4 py-4 text-center">
+                        ${(item.rekapFinals?.[1] ?? 0) > 0
+                            ? `<div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">${item.rekapFinals[1]} Selesai</div>`
+                            : `<div class="px-3 py-1 text-black inline-block"> - </div>`
+                        }
+                    </td>
+
+                    <!-- Realisasi Triwulan II -->
+                    <td class="px-4 py-4 text-center">
+                        ${(item.rekapFinals?.[2] ?? 0) > 0
+                            ? `<div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">${item.rekapFinals[2]} Selesai</div>`
+                            : `<div class="px-3 py-1 text-black inline-block"> - </div>`
+                        }
+                    </td>
+
+                    <!-- Realisasi Triwulan III -->
+                    <td class="px-4 py-4 text-center">
+                        ${(item.rekapFinals?.[3] ?? 0) > 0
+                            ? `<div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">${item.rekapFinals[3]} Selesai</div>`
+                            : `<div class="px-3 py-1 text-black inline-block"> - </div>`
+                        }
+                    </td>
+
+                    <!-- Realisasi Triwulan IV -->
+                    <td class="px-4 py-4 text-center">
+                        ${(item.rekapFinals?.[4] ?? 0) > 0
+                            ? `<div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">${item.rekapFinals[4]} Selesai</div>`
+                            : `<div class="px-3 py-1 text-black inline-block"> - </div>`
+                        }
+                    </td>
+
+                    <td class="px-4 py-4 text-center">
+                        ${(() => {
+                            let html = `
+                                <!-- Tombol Detail -->
+                                <a href="/tahapan/${item.publication_id}" 
+                                class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg mb-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
+                                        <path fill-rule="evenodd" d="M1.38 8.28a.87.87 0 0 1 0-.566 7.003 7.003 0 0 1 13.238.006.87.87 0 0 1 0 .566A7.003 7.003 0 0 1 1.379 8.28ZM11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" clip-rule="evenodd" />
+                                    </svg>
+                                    Detail
+                                </a>
+                            `;
+
+                            // Tambahkan tombol hapus hanya jika role = ketua_tim
+                            if (window.userRole === "ketua_tim") {
+                                html += `
+                                <button onclick="openEditModal(${item.publication_id}, '${item.publication_report}', '${item.publication_name}', '${item.publication_pic}')"
+                                    class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-lg mb-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" 
+                                        fill="none" viewBox="0 0 24 24" stroke-width="1.5" 
+                                        stroke="currentColor" class="w-4 h-4">
+                                        <path stroke-linecap="round" stroke-linejoin="round" 
+                                            d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13l-3.247.974.974-3.247a4.5 4.5 0 011.13-1.897l10.32-10.32z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" 
+                                            d="M19.5 7.125L16.875 4.5" />
+                                    </svg>
+                                    Edit
+                                </button>
+                                <button onclick="deletePublication(${item.publication_id})"
+                                    class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-red-600 hover:bg-red-700 rounded-lg mb-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                        <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd"/>
+                                    </svg>
+                                    Hapus
+                                </button>
+                                `;
+                            }
+
+                            return html;
+                        })()}
+                    </td>
+                </tr>
+            `).join('');
+        });
 });
+
+function deletePublication(id) {
+    if (!confirm("Yakin ingin menghapus publikasi ini?")) return;
+
+    fetch(`/publications/${id}`, {
+        method: 'DELETE',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+        }
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message || "Berhasil dihapus");
+        location.reload(); // reload tabel setelah hapus
+    })
+    .catch(err => console.error(err));
+}
 </script>
 
 

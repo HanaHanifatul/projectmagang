@@ -39,9 +39,10 @@
                     <div>
                         <h1 class="text-2xl font-bold mb-2">{{ $publication->publication_report }}</h1>
                         <p class="text-xs sm:text-sm text-gray-600 mb-2">{{ $publication->publication_name }}</p>
+                        <p class="text-xs sm:text-sm text-gray-600 mb-2">{{ $publication->publication_pic }}</p>
                     </div>
                     <div class="text-right">
-                        <p class="text-2xl font-semibold text-blue-800">83%</p>
+                        <p class="text-2xl font-semibold text-blue-800">{{ $publication->progressKumulatif }}%</p>
                         <p class="text-xs sm:text-sm text-blue-800">Progress Keseluruhan</p>
                     </div>
                 </div>

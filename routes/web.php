@@ -27,6 +27,9 @@ Route::get('/laporan', function () {
 //     return view('/tampilan/detail');
 // });
 
+Route::get('/tahapan/{publication}', [StepsPlanController::class, 'index'])
+    ->name('plans.index');
+
 // Tampilkan halaman detail
 Route::get('/detail/{publication_id}', [
     StepsPlanController::class, 'index'])
@@ -70,7 +73,7 @@ Route::post('/logout', [
 
 // route untuk search
 Route::get('/publications/search', [PublicationController::class, 'search'])->name('publications.search');
-
+// Menampilkan daftar steps berdasarkan publication_id
 Route::resource('publications', PublicationController::class);
 
 

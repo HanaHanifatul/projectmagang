@@ -34,6 +34,38 @@ class StepsPlanController extends Controller
 
         $publication = Publication::findOrFail($publication_id);
 
+        $rekapPlans = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+        $rekapFinals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+        $progressKumulatif = 0;
+        $lintasTriwulan = 0;
+        
+         foreach ($publication->stepsPlans as $plan) {
+                // hitung berdasarkan tanggal rencana
+                $q = getQuarter($plan->plan_start_date);
+                if ($q) $rekapPlans[$q]++;
+
+                // kalau sudah ada realisasi, hitung juga
+                if ($plan->stepsFinals) {
+                    $fq = getQuarter($plan->stepsFinals->actual_started);
+                    if ($fq) $rekapFinals[$fq]++;
+
+                    // cek apakah realisasi lintas triwulan
+                    if ($fq && $q && $fq != $q) {
+                        $lintasTriwulan++;
+                    }
+                }
+            }
+
+            // hitung progress kumulatif
+            $totalPlans = array_sum($rekapPlans);
+            $totalFinals = array_sum($rekapFinals);
+            if ($totalPlans > 0) {
+                $progressKumulatif = ($totalFinals / $totalPlans) * 100;
+            } else {
+                $progressKumulatif = 0;
+            }
+        $publication->progressKumulatif = $progressKumulatif;
+        
         return view('tampilan.detail', compact('stepsplans', 'total_rencana', 'total_realisasi', 'publication_id', 'search', 'publication'));
     }
 

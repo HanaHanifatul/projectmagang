@@ -45,20 +45,3 @@
         <p class="text-xs text-gray-400">Tingkat penyelesaian</p>
     </div>
 </div>
-
-<div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <div class="p-4 border rounded text-center">
-        <p class="text-sm text-black-900">4 Total Tahapan Direncanakan</p>
-        <p class="text-xs text-gray-400">Q1 2024</p>
-    </div>
-    <div class="relative bg-green-100 p-4 border rounded text-center">
-        <p class="text-sm text-blue-900">Efektifitas Realisasi: 100%</p>
-        <p class="text-xs text-gray-400">4 dari 4 tahapan selesai</p>
-    </div>
-</div>
-
-<div class="mt-4 text-center">
-    <span class="px-3 py-1 rounded-full bg-gray-100 text-sm">
-        Data untuk Q1 2024 - Fokus Tahapan
-    </span>
-</div>
