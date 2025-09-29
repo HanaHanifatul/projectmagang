@@ -5,7 +5,6 @@ use Carbon\Carbon;
 if (! function_exists('getQuarter')) {
     function getQuarter($date) {
         if (!$date) return null;
-
         $month = Carbon::parse($date)->month;
 
         if ($month >= 1 && $month <= 3) return 1;   // Jan–Mar → Triwulan I
