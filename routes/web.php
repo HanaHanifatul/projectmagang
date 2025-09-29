@@ -41,6 +41,11 @@ Route::post('/tahapan/store', [
 ->name('tahapan.store');
 
 // Perbarui Rencana yang sudah ada (dari formulir "Edit Rencana")
+Route::put('/tahapan/{plan}/edit-stage', [
+    StepsPlanController::class, 'updateStage'
+])->name('plans.update_stage');
+
+// Perbarui Rencana yang sudah ada (dari formulir "Edit Rencana")
 Route::put('/plans/{plan}', [
     StepsPlanController::class, 'update'
 ])->name('plans.update');

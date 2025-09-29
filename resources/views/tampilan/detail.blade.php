@@ -283,7 +283,7 @@
                                     <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
                                         <h2 class="text-lg font-semibold">Edit Tahapan</h2>
                                         <p class="text-sm text-gray-500 mb-2">Mengedit tahapan publikasi/laporan</p>
-                                        <form action="{{ route('plans.update', $plan->step_plan_id) }}" method="POST">
+                                        <form action="{{ route('plans.update_stage', $plan->step_plan_id) }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <!-- Jenis Tahapan -->

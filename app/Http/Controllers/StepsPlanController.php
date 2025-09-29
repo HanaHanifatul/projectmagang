@@ -89,6 +89,24 @@ class StepsPlanController extends Controller
         return redirect()->back()->with('success', 'Tahapan berhasil ditambahkan.');
     }
 
+    // Fungsi untuk update tahapan
+    public function updateStage(Request $request, StepsPlan $plan){
+        // validasi input
+        $request->validate([
+            'plan_type' => 'required|string',
+            'plan_name' => 'required|string|max:256',
+        ]);
+
+        // perbarui data
+        $plan->update([
+            'plan_type' => $request->plan_type,
+            'plan_name' => $request->plan_name,
+        ]);
+
+        // Redirect pesan sukses
+        return redirect()->back()->with('success', 'Tahapan berhasil diperbarui.');
+    }
+
     // Perbarui data untuk formulir "Edit Rencana"
     public function update(Request $request, StepsPlan $plan){
         // dd($request->hasFile('plan_doc'));
@@ -130,6 +148,8 @@ class StepsPlanController extends Controller
         $plan->update($validated);
         return redirect()->back()->with('success', 'Rencana berhasil diperbarui.');
     }
+
+    
 
 
     // public function update(Request $request, StepsPlan $plan)
