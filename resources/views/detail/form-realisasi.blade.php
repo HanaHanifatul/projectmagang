@@ -27,7 +27,7 @@
 </div>
 
 <!-- Kendala (dinamis) -->
-    <div class="struggles-wrapper space-y-4" id="struggles-wrapper-{{ $plan->step_plan_id }}">
+    <div class="struggles-wrapper space-y-4" {{-- id="struggles-wrapper-{{ $plan->step_plan_id }}" --}}>
         @forelse($final->struggles as $i => $s)
             <div class="struggle-item border p-3 rounded-lg">
                 <input type="hidden" name="struggles[{{ $i }}][struggle_id]" value="{{ $s->id }}">
@@ -84,7 +84,7 @@
         @endforelse
     </div>
 
-    <button type="button" class="add-struggle-button mt-2 mb-3 bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-900" data-target-id="{{ $plan->step_plan_id }}" >+ Tambah Kendala</button>
+    <button type="button" class="add-struggle-button mt-2 mb-3 bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-900" {{-- data-target-id="{{ $plan->step_plan_id }}" --}} >+ Tambah Kendala</button>
     
 <!-- Tindak Lanjut Realisasi -->
 <div>
@@ -132,50 +132,4 @@
         </div>
     @endif
 </div>
-
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    // Ambil semua tombol dengan kelas '.add-struggle-button'
-    const addButtons = document.querySelectorAll('.add-struggle-button');
-
-    addButtons.forEach(button => {
-        button.addEventListener('click', function () {
-            // Temukan 'struggles-wrapper' yang terdekat dengan tombol yang diklik
-            const wrapper = this.parentNode.querySelector('.struggles-wrapper');
-            const struggleItems = wrapper.querySelectorAll('.struggle-item');
-            const struggleIndex = struggleItems.length;
-
-            const div = document.createElement('div');
-            div.classList.add('struggle-item', 'border', 'p-3', 'rounded-lg');
-            div.innerHTML = `
-                <input type="hidden" name="struggles[${struggleIndex}][struggle_id]" value="">
-                <div class="flex items-center justify-between mb-2">
-                    <span class="block text-lg font-medium text-gray-700">Kendala dan Solusi ${struggleIndex + 1}</span>
-                    <button type="button" class="delete-struggle-button text-xs sm:text-sm flex gap-1 px-3 py-1 rounded-lg bg-gray-200 text-red-500 hover:bg-red-600 hover:text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                            <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
-                </div>
-                <label class="block text-sm font-medium text-gray-700">Kendala</label>
-                <textarea name="struggles[${struggleIndex}][struggle_desc]" rows="2" required class="w-full border rounded px-3 py-2"></textarea>
-                <label class="block text-sm font-medium text-gray-700">Solusi</label>
-                <textarea name="struggles[${struggleIndex}][solution_desc]" rows="2" required class="w-full border rounded px-3 py-2"></textarea>
-                <label class="block text-sm font-medium text-gray-700">Bukti Solusi</label>
-                <input type="file" name="struggles[${struggleIndex}][solution_doc]" accept=".png,.jpg,.jpeg,.pdf"
-                class="w-full border rounded px-3 py-2 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-gray-600 file:text-white">
-            `;
-            wrapper.appendChild(div);
-        });
-    });
-
-    // Menggunakan delegasi event untuk tombol hapus
-    document.addEventListener('click', function(event) {
-        if (event.target.closest('.delete-struggle-button')) {
-            const struggleItem = event.target.closest('.struggle-item');
-            struggleItem.remove();
-        }
-    });
-});
-</script> --}}
 
