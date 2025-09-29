@@ -58,7 +58,7 @@
         @if ($plan->plan_doc)
             <div class="mt-2">
                 <p class="text-sm text-gray-500">Dokumen lama:</p>
-                <a href="{{ asset('storage/' . $plan->plan_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                <a href="{{ asset('storage/' . $plan->plan_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm break-all">
                     {{ $plan->plan_doc }}
                 </a>
             </div>

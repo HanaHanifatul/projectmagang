@@ -414,7 +414,7 @@
                                             <p class="text-sm">Kendala: {{ $s->struggle_desc }}</p>
                                             <p class="text-sm">Solusi: {{ $s->solution_desc }}</p>
                                             @if($s->solution_doc)
-                                                <a href="{{ asset('storage/'.$s->solution_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                                                <a href="{{ asset('storage/'.$s->solution_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm break-all">
                                                     📄 Bukti Solusi
                                                 </a>
                                             @endif
@@ -428,7 +428,7 @@
                                     <p class="text-sm text-gray-600">Bukti Pendukung Solusi</p>
                                     <div class="flex flex-col gap-1">
                                         @if (optional($final)->final_doc)
-                                            <a href="{{ Storage::url($final->final_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm">
+                                            <a href="{{ Storage::url($final->final_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm break-all">
                                                 📄 Dokumen Realisasi
                                             </a>
                                         @else

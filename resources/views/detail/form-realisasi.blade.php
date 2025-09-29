@@ -52,7 +52,7 @@
                     @if($s->solution_doc)
                         <input type="hidden" name="struggles[{{ $i }}][existing_solution_doc]" value="{{ $s->solution_doc }}">
                         <p class="text-sm mt-1">Dokumen lama: 
-                            <a href="{{ asset('storage/'.$s->solution_doc) }}" target="_blank" class="text-blue-600 underline">
+                            <a href="{{ asset('storage/'.$s->solution_doc) }}" target="_blank" class="text-blue-600 underline break-all">
                                 {{ $s->solution_doc }}
                             </a>
                         </p>
@@ -126,7 +126,7 @@
     @if (optional($final)->final_doc)
         <div class="mt-2">
             <p class="text-sm text-gray-500">Dokumen lama:</p>
-            <a href="{{ asset('storage/' . $final->final_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm">
+            <a href="{{ asset('storage/' . $final->final_doc) }}" target="_blank" class="text-blue-600 hover:underline text-sm break-all">
                 {{ optional($final)->final_doc ?? '' }}
             </a>
         </div>
