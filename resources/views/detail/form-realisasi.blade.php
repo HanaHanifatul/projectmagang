@@ -27,7 +27,7 @@
 </div>
 
 <!-- Kendala (dinamis) -->
-    <div class="struggles-wrapper space-y-4">
+    <div class="struggles-wrapper space-y-4" id="struggles-wrapper-{{ $plan->step_plan_id }}">
         @forelse($final->struggles as $i => $s)
             <div class="struggle-item border p-3 rounded-lg">
                 <input type="hidden" name="struggles[{{ $i }}][struggle_id]" value="{{ $s->id }}">
@@ -84,7 +84,7 @@
         @endforelse
     </div>
 
-    <button type="button" class="add-struggle-button mt-2 mb-3 bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-900">+ Tambah Kendala</button>
+    <button type="button" class="add-struggle-button mt-2 mb-3 bg-blue-800 text-white px-3 py-1 rounded hover:bg-blue-900" data-target-id="{{ $plan->step_plan_id }}" >+ Tambah Kendala</button>
     
 <!-- Tindak Lanjut Realisasi -->
 <div>
@@ -133,7 +133,7 @@
     @endif
 </div>
 
-<script>
+{{-- <script>
     document.addEventListener('DOMContentLoaded', function() {
     // Ambil semua tombol dengan kelas '.add-struggle-button'
     const addButtons = document.querySelectorAll('.add-struggle-button');
@@ -177,4 +177,5 @@
         }
     });
 });
-</script>
+</script> --}}
+
