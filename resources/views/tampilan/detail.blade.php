@@ -238,7 +238,7 @@
                         this.updateFormValidity();
                     },
 
-                    }" x-init="updateFormValidity()" class="bg-white rounded-xl shadow p-6 border">
+                    }" x-init="updateFormValidity()" class="bg-white rounded-xl shadow p-6 border mb-5">
                         <!-- Header Card (selalu ada) -->
                         <div class="flex items-center justify-between mb-4">
                             <!-- persiapan -->
