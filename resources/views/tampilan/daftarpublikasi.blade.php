@@ -132,33 +132,33 @@
     <div class="bg-white shadow rounded-lg overflow-hidden">
         <div class="overflow-x-auto">
             <table class="w-full text-sm border-collapse">
-                <thead class="bg-gray-100 text-gray-600 text-xs">
+                <thead class="bg-gray-100 text-gray-800 text-xs border-y">
                     <!-- Header Kolom -->
-                    <tr>
-                        <th class="px-3 py-2 border">No</th>
-                        <th class="px-3 py-2 border">Nama Publikasi/Laporan</th>
-                        <th class="px-3 py-2 border">Nama Kegiatan</th>
-                        <th class="px-3 py-2 border">PIC</th>
-                        <th class="px-3 py-2 border">Tahapan</th>
-                        <th class="px-3 py-2 border" colspan="4">Rencana Kegiatan</th>
-                        <th class="px-3 py-2 border" colspan="4">Realisasi Kegiatan</th>
-                        <th class="px-3 py-2 border">Aksi</th>
+                    <tr class="border-y">
+                        <th class="px-3 py-2">No</th>
+                        <th class="px-3 py-2">Nama Publikasi/Laporan</th>
+                        <th class="px-3 py-2">Nama Kegiatan</th>
+                        <th class="px-3 py-2">PIC</th>
+                        <th class="px-3 py-2">Tahapan</th>
+                        <th class="px-3 py-2" colspan="4">Rencana Kegiatan</th>
+                        <th class="px-3 py-2" colspan="4">Realisasi Kegiatan</th>
+                        <th class="px-3 py-2">Aksi</th>
                     </tr>
                     <!-- Sub Header Kolom -->
-                    <tr class="bg-gray-50 text-gray-500 text-xs">
+                    <tr class="bg-gray-100 text-xs whitespace-nowrap">
                         <th class="px-3 py-2"></th>
                         <th class="px-3 py-2"></th>
                         <th class="px-3 py-2"></th>
                         <th class="px-3 py-2"></th>
                         <th class="px-3 py-2"></th>
-                        <th class="px-3 py-2">Triwulan I</th>
-                        <th class="px-3 py-2">Triwulan II</th>
-                        <th class="px-3 py-2">Triwulan III</th>
-                        <th class="px-3 py-2">Triwulan IV</th>
-                        <th class="px-3 py-2">Triwulan I</th>
-                        <th class="px-3 py-2">Triwulan II</th>
-                        <th class="px-3 py-2">Triwulan III</th>
-                        <th class="px-3 py-2">Triwulan IV</th>
+                        <th class="px-3 py-2 text-blue-800">Triwulan I</th>
+                        <th class="px-3 py-2 text-blue-800">Triwulan II</th>
+                        <th class="px-3 py-2 text-blue-800">Triwulan III</th>
+                        <th class="px-3 py-2 text-blue-800">Triwulan IV</th>
+                        <th class="px-3 py-2 text-emerald-800">Triwulan I</th>
+                        <th class="px-3 py-2 text-emerald-800">Triwulan II</th>
+                        <th class="px-3 py-2 text-emerald-800">Triwulan III</th>
+                        <th class="px-3 py-2 text-emerald-800">Triwulan IV</th>
                         <th class="px-3 py-2"></th>
                     </tr>
                 </thead>
