@@ -145,4 +145,77 @@ class PublicationExportController extends Controller
             return redirect()->back()->with('error', 'Gagal membuat file ZIP.');
         }
     }
+
+    public function exportTable()
+    {
+        $publications = Publication::with(['stepsPlans.stepsFinals'])->get();
+
+        // Buat spreadsheet
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        // Header Utama
+        $sheet->mergeCells('A1:A2')->setCellValue('A1', 'No');
+        $sheet->mergeCells('B1:B2')->setCellValue('B1', 'Nama Publikasi/Laporan');
+        $sheet->mergeCells('C1:C2')->setCellValue('C1', 'Nama Kegiatan');
+        $sheet->mergeCells('D1:D2')->setCellValue('D1', 'PIC');
+        $sheet->mergeCells('E1:E2')->setCellValue('E1', 'Tahapan');
+
+        $sheet->mergeCells('F1:I1')->setCellValue('F1', 'Rencana Kegiatan');
+        $sheet->mergeCells('J1:M1')->setCellValue('J1', 'Realisasi Kegiatan');
+        $sheet->mergeCells('N1:N2')->setCellValue('N1', 'Aksi');
+
+        // Sub Header
+        $sheet->setCellValue('F2', 'Triwulan I');
+        $sheet->setCellValue('G2', 'Triwulan II');
+        $sheet->setCellValue('H2', 'Triwulan III');
+        $sheet->setCellValue('I2', 'Triwulan IV');
+        $sheet->setCellValue('J2', 'Triwulan I');
+        $sheet->setCellValue('K2', 'Triwulan II');
+        $sheet->setCellValue('L2', 'Triwulan III');
+        $sheet->setCellValue('M2', 'Triwulan IV');
+
+        // Isi data
+        $row = 3;
+        foreach ($publications as $index => $publication) {
+            $sheet->setCellValue("A{$row}", $index + 1);
+            $sheet->setCellValue("B{$row}", $publication->publication_report);
+            $sheet->setCellValue("C{$row}", $publication->publication_name);
+            $sheet->setCellValue("D{$row}", $publication->publication_pic);
+
+            // Tahapan: jumlah selesai / total
+            $sheet->setCellValue("E{$row}", array_sum($publication->rekapFinals ?? []) . '/' . array_sum($publication->rekapPlans ?? []));
+
+            // Rencana Kegiatan per Triwulan
+            foreach ([1,2,3,4] as $i => $q) {
+                $col = chr(70 + $i); // F,G,H,I
+                $val = $publication->rekapPlans[$q] ?? '-';
+                $sheet->setCellValue("{$col}{$row}", $val);
+            }
+
+            // Realisasi Kegiatan per Triwulan
+            foreach ([1,2,3,4] as $i => $q) {
+                $col = chr(74 + $i); // J,K,L,M
+                $val = $publication->rekapFinals[$q] ?? '-';
+                $sheet->setCellValue("{$col}{$row}", $val);
+            }
+
+            $sheet->setCellValue("N{$row}", "Detail/Edit/Hapus"); // aksi text
+            $row++;
+        }
+
+        // Auto size kolom
+        foreach (range('A','N') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        // Export Excel
+        $writer = new Xlsx($spreadsheet);
+        $fileName = 'daftar_publikasi.xlsx';
+
+        // return sebagai response download
+        return response()->streamDownload(function() use ($writer) {
+            $writer->save('php://output');
+        }, $fileName);
+    }
 }

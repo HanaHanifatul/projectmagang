@@ -104,3 +104,7 @@ Route::post('/change-password', [AuthController::class, 'updatePassword'])->name
 Route::get('/export/publication/{id}', [
     PublicationExportController::class, 'export'
 ])->name('publication.export');
+
+// export tabel
+Route::get('/publications/exportTable', [PublicationExportController::class, 'exportTable'])
+    ->name('publications.exportTable');
