@@ -33,7 +33,7 @@
                     </svg>
                 </div>
                 <p class="text-sm text-gray-500">Tertunda/Mundur</p>
-                <p class="text-2xl font-bold">{{ $tertundaPublikasi }}</p>
+                {{-- <p class="text-2xl font-bold">{{ $tertundaPublikasi }}</p> --}}
                 <p class="text-xs text-gray-400">Publikasi dengan penundaan</p>
             </div>
 
