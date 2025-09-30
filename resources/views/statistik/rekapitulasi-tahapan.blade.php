@@ -8,7 +8,7 @@
             </svg>
         </div>
         <p class="text-sm text-gray-500">Sedang Berlangsung</p>
-        <p class="text-2xl font-bold">0</p>
+        <p class="text-2xl font-bold">{{ $sedangBerlangsungTahapan }}</p>
         <p class="text-xs text-gray-400">Tahapan dalam proses</p>
     </div>
     <div class="relative p-4 border rounded text-center">
@@ -19,7 +19,7 @@
             </svg>
         </div>
         <p class="text-sm text-gray-500">Tahapan Selesai</p>
-        <p class="text-2xl font-bold">4</p>
+        <p class="text-2xl font-bold">{{ $sudahSelesaiTahapan }}</p>
         <p class="text-xs text-gray-400">Selesai sesuai rencana</p>
     </div>
     <div class="relative p-4 border rounded text-center">
@@ -30,7 +30,7 @@
             </svg>
         </div>
         <p class="text-sm text-gray-500">Tertunda/Mundur</p>
-        <p class="text-2xl font-bold">0</p>
+        <p class="text-2xl font-bold">{{ $tertundaTahapan }}</p>
         <p class="text-xs text-gray-400">Tahapan dengan penundaan</p>
     </div>
     <div class="relative p-4 border rounded text-center">
@@ -41,7 +41,7 @@
             </svg>
         </div>
         <p class="text-sm text-gray-500">Persentase Realisasi</p>
-        <p class="text-2xl font-bold">100</p>
+        <p class="text-2xl font-bold">{{ $persentaseRealisasi }}</p>
         <p class="text-xs text-gray-400">Tingkat penyelesaian</p>
     </div>
 </div>
