@@ -76,6 +76,9 @@ Route::post('/logout', [
     AuthController::class, 'logout'])
 ->name('logout');     // logout
 
+// export tabel
+Route::get('/publications/exportTable', [PublicationExportController::class, 'exportTable'])
+    ->name('publications.exportTable');
 // route untuk search
 Route::get('/publications/search', [PublicationController::class, 'search'])->name('publications.search');
 // Menampilkan daftar steps berdasarkan publication_id
@@ -104,7 +107,3 @@ Route::post('/change-password', [AuthController::class, 'updatePassword'])->name
 Route::get('/export/publication/{id}', [
     PublicationExportController::class, 'export'
 ])->name('publication.export');
-
-// export tabel
-Route::get('/publications/exportTable', [PublicationExportController::class, 'exportTable'])
-    ->name('publications.exportTable');
