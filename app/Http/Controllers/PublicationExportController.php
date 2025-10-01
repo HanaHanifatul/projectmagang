@@ -98,13 +98,21 @@ class PublicationExportController extends Controller
         $publication = Publication::with(['stepsplans.stepsFinals.struggles'])->where('slug_publication', $slug_publication)->firstOrFail();
 
         // 2. Export Excel
-        $excelFileName = "publication_{$publication->publication_name}.xlsx";
+        $excelFileName = sprintf(
+            "%s_%s.xlsx",
+            str_replace(' ', '_', $publication->publication_name),
+            str_replace(' ', '_', $publication->publication_report)
+        );
         $excelPath = "exports/{$excelFileName}";
         // File Excel disimpan di storage/app/exports
         Excel::store(new PublicationExport($slug_publication), $excelPath);
 
         // 3. Buat file ZIP
-        $zipFileName = Str::slug($publication->publication_name, '_').'.zip';
+        $zipFileName = sprintf(
+            "%s_%s.zip",
+            str_replace(' ', '_', $publication->publication_name),
+            str_replace(' ', '_', $publication->publication_report)
+        );
         $zipPath = "exports/{$zipFileName}";
         $zip = new ZipArchive;
 
@@ -127,19 +135,31 @@ class PublicationExportController extends Controller
             foreach ($publication->stepsplans as $plan) {
                 // Dokumen Plan (dari storage/app/public)
                 if ($plan->plan_doc && Storage::disk('public')->exists($plan->plan_doc)) {
-                    $zip->addFile(Storage::disk('public')->path($plan->plan_doc), "plans/" . basename($plan->plan_doc));
+                    // Buat nama file: gabungan plan_type + plan_name + ekstensi asli
+                    $filename = Str::slug($plan->plan_type . '_' . $plan->plan_name, '_') 
+                        . '.' . pathinfo($plan->plan_doc, PATHINFO_EXTENSION);
+                    
+                    $zip->addFile(Storage::disk('public')->path($plan->plan_doc), "bukti_dukung_rencana/" . $filename);
                 }
                 
                 if ($plan->stepsFinals) {
                     $final = $plan->stepsFinals;
                     // Dokumen Final (dari storage/app/public)
                     if ($final->final_doc && Storage::disk('public')->exists($final->final_doc)) {
-                        $zip->addFile(Storage::disk('public')->path($final->final_doc), "finals/" . basename($final->final_doc));
+                        // Buat nama file: gabungan plan_type + plan_name + ekstensi asli
+                        $filename = Str::slug($plan->plan_type . '_' . $plan->plan_name, '_') 
+                            . '.' . pathinfo($plan->plan_doc, PATHINFO_EXTENSION);
+                        
+                        $zip->addFile(Storage::disk('public')->path($final->final_doc), "bukti_dukung_realisasi/" . $filename);
                     }
                     // Dokumen Struggles (dari storage/app/public)
                     foreach ($final->struggles as $struggle) {
                         if ($struggle->solution_doc && Storage::disk('public')->exists($struggle->solution_doc)) {
-                            $zip->addFile(Storage::disk('public')->path($struggle->solution_doc), "struggles/" . basename($struggle->solution_doc));
+                            // Buat nama file: gabungan plan_type + plan_name + ekstensi asli
+                            $filename = Str::slug($plan->plan_type . '_' . $plan->plan_name, '_') 
+                                . '.' . pathinfo($plan->plan_doc, PATHINFO_EXTENSION);
+                            
+                            $zip->addFile(Storage::disk('public')->path($struggle->solution_doc), "bukti_dukung_kendala_solusi/" . $filename);
                         }
                     }
                 }
