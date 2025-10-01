@@ -17,7 +17,9 @@ use App\Http\Controllers\PublicationExportController;
 */
 
 // Halaman utama
-Route::get('/', [HomeController::class, 'index'])->name('home');
+// Route::get('/', [HomeController::class, 'index'])->name('home');
+
+Route::get('/', [PublicationController::class, 'index'])->name('daftarpublikasi');
 
 // Laporan
 Route::get('/laporan', function () {
