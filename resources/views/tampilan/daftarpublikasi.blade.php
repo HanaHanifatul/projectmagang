@@ -341,7 +341,7 @@
                                 </button>                              
 
                                 <!-- Tombol Hapus -->
-                                <form action="{{ route('publications.destroy', $publication) }}" method="POST" 
+                                <form action="{{ route('publications.destroy', $publication->slug_publication) }}" method="POST" 
                                     onsubmit="return confirm('Yakin hapus publikasi ini?')">
                                     @csrf
                                     @method('DELETE')

@@ -29,6 +29,9 @@ Route::get('/laporan', function () {
 // ==================== Publications ====================
 Route::resource('publications', PublicationController::class);
 
+// hapus publication
+Route::delete('/publications/{slug_publication}', [PublicationController::class, 'destroy'])->name('publications.destroy');
+
 // Search publications
 Route::get('/publications/search', [PublicationController::class, 'search'])->name('publications.search');
 

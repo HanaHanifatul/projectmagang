@@ -192,9 +192,14 @@ class PublicationController extends Controller
         return redirect()->route('daftarpublikasi')->with('success', 'Publikasi berhasil ditambahkan.');
     }
 
+    public function getRouteKeyName()
+    {
+        return 'slug_publication'; // bukan id lagi
+    }
+
     public function destroy(Publication $publication)
     {
-        $publication = Publication::findOrFail($publication);
+        // $publication = Publication::where('slug_publication', $slug_publication)->firstOrFail();
 
         // Hapus semua StepsPlan yang terkait
         $publication->stepsPlans()->delete();
