@@ -8,18 +8,19 @@ use Maatwebsite\Excel\Concerns\WithHeadings;
 
 class PublicationExport implements FromCollection, WithHeadings
 {
-    protected $publicationId;
+    protected $publicationSlug;
 
-    public function __construct($publicationId)
+    public function __construct($publicationSlug)
     {
-        $this->publicationId = $publicationId;
+        $this->publicationSlug = $publicationSlug;
     }
     
     public function collection()
     {
+        // Ambil data publikasi berdasarkan slug
         $publication = Publication::with(['stepsplans.stepsFinals.struggles'])
-            ->where('publication_id', $this->publicationId)
-            ->first();
+            ->where('slug_publication', $this->publicationSlug)
+            ->firstOrFail();
 
         $rows = collect();
 

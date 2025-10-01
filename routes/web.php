@@ -34,7 +34,7 @@ Route::get('/publications/search', [PublicationController::class, 'search'])->na
 
 // Export
 Route::get('/publications/exportTable', [PublicationExportController::class, 'exportTable'])->name('publications.exportTable');
-Route::get('/export/publication/{id}', [PublicationExportController::class, 'export'])->name('publication.export');
+Route::get('/export/publication/{slug_publication}', [PublicationExportController::class, 'export'])->name('publication.export');
 
 // ==================== Steps / Tahapan ====================
 // Tampilkan tahapan untuk 1 publikasi
