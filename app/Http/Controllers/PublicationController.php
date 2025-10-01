@@ -143,9 +143,6 @@ class PublicationController extends Controller
         return view('publications.create', compact('users'));
     }
 
-    /**
-     * Simpan publikasi baru
-     */
     public function store(Request $request)
     {
         $request->validate([
@@ -171,10 +168,7 @@ class PublicationController extends Controller
 
     }
 
-    /**
-     * Update publikasi
-     */
-    public function update(Request $request, $id)
+    public function update(Request $request, Publication $publication)
     {
         $request->validate([
             'publication_name'   => 'required|string|max:255',
@@ -188,7 +182,7 @@ class PublicationController extends Controller
             ? $request->publication_report_other
             : $request->publication_report;
 
-        $publication = Publication::findOrFail($id);
+        $publication = Publication::findOrFail($publication);
         $publication->update([
             'publication_name'   => $request->publication_name,
             'publication_report' => $publicationReport,
@@ -198,12 +192,9 @@ class PublicationController extends Controller
         return redirect()->route('daftarpublikasi')->with('success', 'Publikasi berhasil ditambahkan.');
     }
 
-    /**
-     * Hapus publikasi
-     */
-    public function destroy($id)
+    public function destroy(Publication $publication)
     {
-        $publication = Publication::findOrFail($id);
+        $publication = Publication::findOrFail($publication);
 
         // Hapus semua StepsPlan yang terkait
         $publication->stepsPlans()->delete();

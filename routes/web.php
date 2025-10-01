@@ -6,104 +6,60 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\StepsPlanController;
 use App\Http\Controllers\StepsFinalController;
+use App\Http\Controllers\StepsController;
 use App\Http\Controllers\PublicationController;
 use App\Http\Controllers\PublicationExportController;
 
-// Route::get('/', function () {
-//     return view('/tampilan/homeketua');
-// })->middleware('auth');
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+*/
 
-Route::get('/', 
-    [HomeController::class, 'index'])->name('home');
+// Halaman utama
+Route::get('/', [HomeController::class, 'index'])->name('home');
 
-Route::get('/', [PublicationController::class, 'index'])->name('daftarpublikasi');
-
-
+// Laporan
 Route::get('/laporan', function () {
     return view('/tampilan/laporan');
-});
+})->name('laporan');
 
-// Route::get('/detail', function () {
-//     return view('/tampilan/detail');
-// });
-
-Route::get('/tahapan/{publication}', [StepsPlanController::class, 'index'])
-    ->name('plans.index');
-
-// Tampilkan halaman detail
-Route::get('/detail/{publication_id}', [
-    StepsPlanController::class, 'index'])
-->name('plans.index');
-
-// Simpan Tahapan Baru (dari modal "Tambah Tahapan")
-Route::post('/tahapan/store', [
-    StepsPlanController::class, 'store'])
-->name('tahapan.store');
-
-// Perbarui Rencana yang sudah ada (dari formulir "Edit Rencana")
-Route::put('/tahapan/{plan}/edit-stage', [
-    StepsPlanController::class, 'updateStage'
-])->name('plans.update_stage');
-
-// Perbarui Rencana yang sudah ada (dari formulir "Edit Rencana")
-Route::put('/plans/{plan}', [
-    StepsPlanController::class, 'update'
-])->name('plans.update');
-
-// Perbarui Rencana yang sudah ada (dari formulir "Edit Realisasi")
-Route::put('/finals/{plan}', [
-    StepsFinalController::class, 'update'
-])->name('finals.update');
-
-// Hapus tahapan
-Route::delete('/plans/{plan}', [
-    StepsPlanController::class, 'destroy'
-])->name('plans.destroy');
-
-// Route::get('/login', function () {
-//     return view('/auth/login');
-// });
-
-Route::get('/login', [
-    AuthController::class, 'showLoginForm'])
-->name('login'); // tampilkan form
-
-Route::post('/login', [
-    AuthController::class, 'login'])
-->name('login.post');   // proses login
-
-Route::post('/logout', [
-    AuthController::class, 'logout'])
-->name('logout');     // logout
-
-// export tabel
-Route::get('/publications/exportTable', [PublicationExportController::class, 'exportTable'])
-    ->name('publications.exportTable');
-// route untuk search
-Route::get('/publications/search', [PublicationController::class, 'search'])->name('publications.search');
-// Menampilkan daftar steps berdasarkan publication_id
+// ==================== Publications ====================
 Route::resource('publications', PublicationController::class);
 
+// Search publications
+Route::get('/publications/search', [PublicationController::class, 'search'])->name('publications.search');
 
-// route contoh buat ngambil id di detail
-// detail publikasi + semua steps-nya
-Route::get('/publications/{publication}/steps', [StepsPlanController::class, 'index'])
-    ->name('steps.index');
+// Export
+Route::get('/publications/exportTable', [PublicationExportController::class, 'exportTable'])->name('publications.exportTable');
+Route::get('/export/publication/{id}', [PublicationExportController::class, 'export'])->name('publication.export');
 
-// simpan step baru
+// ==================== Steps / Tahapan ====================
+// Tampilkan tahapan untuk 1 publikasi
+Route::get('/publications/{publication}/steps', [StepsPlanController::class, 'index'])->name('steps.index');
+
+// Tambah tahapan
 Route::post('/publications/{publication}/steps', [StepsPlanController::class, 'store'])->name('steps.store');
 
-// admin route
+// Update tahapan (rencana & realisasi)
+Route::put('/plans/{plan}', [StepsPlanController::class, 'update'])->name('plans.update');
+Route::put('/plans/{plan}/edit-stage', [StepsPlanController::class, 'updateStage'])->name('plans.update_stage');
+Route::put('/finals/{plan}', [StepsFinalController::class, 'update'])->name('finals.update');
+
+// Hapus tahapan
+Route::delete('/plans/{plan}', [StepsPlanController::class, 'destroy'])->name('plans.destroy');
+
+// ==================== Auth ====================
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+// Ubah password
+Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('password.change');
+Route::post('/change-password', [AuthController::class, 'updatePassword'])->name('password.update');
+
+// ==================== Admin ====================
 Route::get('/admin', [AdminController::class, 'index'])->name('adminpage');
 Route::get('/admin/search', [AdminController::class, 'search'])->name('admin.search');
 Route::post('/admin/store', [AdminController::class, 'store'])->name('admin.store');
 Route::delete('/admin/{id}', [AdminController::class, 'destroy'])->name('admin.destroy');
-
-// ubah sandi
-Route::get('/change-password', [AuthController::class, 'showChangePasswordForm'])->name('password.change');
-Route::post('/change-password', [AuthController::class, 'updatePassword'])->name('password.update');
-
-// export
-Route::get('/export/publication/{id}', [
-    PublicationExportController::class, 'export'
-])->name('publication.export');

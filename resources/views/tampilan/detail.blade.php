@@ -99,10 +99,10 @@
                                         <h2 class="text-lg font-semibold">Tambah Tahapan</h2>
                                         <p class="text-sm text-gray-500 mb-2">Tambahkan tahapan baru untuk publikasi/laporan</p>
                                         <!-- Form -->
-                                        <form method="POST" action="{{ route('tahapan.store') }}">
+                                        <form method="POST" action="{{ route('steps.store', $publication->slug_publication) }}">
                                             @csrf
                                             <!-- publication -->
-                                            <input type="hidden" name="publication_id" value="{{ $publication->publication_id }}">
+                                            <input type="hidden" name="publication_id" value="{{ $publication->slug_publication }}">
                                             <!-- Jenis Tahapan -->
                                             <div class="mb-3">
                                                 <label class="block text-sm font-medium text-gray-700">Jenis Tahapan</label>
@@ -704,7 +704,7 @@
         
         if (searchInput) {
             // URL dasar untuk routing Laravel (dari form action sebelumnya)
-            const baseUrl = "{{ route('plans.index', $publication->publication_id) }}";
+            const baseUrl = "{{ route('steps.index', $publication->slug_publication) }}";
 
             // 2. Fungsi untuk Melakukan Pencarian
             const performSearch = function() {

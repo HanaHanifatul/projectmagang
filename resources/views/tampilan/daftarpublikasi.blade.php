@@ -304,7 +304,7 @@
                         <!-- Aksi -->
                         <td class="px-4 py-4 text-center">
                             <!-- Tombol Detail -->
-                            <a href="{{ route('steps.index', $publication->publication_id) }}" 
+                            <a href="{{ route('steps.index', $publication->slug_publication) }}" 
                             class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg mb-1">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                     <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />

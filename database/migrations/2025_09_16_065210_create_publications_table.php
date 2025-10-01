@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('publication_name');
             $table->string('publication_report');
             $table->string('publication_pic');
+            $table->string('slug_publication')->unique();
             $table->timestamp('created_at')->useCurrent();
             $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate();
             

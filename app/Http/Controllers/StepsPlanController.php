@@ -9,13 +9,13 @@ use App\Models\StepsPlan;
 class StepsPlanController extends Controller
 {
     //tampil data tahapan
-    public function index(Request $request, $publication_id)
+    public function index(Request $request, Publication $publication)
     {
         // ambil input search dari query string (?search=...)
         $search = $request->input('search');
 
         // query dasar: hanya ambil steps dari publikasi tertentu
-        $query = StepsPlan::where('publication_id', $publication_id)->with('stepsFinals');
+        $query = StepsPlan::where('publication_id', $publication->publication_id)->with('stepsFinals');
 
         // filter kalau ada search
         if ($search) {
@@ -32,7 +32,7 @@ class StepsPlanController extends Controller
         $total_rencana   = $stepsplans->count();
         $total_realisasi = $stepsplans->whereNotNull('stepsFinals')->count();
 
-        $publication = Publication::findOrFail($publication_id);
+        // $publication = Publication::findOrFail($publication->slug_publication);
 
         $rekapPlans = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
         $rekapFinals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
@@ -66,28 +66,32 @@ class StepsPlanController extends Controller
             }
         $publication->progressKumulatif = $progressKumulatif;
         
-        return view('tampilan.detail', compact('stepsplans', 'total_rencana', 'total_realisasi', 'publication_id', 'search', 'publication'));
+        return view('tampilan.detail', compact('stepsplans', 'total_rencana', 'total_realisasi', 'publication', 'search', 'publication'));
     }
 
     
     //simpan data untuk formulir "Tambah Tahapan"
-    public function store(Request $request){
+    public function store(Request $request, Publication $publication)
+    {
         // validasi input
         $request->validate([
             'plan_type' => 'required|string',
             'plan_name' => 'required|string|max:256',
-            'publication_id' => 'required|exists:publications,publication_id'
         ]);
 
-        // Simpan ke database
+        // Simpan ke database, ambil publication_id dari model Publication
         StepsPlan::create([
-            'plan_type' => $request->plan_type,
-            'plan_name' => $request->plan_name,
-            'publication_id' => $request->publication_id,      // isi sesuai id publikasi terkait
+            'plan_type'      => $request->plan_type,
+            'plan_name'      => $request->plan_name,
+            'publication_id' => $publication->publication_id, // FK id, bukan slug
         ]);
 
-        return redirect()->back()->with('success', 'Tahapan berhasil ditambahkan.');
+        return redirect()
+            ->back()
+            // ->route('steps.index', $publication) // balik ke detail publikasi slug
+            ->with('success', 'Tahapan berhasil ditambahkan.');
     }
+
 
     // Fungsi untuk update tahapan
     public function updateStage(Request $request, StepsPlan $plan){
