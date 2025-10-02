@@ -69,7 +69,7 @@ class PublicationController extends Controller
                     $tertundaTahapan++;
                 }
                 // KONDISI 2: Tahapan Sedang Berlangsung
-                else {
+                else if (!empty($plan->plan_start_date) && !empty($plan->plan_end_date)){
                     $sedangBerlangsungTahapan++;
                 }
             }
