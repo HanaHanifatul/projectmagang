@@ -168,8 +168,13 @@ class PublicationController extends Controller
 
     }
 
-    public function update(Request $request, Publication $publication)
+    public function getRouteKeyName()
     {
+        return 'slug_publication'; // bukan id lagi
+    }
+
+    public function update(Request $request, Publication $publication)
+    {        
         $request->validate([
             'publication_name'   => 'required|string|max:255',
             'publication_report' => 'required|string|max:255',
@@ -182,7 +187,7 @@ class PublicationController extends Controller
             ? $request->publication_report_other
             : $request->publication_report;
 
-        $publication = Publication::findOrFail($publication);
+        // $publication = Publication::findOrFail($publication);
         $publication->update([
             'publication_name'   => $request->publication_name,
             'publication_report' => $publicationReport,
@@ -192,10 +197,7 @@ class PublicationController extends Controller
         return redirect()->route('daftarpublikasi')->with('success', 'Publikasi berhasil ditambahkan.');
     }
 
-    public function getRouteKeyName()
-    {
-        return 'slug_publication'; // bukan id lagi
-    }
+    
 
     public function destroy(Publication $publication)
     {

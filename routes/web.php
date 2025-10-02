@@ -17,8 +17,6 @@ use App\Http\Controllers\PublicationExportController;
 */
 
 // Halaman utama
-// Route::get('/', [HomeController::class, 'index'])->name('home');
-
 Route::get('/', [PublicationController::class, 'index'])->name('daftarpublikasi');
 
 // Laporan
@@ -27,17 +25,17 @@ Route::get('/laporan', function () {
 })->name('laporan');
 
 // ==================== Publications ====================
+// Export
+Route::get('/publications/exportTable', [PublicationExportController::class, 'exportTable'])->name('publications.exportTable');
+
+// All function
 Route::resource('publications', PublicationController::class);
 
-// hapus publication
+// Hapus publication
 Route::delete('/publications/{slug_publication}', [PublicationController::class, 'destroy'])->name('publications.destroy');
 
 // Search publications
 Route::get('/publications/search', [PublicationController::class, 'search'])->name('publications.search');
-
-// Export
-Route::get('/publications/exportTable', [PublicationExportController::class, 'exportTable'])->name('publications.exportTable');
-Route::get('/export/publication/{slug_publication}', [PublicationExportController::class, 'export'])->name('publication.export');
 
 // ==================== Steps / Tahapan ====================
 // Tampilkan tahapan untuk 1 publikasi
@@ -53,6 +51,9 @@ Route::put('/finals/{plan}', [StepsFinalController::class, 'update'])->name('fin
 
 // Hapus tahapan
 Route::delete('/plans/{plan}', [StepsPlanController::class, 'destroy'])->name('plans.destroy');
+
+// Export Tahapan
+Route::get('/export/publication/{slug_publication}', [PublicationExportController::class, 'export'])->name('publication.export');
 
 // ==================== Auth ====================
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
