@@ -28,14 +28,14 @@ Route::get('/laporan', function () {
 // Export
 Route::get('/publications/exportTable', [PublicationExportController::class, 'exportTable'])->name('publications.exportTable');
 
+// Search publications
+Route::get('/publications/search', [PublicationController::class, 'search'])->name('publications.search');
+
 // All function
 Route::resource('publications', PublicationController::class);
 
 // Hapus publication
 Route::delete('/publications/{slug_publication}', [PublicationController::class, 'destroy'])->name('publications.destroy');
-
-// Search publications
-Route::get('/publications/search', [PublicationController::class, 'search'])->name('publications.search');
 
 // ==================== Steps / Tahapan ====================
 // Tampilkan tahapan untuk 1 publikasi
