@@ -9,10 +9,10 @@
         <div>
             <label for="triwulan" class="mr-2 text-sm font-medium text-gray-700">Triwulan:</label>
             <select id="triwulan" class="rounded-md border text-sm" x-model="triwulan">
-                <option>Triwulan I</option>
-                <option>Triwulan II</option>
-                <option>Triwulan III</option>
-                <option>Triwulan IV</option>
+                <option value="1">Triwulan I</option>
+                <option value="2">Triwulan II</option>
+                <option value="3">Triwulan III</option>
+                <option value="4">Triwulan IV</option>
             </select>
         </div>
     </div>

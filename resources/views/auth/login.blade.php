@@ -62,7 +62,10 @@
                     </a> --}}
                     <div class="flex justify-center mt-4">
                         <button type="submit"
-                            class="w-full md:w-[200px] py-2 px-4 md:py-3 md:px-6 border border-transparent rounded-lg shadow-md text-base md:text-xl font-bold text-white bg-blue-800 hover:bg-orange-600 focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-orange-500 tracking-wider">
+                             class="w-full md:w-[200px] py-2 px-4 md:py-3 md:px-6 border border-transparent rounded-lg shadow-md 
+                                    text-base md:text-xl font-bold text-white bg-blue-800 
+                                    hover:bg-emerald-800 hover:text-white 
+                                    focus:outline-none focus:ring-4 focus:ring-offset-2 focus:ring-emerald-500 tracking-wider">
                             Login
                         </button>
                     </div>
