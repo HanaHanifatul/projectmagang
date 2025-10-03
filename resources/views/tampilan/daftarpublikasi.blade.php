@@ -380,9 +380,11 @@
 
                 <h2 class="text-lg font-semibold mb-4">Edit Publikasi</h2>
 
-                <form id="editForm" method="POST" action="{{ route('publications.update', $publication->slug_publication) }}">
+                <form id="editForm" method="POST" action="{{ isset($publication) ? route('publications.update', $publication->slug_publication) : route('publications.store') }}">
                     @csrf
-                    @method('PUT')
+                    @if(isset($publication))
+                        @method('PUT')
+                    @endif
 
                     <!-- Nama Laporan -->
                     <div class="mb-3">
