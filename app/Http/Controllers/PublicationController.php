@@ -69,7 +69,7 @@ class PublicationController extends Controller
                     $tertundaTahapan++;
                 }
                 // KONDISI 2: Tahapan Sedang Berlangsung
-                else {
+                else if (!empty($plan->plan_start_date) && !empty($plan->plan_end_date)){
                     $sedangBerlangsungTahapan++;
                 }
             }
@@ -168,8 +168,13 @@ class PublicationController extends Controller
 
     }
 
-    public function update(Request $request, Publication $publication)
+    public function getRouteKeyName()
     {
+        return 'slug_publication'; // bukan id lagi
+    }
+
+    public function update(Request $request, Publication $publication)
+    {        
         $request->validate([
             'publication_name'   => 'required|string|max:255',
             'publication_report' => 'required|string|max:255',
@@ -182,6 +187,7 @@ class PublicationController extends Controller
             ? $request->publication_report_other
             : $request->publication_report;
 
+        // $publication = Publication::findOrFail($publication);
         $publication->update([
             'publication_name'   => $request->publication_name,
             'publication_report' => $publicationReport,
@@ -192,9 +198,11 @@ class PublicationController extends Controller
             ->with('success', 'Publikasi berhasil diperbarui.');
     }
 
+    
 
     public function destroy(Publication $publication)
     {
+        // $publication = Publication::where('slug_publication', $slug_publication)->firstOrFail();
 
         // Hapus semua StepsPlan yang terkait
         $publication->stepsPlans()->delete();

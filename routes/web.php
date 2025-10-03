@@ -25,7 +25,8 @@ Route::get('/laporan', function () {
 })->name('laporan');
 
 // ==================== Publications ====================
-Route::resource('publications', PublicationController::class);
+// Export
+Route::get('/publications/exportTable', [PublicationExportController::class, 'exportTable'])->name('publications.exportTable');
 
 // Update publikasi
 Route::put('/publications/{publication}', [PublicationController::class, 'update'])->name('publications.update');
@@ -33,9 +34,11 @@ Route::put('/publications/{publication}', [PublicationController::class, 'update
 // Search publications
 Route::get('/publications/search', [PublicationController::class, 'search'])->name('publications.search');
 
-// Export
-Route::get('/publications/exportTable', [PublicationExportController::class, 'exportTable'])->name('publications.exportTable');
-Route::get('/export/publication/{id}', [PublicationExportController::class, 'export'])->name('publication.export');
+// All function
+Route::resource('publications', PublicationController::class);
+
+// Hapus publication
+Route::delete('/publications/{slug_publication}', [PublicationController::class, 'destroy'])->name('publications.destroy');
 
 // ==================== Steps / Tahapan ====================
 // Tampilkan tahapan untuk 1 publikasi
@@ -51,6 +54,9 @@ Route::put('/finals/{plan}', [StepsFinalController::class, 'update'])->name('fin
 
 // Hapus tahapan
 Route::delete('/plans/{plan}', [StepsPlanController::class, 'destroy'])->name('plans.destroy');
+
+// Export Tahapan
+Route::get('/export/publication/{slug_publication}', [PublicationExportController::class, 'export'])->name('publication.export');
 
 // ==================== Auth ====================
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');

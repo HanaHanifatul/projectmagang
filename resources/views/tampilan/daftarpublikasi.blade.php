@@ -8,13 +8,13 @@
 
         <div class="flex flex-wrap gap-2 justify-start sm:justify-end" x-data="{ open: false }">
             <!-- Tombol Unduh Excel -->
-           <a href="{{ route('publications.exportTable') }}" 
-            class="flex items-center justify-center gap-1 border text-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm shadow hover:text-white hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                    <path d="M8.75 2.75a.75.75 0 0 0-1.5 0v5.69L5.03 6.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.44V2.75Z" />
-                    <path d="M3.5 9.75a.75.75 0 0 0-1.5 0v1.5A2.75 2.75 0 0 0 4.75 14h6.5A2.75 2.75 0 0 0 14 11.25v-1.5a.75.75 0 0 0-1.5 0v1.5c0 .69-.56 1.25-1.25 1.25h-6.5c-.69 0-1.25-.56-1.25-1.25v-1.5Z" />
-                </svg>
-                Unduh Excel
+            <a href="{{ route('publications.exportTable') }}"
+                class="flex items-center justify-center gap-1 border text-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm shadow hover:text-white hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                        <path d="M8.75 2.75a.75.75 0 0 0-1.5 0v5.69L5.03 6.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.44V2.75Z" />
+                        <path d="M3.5 9.75a.75.75 0 0 0-1.5 0v1.5A2.75 2.75 0 0 0 4.75 14h6.5A2.75 2.75 0 0 0 14 11.25v-1.5a.75.75 0 0 0-1.5 0v1.5c0 .69-.56 1.25-1.25 1.25h-6.5c-.69 0-1.25-.56-1.25-1.25v-1.5Z" />
+                    </svg>
+                    Unduh Excel
             </a>
 
             <!-- Tombol Tambah Publikasi -->
@@ -341,7 +341,7 @@
                                 </button>                              
 
                                 <!-- Tombol Hapus -->
-                                <form action="{{ route('publications.destroy', $publication) }}" method="POST" 
+                                <form action="{{ route('publications.destroy', $publication->slug_publication) }}" method="POST" 
                                     onsubmit="return confirm('Yakin hapus publikasi ini?')">
                                     @csrf
                                     @method('DELETE')
@@ -380,75 +380,75 @@
 
                 <h2 class="text-lg font-semibold mb-4">Edit Publikasi</h2>
 
-                <form id="editForm" action="{{ route('publications.update', $publication) }}" method="POST">
-                @csrf
-                @method('PUT')
+                <form id="editForm" method="POST" action="{{ route('publications.update', $publication->slug_publication) }}">
+                    @csrf
+                    @method('PUT')
 
-                <!-- Nama Laporan -->
-                <div class="mb-3">
-                    <label class="block text-sm font-medium text-gray-700">Nama Laporan/Publikasi</label>
-                    <select id="edit_publication_report" name="publication_report" 
-                            x-model="editReport"
-                            @change="editReport === 'other' ? editOther = true : editOther = false"
-                            class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm 
-                                focus:border-emerald-500 focus:ring-emerald-500 text-sm">
+                    <!-- Nama Laporan -->
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium text-gray-700">Nama Laporan/Publikasi</label>
+                        <select id="edit_publication_report" name="publication_report" 
+                                x-model="editReport"
+                                @change="editReport === 'other' ? editOther = true : editOther = false"
+                                class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm 
+                                    focus:border-emerald-500 focus:ring-emerald-500 text-sm">
 
-                    <option value="">-- Pilih Nama Laporan --</option>
-                    <option value="Laporan Statistik Kependudukan dan Ketenagakerjaan">Laporan Statistik Kependudukan dan Ketenagakerjaan</option>
-                    <option value="Laporan Statistik Statistik Kesejahteraan Rakyat">Laporan Statistik Statistik Kesejahteraan Rakyat</option>
-                    <option value="Laporan Statistik Ketahanan Sosial">Laporan Statistik Ketahanan Sosial</option>
-                    <option value="Laporan Statistik Tanaman Pangan">Laporan Statistik Tanaman Pangan</option>
-                    <option value="Laporan Statistik Peternakan, Perikanan, dan Kehutanan">Laporan Statistik Peternakan, Perikanan, dan Kehutanan</option>
-                    <option value="Laporan Statistik Industri">Laporan Statistik Industri</option>
-                    <option value="Laporan Statistik Distribusi">Laporan Statistik Distribusi</option>
-                    <option value="Laporan Statistik Harga">Laporan Statistik Harga</option>
-                    <option value="Laporan Statistik Keuangan, Teknologi Informasi, dan Pariwisata">Laporan Statistik Keuangan, Teknologi Informasi, dan Pariwisata</option>
-                    <option value="Laporan Neraca Produksi">Laporan Neraca Produksi</option>
-                    <option value="Laporan Neraca Pengeluaran">Laporan Neraca Pengeluaran</option>
-                    <option value="Laporan Analisis dan Pengembangan Statistik">Laporan Analisis dan Pengembangan Statistik</option>
-                    <option value="Tingkat Penyelenggaraan Pembinaan Statistik Sektoral sesuai Standar">Tingkat Penyelenggaraan Pembinaan Statistik Sektoral sesuai Standar</option>
-                    <option value="Indeks Pelayanan Publik - Penilaian Mandiri">Indeks Pelayanan Publik - Penilaian Mandiri</option>
-                    <option value="Nilai SAKIP oleh Inspektorat">Nilai SAKIP oleh Inspektorat</option>
-                    <option value="Indeks Implementasi BerAKHLAK">Indeks Implementasi BerAKHLAK</option>
-                    <option value="other"> -- Tambahkan Lainnya -- </option>
-                    </select>
-                </div>
+                        <option value="">-- Pilih Nama Laporan --</option>
+                        <option value="Laporan Statistik Kependudukan dan Ketenagakerjaan">Laporan Statistik Kependudukan dan Ketenagakerjaan</option>
+                        <option value="Laporan Statistik Statistik Kesejahteraan Rakyat">Laporan Statistik Statistik Kesejahteraan Rakyat</option>
+                        <option value="Laporan Statistik Ketahanan Sosial">Laporan Statistik Ketahanan Sosial</option>
+                        <option value="Laporan Statistik Tanaman Pangan">Laporan Statistik Tanaman Pangan</option>
+                        <option value="Laporan Statistik Peternakan, Perikanan, dan Kehutanan">Laporan Statistik Peternakan, Perikanan, dan Kehutanan</option>
+                        <option value="Laporan Statistik Industri">Laporan Statistik Industri</option>
+                        <option value="Laporan Statistik Distribusi">Laporan Statistik Distribusi</option>
+                        <option value="Laporan Statistik Harga">Laporan Statistik Harga</option>
+                        <option value="Laporan Statistik Keuangan, Teknologi Informasi, dan Pariwisata">Laporan Statistik Keuangan, Teknologi Informasi, dan Pariwisata</option>
+                        <option value="Laporan Neraca Produksi">Laporan Neraca Produksi</option>
+                        <option value="Laporan Neraca Pengeluaran">Laporan Neraca Pengeluaran</option>
+                        <option value="Laporan Analisis dan Pengembangan Statistik">Laporan Analisis dan Pengembangan Statistik</option>
+                        <option value="Tingkat Penyelenggaraan Pembinaan Statistik Sektoral sesuai Standar">Tingkat Penyelenggaraan Pembinaan Statistik Sektoral sesuai Standar</option>
+                        <option value="Indeks Pelayanan Publik - Penilaian Mandiri">Indeks Pelayanan Publik - Penilaian Mandiri</option>
+                        <option value="Nilai SAKIP oleh Inspektorat">Nilai SAKIP oleh Inspektorat</option>
+                        <option value="Indeks Implementasi BerAKHLAK">Indeks Implementasi BerAKHLAK</option>
+                        <option value="other"> -- Tambahkan Lainnya -- </option>
+                        </select>
+                    </div>
 
-                <!-- Input tambahan jika pilih "other" -->
-                <div class="mb-3" x-show="editOther" x-transition>
-                    <label class="block text-sm font-medium text-gray-700">Nama Laporan Lainnya</label>
-                    <input type="text" name="publication_report_other" 
-                        x-model="editReportOther"
-                        class="w-full border rounded-lg px-3 py-2 mt-1 
-                                focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                        placeholder="Tulis nama laporan lain di sini...">
-                </div>
+                    <!-- Input tambahan jika pilih "other" -->
+                    <div class="mb-3" x-show="editOther" x-transition>
+                        <label class="block text-sm font-medium text-gray-700">Nama Laporan Lainnya</label>
+                        <input type="text" name="publication_report_other" 
+                            x-model="editReportOther"
+                            class="w-full border rounded-lg px-3 py-2 mt-1 
+                                    focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                            placeholder="Tulis nama laporan lain di sini...">
+                    </div>
 
-                <!-- Nama Kegiatan -->
-                <div class="mb-3">
-                    <label class="block text-sm font-medium">Nama Kegiatan</label>
-                    <input type="text" id="edit_name" name="publication_name" 
-                        class="w-full border rounded-lg p-2">
-                </div>
-
-                <!-- PIC -->
-                <div class="mb-3">
-                    <label class="block text-sm font-medium">PIC</label>
-                    <select id="edit_pic" name="publication_pic" 
+                    <!-- Nama Kegiatan -->
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium">Nama Kegiatan</label>
+                        <input type="text" id="edit_name" name="publication_name" 
                             class="w-full border rounded-lg p-2">
-                    <option value="Umum">Tim Umum</option>
-                    <option value="Produksi">Tim Produksi</option>
-                    <option value="Distribusi">Tim Distribusi</option>
-                    <option value="Neraca">Tim Neraca</option>
-                    <option value="Sosial">Tim Sosial</option>
-                    <option value="IPDS">Tim IPDS</option>
-                    </select>
-                </div>
+                    </div>
 
-                <button type="submit" 
-                        class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg mt-3">
-                    Update
-                </button>
+                    <!-- PIC -->
+                    <div class="mb-3">
+                        <label class="block text-sm font-medium">PIC</label>
+                        <select id="edit_pic" name="publication_pic" 
+                                class="w-full border rounded-lg p-2">
+                        <option value="Umum">Tim Umum</option>
+                        <option value="Produksi">Tim Produksi</option>
+                        <option value="Distribusi">Tim Distribusi</option>
+                        <option value="Neraca">Tim Neraca</option>
+                        <option value="Sosial">Tim Sosial</option>
+                        <option value="IPDS">Tim IPDS</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" 
+                            class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg mt-3">
+                        Update
+                    </button>
                 </form>
             </div>
             </div>
