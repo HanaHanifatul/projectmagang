@@ -70,14 +70,15 @@ class PublicationController extends Controller
                     $tertundaTahapan++;
                 }
             }
-            // KONDISI 2: Tahapan Sedang Berlangsung
+            // KONDISI 3: Tahapan Sedang Berlangsung
             else if (!empty($plan->plan_start_date) && !empty($plan->plan_end_date)){
                 $sedangBerlangsungTahapan++;
             }
-            // KONDISI 3: Tahapan Tertunda
+            // KONDISI 2: Tahapan Tertunda
             else if ($plan->plan_end_date) {
                 $tertundaTahapan++;
             }
+            
         }
 
         // --- PENGHITUNGAN PROGRESS KUMULATIF PUBLIKASI ---
@@ -127,6 +128,84 @@ class PublicationController extends Controller
         'tertundaTahapan',
         'persentaseRealisasi'
     ));
+}
+
+private function getStatistikPerTriwulan($triwulan)
+{
+    $publications = Publication::with([
+        'user',
+        'stepsPlans.stepsFinals.struggles'
+    ])->get();
+
+    // Variabel untuk triwulan yang dipilih
+    $totalPublikasi = 0;
+    $sedangBerlangsungPublikasi = 0;
+    $sudahSelesaiPublikasi = 0;
+    
+    $totalTahapan = 0;
+    $sedangBerlangsungTahapan = 0;
+    $sudahSelesaiTahapan = 0;
+    $tertundaTahapan = 0;
+
+    foreach ($publications as $publication) {
+        $rekapPlans = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+        $rekapFinals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
+
+        foreach ($publication->stepsPlans as $plan) {
+            $q = getQuarter($plan->plan_start_date);
+            
+            // Hanya hitung tahapan di triwulan yang dipilih
+            if ($q == $triwulan) {
+                $totalTahapan++;
+                $rekapPlans[$q]++;
+
+                if ($plan->stepsFinals) {
+                    $sudahSelesaiTahapan++;
+                    $fq = getQuarter($plan->stepsFinals->actual_started);
+                    if ($fq) {
+                        $rekapFinals[$fq]++;
+                    }
+
+                    if ($fq && $q && $fq != $q) {
+                        $tertundaTahapan++;
+                    }
+                } else if ($plan->plan_end_date && $plan->plan_end_date < now()) {
+                    $tertundaTahapan++;
+                } else if (!empty($plan->plan_start_date) && !empty($plan->plan_end_date)) {
+                    $sedangBerlangsungTahapan++;
+                }
+            }
+        }
+
+        // Hitung publikasi untuk triwulan
+        if ($rekapPlans[$triwulan] > 0) {
+            $totalPublikasi++;
+            if ($rekapFinals[$triwulan] == $rekapPlans[$triwulan]) {
+                $sudahSelesaiPublikasi++;
+            } else {
+                $sedangBerlangsungPublikasi++;
+            }
+        }
+    }
+
+    $persentaseRealisasi = ($totalTahapan > 0) 
+        ? round(($sudahSelesaiTahapan / $totalTahapan) * 100) 
+        : 0;
+
+    return response()->json([
+        'publikasi' => [
+            'total' => $totalPublikasi,
+            'sedangBerlangsung' => $sedangBerlangsungPublikasi,
+            'sudahSelesai' => $sudahSelesaiPublikasi,
+        ],
+        'tahapan' => [
+            'total' => $totalTahapan,
+            'sedangBerlangsung' => $sedangBerlangsungTahapan,
+            'sudahSelesai' => $sudahSelesaiTahapan,
+            'tertunda' => $tertundaTahapan,
+            'persentaseRealisasi' => $persentaseRealisasi,
+        ]
+    ]);
 }
 
     public function getRouteKeyName()
