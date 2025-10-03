@@ -182,19 +182,19 @@ class PublicationController extends Controller
             ? $request->publication_report_other
             : $request->publication_report;
 
-        $publication = Publication::findOrFail($publication);
         $publication->update([
             'publication_name'   => $request->publication_name,
             'publication_report' => $publicationReport,
             'publication_pic'    => $request->publication_pic,
         ]);
 
-        return redirect()->route('daftarpublikasi')->with('success', 'Publikasi berhasil ditambahkan.');
+        return redirect()->route('daftarpublikasi')
+            ->with('success', 'Publikasi berhasil diperbarui.');
     }
+
 
     public function destroy(Publication $publication)
     {
-        $publication = Publication::findOrFail($publication);
 
         // Hapus semua StepsPlan yang terkait
         $publication->stepsPlans()->delete();
@@ -212,8 +212,13 @@ class PublicationController extends Controller
 
         $publications = Publication::when($query, function ($q) use ($query) {
             $q->where('publication_report', 'like', "%{$query}%")
-            ->orWhere('publication_name', 'like', "%{$query}%");
-        })->get();
+            ->orWhere('publication_name', 'like', "%{$query}%")
+            ->orWhere('publication_pic', 'like', "%{$query}%");
+        })
+        ->with([
+            'user',
+            'stepsPlans.stepsFinals.struggles'])
+        ->get();
 
         foreach ($publications as $publication) {
             // inisialisasi jumlah per triwulan

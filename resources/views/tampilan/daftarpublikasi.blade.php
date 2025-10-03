@@ -326,7 +326,7 @@
                                 }">
 
                                 <!-- Tombol Edit -->
-                                <button onclick="openEditModal({{ $publication->publication_id }}, '{{ $publication->publication_report }}', '{{ $publication->publication_name }}', '{{ $publication->publication_pic }}')"
+                                <button onclick="openEditModal('{{ $publication->slug_publication }}', '{{ $publication->publication_report }}', '{{ $publication->publication_name }}', '{{ $publication->publication_pic }}')"
                                     class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-lg mb-1">
                                     <!-- Ikon Pensil -->
                                     <svg xmlns="http://www.w3.org/2000/svg" 
@@ -380,7 +380,7 @@
 
                 <h2 class="text-lg font-semibold mb-4">Edit Publikasi</h2>
 
-                <form id="editForm" method="POST">
+                <form id="editForm" action="{{ route('publications.update', $publication) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -487,7 +487,7 @@ function openEditModal(id, report, name, pic) {
     document.getElementById('edit_pic').value = pic;
 
     // update action form
-    document.getElementById('editForm').action = `/publications/${id}`;
+    document.getElementById('editForm').action = `/publications/${slug_publication}`;
 
     // isi alpine variable untuk select laporan
     let alpineComp = Alpine.$data(document.querySelector('#editModal .bg-white'));
@@ -626,7 +626,7 @@ document.getElementById('search').addEventListener('keyup', function() {
                         ${(() => {
                             let html = `
                                 <!-- Tombol Detail -->
-                                <a href="/tahapan/${item.publication_id}" 
+                                <a href="/tahapan/${item.slug_publication}" 
                                 class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg mb-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                         <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
@@ -639,7 +639,7 @@ document.getElementById('search').addEventListener('keyup', function() {
                             // Tambahkan tombol hapus hanya jika role = ketua_tim
                             if (window.userRole === "ketua_tim") {
                                 html += `
-                                <button onclick="openEditModal(${item.publication_id}, '${item.publication_report}', '${item.publication_name}', '${item.publication_pic}')"
+                                <button onclick="openEditModal(${item.slug_publication}, '${item.publication_report}', '${item.publication_name}', '${item.publication_pic}')"
                                     class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-lg mb-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" 
                                         fill="none" viewBox="0 0 24 24" stroke-width="1.5" 
@@ -651,7 +651,7 @@ document.getElementById('search').addEventListener('keyup', function() {
                                     </svg>
                                     Edit
                                 </button>
-                                <button onclick="deletePublication(${item.publication_id})"
+                                <button onclick="deletePublication(${item.slug_publication})"
                                     class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-red-600 hover:bg-red-700 rounded-lg mb-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                         <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd"/>
@@ -669,10 +669,10 @@ document.getElementById('search').addEventListener('keyup', function() {
         });
 });
 
-function deletePublication(id) {
+function deletePublication(slug_publication) {
     if (!confirm("Yakin ingin menghapus publikasi ini?")) return;
 
-    fetch(`/publications/${id}`, {
+    fetch(`/publications/${slug_publication}`, {
         method: 'DELETE',
         headers: {
             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content

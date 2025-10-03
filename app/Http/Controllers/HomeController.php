@@ -10,7 +10,7 @@ class HomeController extends Controller
     public function index()
         {
             $publications = Publication::with('stepsPlans')->get();
-            return view('tampilan.homeketua', compact(var_name: 'publications'));
+            return view('tampilan.daftarpublikasi', compact('publications'));
             // return view('tampilan.homeketua');
         }
 }

@@ -17,7 +17,7 @@ use App\Http\Controllers\PublicationExportController;
 */
 
 // Halaman utama
-Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/', [PublicationController::class, 'index'])->name('daftarpublikasi');
 
 // Laporan
 Route::get('/laporan', function () {
@@ -26,6 +26,9 @@ Route::get('/laporan', function () {
 
 // ==================== Publications ====================
 Route::resource('publications', PublicationController::class);
+
+// Update publikasi
+Route::put('/publications/{publication}', [PublicationController::class, 'update'])->name('publications.update');
 
 // Search publications
 Route::get('/publications/search', [PublicationController::class, 'search'])->name('publications.search');
