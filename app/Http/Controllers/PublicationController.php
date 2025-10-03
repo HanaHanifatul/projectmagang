@@ -70,13 +70,13 @@ class PublicationController extends Controller
                     $tertundaTahapan++;
                 }
             }
-            // KONDISI 2: Tahapan Tertunda
-            else if ($plan->plan_end_date && $plan->plan_end_date < now()) {
-                $tertundaTahapan++;
-            }
-            // KONDISI 3: Tahapan Sedang Berlangsung
+            // KONDISI 2: Tahapan Sedang Berlangsung
             else if (!empty($plan->plan_start_date) && !empty($plan->plan_end_date)){
                 $sedangBerlangsungTahapan++;
+            }
+            // KONDISI 3: Tahapan Tertunda
+            else if ($plan->plan_end_date) {
+                $tertundaTahapan++;
             }
         }
 
@@ -129,86 +129,10 @@ class PublicationController extends Controller
     ));
 }
 
-/**
- * Helper method untuk menghitung statistik per triwulan (dipanggil via AJAX)
- */
-private function getStatistikPerTriwulan($triwulan)
-{
-    $publications = Publication::with([
-        'user',
-        'stepsPlans.stepsFinals.struggles'
-    ])->get();
-
-    // Variabel untuk triwulan yang dipilih
-    $totalPublikasi = 0;
-    $sedangBerlangsungPublikasi = 0;
-    $sudahSelesaiPublikasi = 0;
-    
-    $totalTahapan = 0;
-    $sedangBerlangsungTahapan = 0;
-    $sudahSelesaiTahapan = 0;
-    $tertundaTahapan = 0;
-
-    foreach ($publications as $publication) {
-        $rekapPlans = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
-        $rekapFinals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
-
-        foreach ($publication->stepsPlans as $plan) {
-            $q = getQuarter($plan->plan_start_date);
-            
-            // Hanya hitung tahapan di triwulan yang dipilih
-            if ($q == $triwulan) {
-                $totalTahapan++;
-                $rekapPlans[$q]++;
-
-                if ($plan->stepsFinals) {
-                    $sudahSelesaiTahapan++;
-                    $fq = getQuarter($plan->stepsFinals->actual_started);
-                    if ($fq) {
-                        $rekapFinals[$fq]++;
-                    }
-
-                    if ($fq && $q && $fq != $q) {
-                        $tertundaTahapan++;
-                    }
-                } else if ($plan->plan_end_date && $plan->plan_end_date < now()) {
-                    $tertundaTahapan++;
-                } else if (!empty($plan->plan_start_date) && !empty($plan->plan_end_date)) {
-                    $sedangBerlangsungTahapan++;
-                }
-            }
-        }
-
-        // Hitung publikasi untuk triwulan
-        if ($rekapPlans[$triwulan] > 0) {
-            $totalPublikasi++;
-            if ($rekapFinals[$triwulan] == $rekapPlans[$triwulan]) {
-                $sudahSelesaiPublikasi++;
-            } else {
-                $sedangBerlangsungPublikasi++;
-            }
-        }
+    public function getRouteKeyName()
+    {
+        return 'slug_publication'; // bukan id lagi
     }
-
-    $persentaseRealisasi = ($totalTahapan > 0) 
-        ? round(($sudahSelesaiTahapan / $totalTahapan) * 100) 
-        : 0;
-
-    return response()->json([
-        'publikasi' => [
-            'total' => $totalPublikasi,
-            'sedangBerlangsung' => $sedangBerlangsungPublikasi,
-            'sudahSelesai' => $sudahSelesaiPublikasi,
-        ],
-        'tahapan' => [
-            'total' => $totalTahapan,
-            'sedangBerlangsung' => $sedangBerlangsungTahapan,
-            'sudahSelesai' => $sudahSelesaiTahapan,
-            'tertunda' => $tertundaTahapan,
-            'persentaseRealisasi' => $persentaseRealisasi,
-        ]
-    ]);
-}
 
     // Menampilkan detail publikasi dengan semua relasinya
     public function show($id)
@@ -253,10 +177,6 @@ private function getStatistikPerTriwulan($triwulan)
 
     }
 
-    public function getRouteKeyName()
-    {
-        return 'slug_publication'; // bukan id lagi
-    }
 
     public function update(Request $request, Publication $publication)
     {        
@@ -310,34 +230,32 @@ private function getStatistikPerTriwulan($triwulan)
         })
         ->with([
             'user',
-            'stepsPlans.stepsFinals.struggles'])
+            'stepsPlans.stepsFinals.struggles'
+        ])
         ->get();
 
         foreach ($publications as $publication) {
-            // inisialisasi jumlah per triwulan
+            // ... kode rekap yang sama ...
+            
             $rekapPlans = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
             $rekapFinals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
             $lintasTriwulan = 0;
             $progressKumulatif = 0;
 
             foreach ($publication->stepsPlans as $plan) {
-                // hitung berdasarkan tanggal rencana
                 $q = getQuarter($plan->plan_start_date);
                 if ($q) $rekapPlans[$q]++;
 
-                // kalau sudah ada realisasi, hitung juga
                 if ($plan->stepsFinals) {
                     $fq = getQuarter($plan->stepsFinals->actual_started);
                     if ($fq) $rekapFinals[$fq]++;
 
-                    // cek apakah realisasi lintas triwulan
                     if ($fq && $q && $fq != $q) {
                         $lintasTriwulan++;
                     }
                 }
             }
 
-            // hitung progress kumulatif
             $totalPlans = array_sum($rekapPlans);
             $totalFinals = array_sum($rekapFinals);
             if ($totalPlans > 0) {
@@ -346,7 +264,6 @@ private function getStatistikPerTriwulan($triwulan)
                 $progressKumulatif = 0;
             }
 
-            // hitung progress per triwulan
             $progressTriwulan = [];
             foreach ([1, 2, 3, 4] as $q) {
                 if ($rekapPlans[$q] > 0) {
@@ -356,7 +273,6 @@ private function getStatistikPerTriwulan($triwulan)
                 }
             }
 
-            // inject hasil rekap ke model publikasi
             $publication->rekapPlans = $rekapPlans;
             $publication->rekapFinals = $rekapFinals;
             $publication->lintasTriwulan = $lintasTriwulan;
@@ -364,7 +280,19 @@ private function getStatistikPerTriwulan($triwulan)
             $publication->progressTriwulan = $progressTriwulan;
         }
 
-        return response()->json($publications);
+        // Return dengan explicit fields termasuk slug_publication
+        return response()->json($publications->map(function($pub) {
+            return [
+                'slug_publication' => $pub->slug_publication, // PENTING: pastikan ini ada
+                'publication_report' => $pub->publication_report,
+                'publication_name' => $pub->publication_name,
+                'publication_pic' => $pub->publication_pic,
+                'rekapPlans' => $pub->rekapPlans,
+                'rekapFinals' => $pub->rekapFinals,
+                'lintasTriwulan' => $pub->lintasTriwulan,
+                'progressKumulatif' => $pub->progressKumulatif,
+                'progressTriwulan' => $pub->progressTriwulan,
+            ];
+        }));
     }
-
 }
