@@ -244,10 +244,10 @@
                             <!-- Realisasi Triwulan I -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapFinals[1] ?? 0) > 0)
-                                    @if($publication->lintasTriwulan > 0)
+                                    @if(($publication->lintasTriwulan[1] ?? 0) > 0)
                                         <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[1] }} Selesai </div>
                                         <p class="text-xs text-orange-500 mt-1">
-                                            +{{ $publication->lintasTriwulan }} lintas triwulan
+                                            +{{ $publication->lintasTriwulan[1] }} lintas triwulan
                                         </p>
                                     @else
                                         <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[1] }} Selesai </div>
@@ -259,10 +259,10 @@
                             <!-- Realisasi Triwulan II -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapFinals[2] ?? 0) > 0)
-                                    @if($publication->lintasTriwulan > 0)
+                                    @if(($publication->lintasTriwulan[2] ?? 0) > 0)
                                         <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[2] }} Selesai </div>
                                         <p class="text-xs text-orange-500 mt-1">
-                                            +{{ $publication->lintasTriwulan }} lintas triwulan
+                                            +{{ $publication->lintasTriwulan[2] }} lintas triwulan
                                         </p>
                                     @else
                                         <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[2] }} Selesai </div>
@@ -274,10 +274,10 @@
                             <!-- Realisasi Triwulan III -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapFinals[3] ?? 0) > 0)
-                                    @if($publication->lintasTriwulan > 0)
+                                    @if(($publication->lintasTriwulan[3] ?? 0) > 0)
                                         <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[3] }} Selesai </div>
                                         <p class="text-xs text-orange-500 mt-1">
-                                            +{{ $publication->lintasTriwulan }} lintas triwulan
+                                            +{{ $publication->lintasTriwulan[3] }} lintas triwulan
                                         </p>
                                     @else
                                         <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[3] }} Selesai </div>
@@ -289,10 +289,10 @@
                             <!-- Realisasi Triwulan IV -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapFinals[4] ?? 0) > 0)
-                                    @if($publication->lintasTriwulan > 0)
+                                    @if(($publication->lintasTriwulan[4] ?? 0) > 0)
                                         <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[4] }} Selesai </div>
                                         <p class="text-xs text-orange-500 mt-1">
-                                            +{{ $publication->lintasTriwulan }} lintas triwulan
+                                            +{{ $publication->lintasTriwulan[4] }} lintas triwulan
                                         </p>
                                     @else
                                         <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[4] }} Selesai </div>

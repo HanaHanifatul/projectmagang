@@ -42,7 +42,8 @@ class PublicationController extends Controller
             // inisialisasi jumlah per triwulan
             $rekapPlans = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
             $rekapFinals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
-            $lintasTriwulan = 0;
+            // $lintasTriwulan = 0;
+            $lintasTriwulan = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
             $progressKumulatif = 0;
 
             // Looping di setiap tahapan 
@@ -54,28 +55,7 @@ class PublicationController extends Controller
                 if ($q) {
                     $rekapPlans[$q]++;
                 }
-                // $fq = $plan->stepsFinals ? getQuarter($plan->stepsFinals->actual_started) : null;
-
-                // // 1. BELUM BERLANGSUNG -> Tahapan dibuat tapi form rencana belum diisi
-                // if (empty($plan->plan_start_date) && empty($plan->plan_end_date)) {
-                //     $belumBerlangsungTahapan++;
-                // }
-
-                // // 2. SEDANG BERLANGSUNG -> Form rencana ada, tapi realisasi belum ada
-                // else if (!empty($plan->plan_start_date) && !$plan->stepsFinals) {
-                //     $sedangBerlangsungTahapan++;
-                // }
-
-                // // 3. SELESAI -> Realisasi sudah diisi
-                // else if ($plan->stepsFinals) {
-                //     $sudahSelesaiTahapan++;
-
-                //     // 4. TERTUNDA/MUNDUR -> jika triwulan rencana != triwulan realisasi
-                //     if ($fq && $q && $fq != $q) {
-                //         $tertundaTahapan++;
-                //     }
-                // }
-                // KONDISI 1: Tahapan Sudah Selesai 
+                
                 if ($plan->stepsFinals) {
                     $sudahSelesaiTahapan++;
 
@@ -87,7 +67,7 @@ class PublicationController extends Controller
 
                     // Cek Lintas Triwulan
                     if ($fq && $q && $fq != $q) {
-                        $lintasTriwulan++;
+                        $lintasTriwulan[$fq]++;
                         $tertundaTahapan++;
                     }
                 }
@@ -327,8 +307,6 @@ class PublicationController extends Controller
         return redirect()->route('daftarpublikasi')
             ->with('success', 'Publikasi berhasil diperbarui.');
     }
-
-    
 
     public function destroy(Publication $publication)
     {
