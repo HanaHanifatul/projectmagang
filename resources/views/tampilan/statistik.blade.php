@@ -12,6 +12,7 @@
              },
              tahapan: {
                  total: 0,
+                 belumBerlangsung:0,
                  sedangBerlangsung: 0,
                  sudahSelesai: 0,
                  tertunda: 0,
