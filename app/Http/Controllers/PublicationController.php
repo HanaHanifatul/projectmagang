@@ -24,18 +24,6 @@ class PublicationController extends Controller
             'user',
             'stepsPlans.stepsFinals.struggles'
         ])->get();
-
-        // Variabel untuk Rekapitulasi Publikasi (total kumulatif)
-        $totalPublikasi = $publications->count();
-        $sedangBerlangsungPublikasi = 0;
-        $sudahSelesaiPublikasi = 0;
-
-        // Variabel untuk Rekapitulasi Tahapan (total kumulatif)
-        $totalTahapan = 0;
-        $belumBerlangsungTahapan = 0;
-        $sedangBerlangsungTahapan = 0;
-        $sudahSelesaiTahapan = 0;
-        $tertundaTahapan = 0;
         
         // looping dan perhitungan per publikasi
         foreach ($publications as $publication) {
@@ -48,7 +36,6 @@ class PublicationController extends Controller
 
             // Looping di setiap tahapan 
             foreach ($publication->stepsPlans as $plan) {
-                $totalTahapan++;
                 
                 // Tentukan triwulan dari rencana dan realisasi
                 $q = getQuarter($plan->plan_start_date);
@@ -57,8 +44,6 @@ class PublicationController extends Controller
                 }
                 
                 if ($plan->stepsFinals) {
-                    $sudahSelesaiTahapan++;
-
                     // Tentukan triwulan realisasi
                     $fq = getQuarter($plan->stepsFinals->actual_started);
                     if ($fq) {
@@ -68,31 +53,14 @@ class PublicationController extends Controller
                     // Cek Lintas Triwulan
                     if ($fq && $q && $fq != $q) {
                         $lintasTriwulan[$fq]++;
-                        $tertundaTahapan++;
                     }
-                }
-                // KONDISI 3: Tahapan Sedang Berlangsung
-                else if (!empty($plan->plan_start_date) && !empty($plan->plan_end_date)){
-                    $sedangBerlangsungTahapan++;
-                }
-                // KONDISI 2: Tahapan Tertunda
-                else if ($plan->plan_end_date) {
-                    $tertundaTahapan++;
-                }
-                
+                }        
             }
 
             // --- PENGHITUNGAN PROGRESS KUMULATIF PUBLIKASI ---
             $totalPlans = array_sum($rekapPlans);
             $totalFinals = array_sum($rekapFinals);
             $progressKumulatif = ($totalPlans > 0) ? ($totalFinals / $totalPlans) * 100 : 0;
-
-            // Klasifikasi status publikasi KUMULATIF
-            if ($progressKumulatif == 100) {
-                $sudahSelesaiPublikasi++;
-            } elseif ($progressKumulatif < 100) {
-                $sedangBerlangsungPublikasi++;
-            }
 
             // Hitung progress per triwulan
             $progressTriwulan = [];
@@ -112,24 +80,8 @@ class PublicationController extends Controller
             $publication->progressTriwulan = $progressTriwulan;
         }
 
-        // Perhitungan persentase realisasi KUMULATIF
-        $persentaseRealisasi = ($totalTahapan > 0) 
-            ? round(($sudahSelesaiTahapan / $totalTahapan) * 100) 
-            : 0;
-
         return view('tampilan.homeketua', compact(
             'publications',
-            // Publikasi
-            'totalPublikasi',
-            'sedangBerlangsungPublikasi',
-            'sudahSelesaiPublikasi',
-            // Tahapan
-            'belumBerlangsungTahapan',
-            'sedangBerlangsungTahapan',
-            'sudahSelesaiTahapan',
-            'tertundaTahapan',
-            'totalTahapan',
-            'persentaseRealisasi'
         ));
     }
 
@@ -142,6 +94,7 @@ class PublicationController extends Controller
 
         // Variabel untuk Rekapitulasi Publikasi (total kumulatif)
         $totalPublikasi = $publications->count();
+        $belumBerlangsungPublikasi = 0;
         $sedangBerlangsungPublikasi = 0;
         $sudahSelesaiPublikasi = 0;
 
@@ -183,34 +136,21 @@ class PublicationController extends Controller
                     else if (!empty($plan->plan_start_date) && !empty($plan->plan_end_date)) {
                         $sedangBerlangsungTahapan++;
                     }
-
-                    // if ($plan->stepsFinals) {
-                    //     $sudahSelesaiTahapan++;
-                    //     $fq = getQuarter($plan->stepsFinals->actual_started);
-                    //     if ($fq) {
-                    //         $rekapFinals[$fq]++;
-                    //     }
-
-                    //     if ($fq && $q && $fq != $q) {
-                    //         $tertundaTahapan++;
-                    //     }
-                    // } else if ($plan->plan_end_date && $plan->plan_end_date < now()) {
-                    //     $tertundaTahapan++;
-                    // } else if (!empty($plan->plan_start_date) && !empty($plan->plan_end_date)) {
-                    //     $sedangBerlangsungTahapan++;
-                    // }
                 }
             }
 
-            // Hitung publikasi untuk triwulan
-            if ($rekapPlans[$triwulan] > 0) {
-                $totalPublikasi++;
-                if ($rekapFinals[$triwulan] == $rekapPlans[$triwulan]) {
-                    $sudahSelesaiPublikasi++;
-                } else {
-                    $sedangBerlangsungPublikasi++;
-                }
-            }
+            // --- PENGHITUNGAN PROGRESS KUMULATIF PUBLIKASI ---
+            $totalPlans = array_sum($rekapPlans);
+            $totalFinals = array_sum($rekapFinals);
+            $progressKumulatif = ($totalPlans > 0) ? ($totalFinals / $totalPlans) * 100 : 0;
+
+            // Klasifikasi status publikasi KUMULATIF
+            if ($progressKumulatif == 100) {
+                $sudahSelesaiPublikasi++;
+            } 
+            elseif ($progressKumulatif < 100) {
+                $belumBerlangsungPublikasi++;
+            } 
         }
 
         $persentaseRealisasi = ($totalTahapan > 0) 
@@ -220,6 +160,7 @@ class PublicationController extends Controller
         return response()->json([
             'publikasi' => [
                 'total' => $totalPublikasi,
+                'belumBerlangsung' => $belumBerlangsungPublikasi,
                 'sedangBerlangsung' => $sedangBerlangsungPublikasi,
                 'sudahSelesai' => $sudahSelesaiPublikasi,
             ],
