@@ -111,10 +111,10 @@ class PublicationController extends Controller
             'stepsPlans.stepsFinals.struggles'
         ])->get();
 
-        $totalPublikasi = $publications->count();
-        $belumBerlangsungPublikasi = 0;
-        $sedangBerlangsungPublikasi = 0;
-        $sudahSelesaiPublikasi = 0;
+        // $totalPublikasi = $publications->count();
+        // $belumBerlangsungPublikasi = 0;
+        // $sedangBerlangsungPublikasi = 0;
+        // $sudahSelesaiPublikasi = 0;
 
         $totalTahapan = 0;
         $belumBerlangsungTahapan = 0;
@@ -164,18 +164,18 @@ class PublicationController extends Controller
             }
 
             // Hitung progres publikasi di triwulan ini
-            $totalPlans = array_sum($rekapPlans);
-            $totalFinals = array_sum($rekapFinals);
-            $progressTriwulan = ($totalPlans > 0) ? ($totalFinals / $totalPlans) * 100 : 0;
+            // $totalPlans = array_sum($rekapPlans);
+            // $totalFinals = array_sum($rekapFinals);
+            // $progressTriwulan = ($totalPlans > 0) ? ($totalFinals / $totalPlans) * 100 : 0;
 
             // Status publikasi
-            if ($selesaiTahapan > 0 && $berlangsungTahapan == 0 && $belumTahapan == 0) {
-                $sudahSelesaiPublikasi++;
-            } elseif ($berlangsungTahapan > 0) {
-                $sedangBerlangsungPublikasi++;
-            } elseif ($belumTahapan > 0 && $berlangsungTahapan == 0 && $selesaiTahapan == 0) {
-                $belumBerlangsungPublikasi++;
-            }
+            // if ($selesaiTahapan > 0 && $berlangsungTahapan == 0 && $belumTahapan == 0) {
+            //     $sudahSelesaiPublikasi++;
+            // } elseif ($berlangsungTahapan > 0) {
+            //     $sedangBerlangsungPublikasi++;
+            // } elseif ($belumTahapan > 0 && $berlangsungTahapan == 0 && $selesaiTahapan == 0) {
+            //     $belumBerlangsungPublikasi++;
+            // }
         }
 
         $persentaseRealisasi = ($totalTahapan > 0) 
@@ -183,12 +183,12 @@ class PublicationController extends Controller
             : 0;
 
         return response()->json([
-            'publikasi' => [
-                'total' => $totalPublikasi,
-                'belumBerlangsung' => $belumBerlangsungPublikasi,
-                'sedangBerlangsung' => $sedangBerlangsungPublikasi,
-                'sudahSelesai' => $sudahSelesaiPublikasi,
-            ],
+            // 'publikasi' => [
+            //     'total' => $totalPublikasi,
+            //     'belumBerlangsung' => $belumBerlangsungPublikasi,
+            //     'sedangBerlangsung' => $sedangBerlangsungPublikasi,
+            //     'sudahSelesai' => $sudahSelesaiPublikasi,
+            // ],
             'tahapan' => [
                 'total' => $totalTahapan,
                 'belumBerlangsung' => $belumBerlangsungTahapan,
