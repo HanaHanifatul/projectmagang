@@ -7,7 +7,7 @@
         </div>
 
         <div class="flex flex-wrap gap-2 justify-start sm:justify-end" x-data="{ open: false }">
-            @if(auth()->check() && auth()->user()->role === 'ketua_tim' || 'admin')
+            @if(auth()->check() && auth()->user()->role === 'ketua_tim' || auth()->user()->role === 'admin')
                 <!-- Tombol Unduh Excel -->
                 <a href="{{ route('publications.exportTable') }}"
                     class="flex items-center justify-center gap-1 border text-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm shadow hover:text-white hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
@@ -485,7 +485,7 @@
                                     Detail
                                 </a>
 
-                                @if(auth()->check() && auth()->user()->role === 'ketua_tim' || 'admin')
+                                @if(auth()->check() && auth()->user()->role === 'ketua_tim' || auth()->user()->role === 'admin')
                                     <div x-data="{
                                         open: false, 
                                         editOpen: false, 
@@ -958,7 +958,7 @@ document.getElementById('search').addEventListener('keyup', function() {
                             `;
 
                             // Tambahkan tombol edit dan hapus hanya jika role = ketua_tim
-                            if (window.userRole === "ketua_tim" || "admin") {
+                            if (window.userRole === "ketua_tim" || auth()->user()->role === "admin") {
                                 // ✅ FIXED: Parameter onclick diganti ke slug_publication dan escape quotes
                                 html += `
                                 <button onclick="openEditModal('${item.slug_publication}', '${item.publication_report.replace(/'/g, "\\'")}', '${item.publication_name.replace(/'/g, "\\'")}', '${item.publication_pic.replace(/'/g, "\\'")}')"

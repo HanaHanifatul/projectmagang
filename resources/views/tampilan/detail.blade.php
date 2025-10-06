@@ -49,7 +49,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-6 gap-2 mb-4 items-center">
                     <!-- Search (2 kolom di layar besar) -->
-                    <div class="{{ (auth()->check() && auth()->user()->role === 'ketua_tim' || 'admin') ? 'sm:col-span-4' : 'sm:col-span-6' }}">
+                    <div class="{{ (auth()->check() && in_array(auth()->user()->role, ['ketua_tim', 'admin'])) ? 'sm:col-span-4' : 'sm:col-span-6' }}">
                             <input 
                             type="text" 
                             id="search-input"
@@ -59,7 +59,7 @@
                             class="w-full border px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                     </div>
-                    @if(auth()->check() && auth()->user()->role === 'ketua_tim' || 'admin')
+                    @if(auth()->check() && in_array(auth()->user()->role, ['ketua_tim', 'admin']))
                         <!-- Tombol Unduh Excel -->
                         <div class="sm:col-span-1">
                             <a href="{{ route('publication.export', $publication->slug_publication) }}" 
@@ -270,7 +270,7 @@
                                 </div>
                             </div>
                             <!-- Modal Edit Tahapan -->
-                            @if(auth()->check() && auth()->user()->role === 'ketua_tim' || 'admin')
+                            @if(auth()->check() && in_array(auth()->user()->role, ['ketua_tim', 'admin', 'operator']))
                                 <div x-data="{ open: false }">
                                     <button 
                                         @click="open = true"
@@ -441,7 +441,7 @@
                             <!-- Tombol Edit -->
                             <div class="flex justify-end mt-4 gap-2">
                                 @if(auth()->check()) 
-                                    @if(auth()->user()->role === 'ketua_tim' || 'admin')
+                                    @if(auth()->user()->role === 'ketua_tim' || auth()->user()->role === 'admin')
                                         <div x-data="{ showConfirm: false }">
                                             <button type="button"
                                                 @click="showConfirm = true"
