@@ -14,6 +14,13 @@
     <script src="https://unpkg.com/alpinejs" defer></script>
 </head>
 <body>
+    <header class="fixed top-0 left-0 right-0 w-full bg-[#002b6b] z-50 shadow-md">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center space-x-3">
+        <img src="{{ asset('images/logo-bps.png') }}" alt="Logo BPS" class="h-8">
+        <span class="text-white font-semibold">BADAN PUSAT STATISTIK</span>
+    </div>
+</header>
+
     <div>
         {{-- Navbar --}}
         <x-navbar ></x-navbar>
@@ -30,10 +37,27 @@
             @include('tampilan.daftarpublikasi')
 
             <!-- Grafik Ringkasan -->
-            @include('tampilan.dashboard')
+            {{-- @include('tampilan.dashboard') --}}
         </div>
     </main>
 </body>
+<footer class="bg-blue-950 text-white mt-8">
+    <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
+        <!-- Logo dan instansi -->
+        <div class="flex items-center">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Lambang_Badan_Pusat_Statistik_%28BPS%29_Indonesia.svg/960px-Lambang_Badan_Pusat_Statistik_%28BPS%29_Indonesia.svg.png" class="h-8 me-3"
+                alt="Logo BPS" />
+            <span class="font-semibold text-sm md:text-base">BADAN PUSAT STATISTIK</span>
+        </div>
+
+        <!-- Kredit mahasiswa magang -->
+        <div class="mt-4 md:mt-0 text-xs md:text-sm text-center md:text-right">
+            <p>© 2025 Badan Pusat Statistik</p>
+            <p class="italic">Kredit by Mahasiswa Magang BPS Kota Bekasi</p>
+        </div>
+    </div>
+</footer>
+
 </html>
 
 <script>

@@ -1,5 +1,5 @@
-<div>
-    <nav class="bg-blue-800" x-data="{isOpen: false}">
+<div class="fixed top-0 left-0 right-0 w-full bg-[#002b6b] z-50 shadow-md px-4 py-3">
+    <nav class="bg-blue-9" x-data="{isOpen: false}">
         <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <header class="px-5 py-2 shadow-md">
                 <div class="flex items-center justify-between">
@@ -10,7 +10,7 @@
                         </svg>
                         <!-- Title -->
                         <div class="flex flex-col ">
-                            <h1 class="text-xl font-semibold text-white">SIMKA</h1>
+                            <h1 class="text-xl font-semibold text-white">SIMONIKA</h1>
                             <span class="text-sm text-gray-200">Sistem Monitoring Kegiatan Badan Pusat Statistik Kota Bekasi </span>
                         </div>
 
