@@ -649,25 +649,43 @@
 
 <!-- skrip ajax fitur search -->
 <script>
+window.csrfToken = "{{ csrf_token() }}";
 window.userRole = "{{ auth()->check() ? auth()->user()->role : '' }}"; //ambil role
 
-function openEditModal(id, report, name, pic) {
+// ✅ FIXED: Parameter diganti dari id ke slug, dan ditambahkan slug sebagai parameter
+function openEditModal(slug, report, name, pic) {
     let modal = document.getElementById('editModal');
     modal.classList.remove('hidden');
-    modal.classList.add('flex'); // biar pakai flex (center)
+    modal.classList.add('flex');
 
     // isi field non-alpine
     document.getElementById('edit_name').value = name;
     document.getElementById('edit_pic').value = pic;
 
-    // update action form
-    document.getElementById('editForm').action = `/publications/${slug_publication}`;
+    // ✅ FIXED: Update action form dengan slug yang benar (JavaScript variable, bukan PHP)
+    document.getElementById('editForm').action = `/publications/${slug}`;
+    
+    // ✅ FIXED: Tambahkan method spoofing untuk PUT request
+    let methodInput = document.getElementById('editForm').querySelector('input[name="_method"]');
+    if (!methodInput) {
+        methodInput = document.createElement('input');
+        methodInput.type = 'hidden';
+        methodInput.name = '_method';
+        methodInput.value = 'PUT';
+        document.getElementById('editForm').appendChild(methodInput);
+    } else {
+        methodInput.value = 'PUT';
+    }
 
     // isi alpine variable untuk select laporan
-    let alpineComp = Alpine.$data(document.querySelector('#editModal .bg-white'));
-    alpineComp.editReport = report;
-    alpineComp.editOther = (report === 'other');
-    alpineComp.editReportOther = (report !== 'other') ? '' : '';
+    try {
+        let alpineComp = Alpine.$data(document.querySelector('#editModal .bg-white'));
+        alpineComp.editReport = report;
+        alpineComp.editOther = (report === 'other');
+        alpineComp.editReportOther = (report !== 'other') ? '' : report;
+    } catch (e) {
+        console.warn('Alpine.js not found or modal component not initialized:', e);
+    }
 }
 
 function closeEditModal() {
@@ -727,7 +745,17 @@ document.getElementById('search').addEventListener('keyup', function() {
                     <!-- Rencana Triwulan I -->
                     <td class="px-4 py-4 text-center">
                         ${(item.rekapPlans?.[1] ?? 0) > 0
-                            ? `<div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">${item.rekapPlans[1]} Rencana</div>
+                            ? `<div class="relative group inline-block">
+                                   <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block cursor-pointer hover:bg-blue-800 transition">
+                                       ${item.rekapPlans[1]} Rencana
+                                   </div>
+                                   <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                       <p class="font-semibold text-gray-800 mb-1">Daftar Rencana:</p>
+                                       <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                           ${(item.listPlans?.[1] || []).map(plan => `<li>${plan}</li>`).join('')}
+                                       </ul>
+                                   </div>
+                               </div>
                                <p class="text-xs text-gray-500 mt-1">${Math.round(item.progressTriwulan?.[1] ?? 0)}% selesai</p>`
                             : `<div class="px-3 py-1 text-black inline-block"> - </div>
                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>`
@@ -737,7 +765,17 @@ document.getElementById('search').addEventListener('keyup', function() {
                     <!-- Rencana Triwulan II -->
                     <td class="px-4 py-4 text-center">
                         ${(item.rekapPlans?.[2] ?? 0) > 0
-                            ? `<div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">${item.rekapPlans[2]} Rencana</div>
+                            ? `<div class="relative group inline-block">
+                                   <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block cursor-pointer hover:bg-blue-800 transition">
+                                       ${item.rekapPlans[2]} Rencana
+                                   </div>
+                                   <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                       <p class="font-semibold text-gray-800 mb-1">Daftar Rencana:</p>
+                                       <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                           ${(item.listPlans?.[2] || []).map(plan => `<li>${plan}</li>`).join('')}
+                                       </ul>
+                                   </div>
+                               </div>
                                <p class="text-xs text-gray-500 mt-1">${Math.round(item.progressTriwulan?.[2] ?? 0)}% selesai</p>`
                             : `<div class="px-3 py-1 text-black inline-block"> - </div>
                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>`
@@ -747,7 +785,17 @@ document.getElementById('search').addEventListener('keyup', function() {
                     <!-- Rencana Triwulan III -->
                     <td class="px-4 py-4 text-center">
                         ${(item.rekapPlans?.[3] ?? 0) > 0
-                            ? `<div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">${item.rekapPlans[3]} Rencana</div>
+                            ? `<div class="relative group inline-block">
+                                   <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block cursor-pointer hover:bg-blue-800 transition">
+                                       ${item.rekapPlans[3]} Rencana
+                                   </div>
+                                   <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                       <p class="font-semibold text-gray-800 mb-1">Daftar Rencana:</p>
+                                       <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                           ${(item.listPlans?.[3] || []).map(plan => `<li>${plan}</li>`).join('')}
+                                       </ul>
+                                   </div>
+                               </div>
                                <p class="text-xs text-gray-500 mt-1">${Math.round(item.progressTriwulan?.[3] ?? 0)}% selesai</p>`
                             : `<div class="px-3 py-1 text-black inline-block"> - </div>
                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>`
@@ -757,7 +805,17 @@ document.getElementById('search').addEventListener('keyup', function() {
                     <!-- Rencana Triwulan IV -->
                     <td class="px-4 py-4 text-center">
                         ${(item.rekapPlans?.[4] ?? 0) > 0
-                            ? `<div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">${item.rekapPlans[4]} Rencana</div>
+                            ? `<div class="relative group inline-block">
+                                   <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block cursor-pointer hover:bg-blue-800 transition">
+                                       ${item.rekapPlans[4]} Rencana
+                                   </div>
+                                   <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                       <p class="font-semibold text-gray-800 mb-1">Daftar Rencana:</p>
+                                       <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                           ${(item.listPlans?.[4] || []).map(plan => `<li>${plan}</li>`).join('')}
+                                       </ul>
+                                   </div>
+                               </div>
                                <p class="text-xs text-gray-500 mt-1">${Math.round(item.progressTriwulan?.[4] ?? 0)}% selesai</p>`
                             : `<div class="px-3 py-1 text-black inline-block"> - </div>
                                <p class="text-xs text-gray-500 mt-1">0% Direncanakan</p>`
@@ -767,7 +825,29 @@ document.getElementById('search').addEventListener('keyup', function() {
                     <!-- Realisasi Triwulan I -->
                     <td class="px-4 py-4 text-center">
                         ${(item.rekapFinals?.[1] ?? 0) > 0
-                            ? `<div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">${item.rekapFinals[1]} Selesai</div>`
+                            ? `<div class="relative inline-block group">
+                                   <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block cursor-pointer">
+                                       ${item.rekapFinals[1]} Selesai
+                                   </div>
+                                   <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                       <p class="font-semibold text-gray-800 mb-1">Daftar Realisasi:</p>
+                                       <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                           ${(item.listFinals?.[1] || []).map(final => `<li>${final}</li>`).join('')}
+                                       </ul>
+                                       ${(item.lintasTriwulan?.[1] ?? 0) > 0 ? `
+                                       <div class="mt-2 pt-2 border-t border-gray-200">
+                                           <p class="text-xs text-orange-500 font-medium">
+                                               +${item.lintasTriwulan[1]} lintas triwulan:
+                                           </p>
+                                           <ul class="list-disc pl-4 text-xs">
+                                               ${(item.listLintas?.[1] || []).map(lintas => `
+                                                   <li>${lintas.plan_name} (${lintas.from_quarter} → ${lintas.to_quarter})</li>
+                                               `).join('')}
+                                           </ul>
+                                       </div>` : ''}
+                                   </div>
+                               </div>
+                               ${(item.lintasTriwulan?.[1] ?? 0) > 0 ? `<p class="text-xs text-orange-500 mt-1">+${item.lintasTriwulan[1]} lintas triwulan</p>` : ''}`
                             : `<div class="px-3 py-1 text-black inline-block"> - </div>`
                         }
                     </td>
@@ -775,7 +855,29 @@ document.getElementById('search').addEventListener('keyup', function() {
                     <!-- Realisasi Triwulan II -->
                     <td class="px-4 py-4 text-center">
                         ${(item.rekapFinals?.[2] ?? 0) > 0
-                            ? `<div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">${item.rekapFinals[2]} Selesai</div>`
+                            ? `<div class="relative inline-block group">
+                                   <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block cursor-pointer">
+                                       ${item.rekapFinals[2]} Selesai
+                                   </div>
+                                   <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                       <p class="font-semibold text-gray-800 mb-1">Daftar Realisasi:</p>
+                                       <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                           ${(item.listFinals?.[2] || []).map(final => `<li>${final}</li>`).join('')}
+                                       </ul>
+                                       ${(item.lintasTriwulan?.[2] ?? 0) > 0 ? `
+                                       <div class="mt-2 pt-2 border-t border-gray-200">
+                                           <p class="text-xs text-orange-500 font-medium">
+                                               +${item.lintasTriwulan[2]} lintas triwulan:
+                                           </p>
+                                           <ul class="list-disc pl-4 text-xs">
+                                               ${(item.listLintas?.[2] || []).map(lintas => `
+                                                   <li>${lintas.plan_name} (${lintas.from_quarter} → ${lintas.to_quarter})</li>
+                                               `).join('')}
+                                           </ul>
+                                       </div>` : ''}
+                                   </div>
+                               </div>
+                               ${(item.lintasTriwulan?.[2] ?? 0) > 0 ? `<p class="text-xs text-orange-500 mt-1">+${item.lintasTriwulan[2]} lintas triwulan</p>` : ''}`
                             : `<div class="px-3 py-1 text-black inline-block"> - </div>`
                         }
                     </td>
@@ -783,7 +885,29 @@ document.getElementById('search').addEventListener('keyup', function() {
                     <!-- Realisasi Triwulan III -->
                     <td class="px-4 py-4 text-center">
                         ${(item.rekapFinals?.[3] ?? 0) > 0
-                            ? `<div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">${item.rekapFinals[3]} Selesai</div>`
+                            ? `<div class="relative inline-block group">
+                                   <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block cursor-pointer">
+                                       ${item.rekapFinals[3]} Selesai
+                                   </div>
+                                   <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                       <p class="font-semibold text-gray-800 mb-1">Daftar Realisasi:</p>
+                                       <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                           ${(item.listFinals?.[3] || []).map(final => `<li>${final}</li>`).join('')}
+                                       </ul>
+                                       ${(item.lintasTriwulan?.[3] ?? 0) > 0 ? `
+                                       <div class="mt-2 pt-2 border-t border-gray-200">
+                                           <p class="text-xs text-orange-500 font-medium">
+                                               +${item.lintasTriwulan[3]} lintas triwulan:
+                                           </p>
+                                           <ul class="list-disc pl-4 text-xs">
+                                               ${(item.listLintas?.[3] || []).map(lintas => `
+                                                   <li>${lintas.plan_name} (${lintas.from_quarter} → ${lintas.to_quarter})</li>
+                                               `).join('')}
+                                           </ul>
+                                       </div>` : ''}
+                                   </div>
+                               </div>
+                               ${(item.lintasTriwulan?.[3] ?? 0) > 0 ? `<p class="text-xs text-orange-500 mt-1">+${item.lintasTriwulan[3]} lintas triwulan</p>` : ''}`
                             : `<div class="px-3 py-1 text-black inline-block"> - </div>`
                         }
                     </td>
@@ -791,7 +915,29 @@ document.getElementById('search').addEventListener('keyup', function() {
                     <!-- Realisasi Triwulan IV -->
                     <td class="px-4 py-4 text-center">
                         ${(item.rekapFinals?.[4] ?? 0) > 0
-                            ? `<div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block">${item.rekapFinals[4]} Selesai</div>`
+                            ? `<div class="relative inline-block group">
+                                   <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block cursor-pointer">
+                                       ${item.rekapFinals[4]} Selesai
+                                   </div>
+                                   <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                       <p class="font-semibold text-gray-800 mb-1">Daftar Realisasi:</p>
+                                       <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                           ${(item.listFinals?.[4] || []).map(final => `<li>${final}</li>`).join('')}
+                                       </ul>
+                                       ${(item.lintasTriwulan?.[4] ?? 0) > 0 ? `
+                                       <div class="mt-2 pt-2 border-t border-gray-200">
+                                           <p class="text-xs text-orange-500 font-medium">
+                                               +${item.lintasTriwulan[4]} lintas triwulan:
+                                           </p>
+                                           <ul class="list-disc pl-4 text-xs">
+                                               ${(item.listLintas?.[4] || []).map(lintas => `
+                                                   <li>${lintas.plan_name} (${lintas.from_quarter} → ${lintas.to_quarter})</li>
+                                               `).join('')}
+                                           </ul>
+                                       </div>` : ''}
+                                   </div>
+                               </div>
+                               ${(item.lintasTriwulan?.[4] ?? 0) > 0 ? `<p class="text-xs text-orange-500 mt-1">+${item.lintasTriwulan[4]} lintas triwulan</p>` : ''}`
                             : `<div class="px-3 py-1 text-black inline-block"> - </div>`
                         }
                     </td>
@@ -800,7 +946,8 @@ document.getElementById('search').addEventListener('keyup', function() {
                         ${(() => {
                             let html = `
                                 <!-- Tombol Detail -->
-                                <a href="/tahapan/${item.slug_publication}" 
+                                <!-- ✅ FIXED: Route diganti ke /publications/{slug}/steps -->
+                                <a href="/publications/${item.slug_publication}/steps" 
                                 class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-emerald-600 hover:bg-emerald-700 rounded-lg mb-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                         <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z" />
@@ -810,10 +957,11 @@ document.getElementById('search').addEventListener('keyup', function() {
                                 </a>
                             `;
 
-                            // Tambahkan tombol hapus hanya jika role = ketua_tim
+                            // Tambahkan tombol edit dan hapus hanya jika role = ketua_tim
                             if (window.userRole === "ketua_tim") {
+                                // ✅ FIXED: Parameter onclick diganti ke slug_publication dan escape quotes
                                 html += `
-                                <button onclick="openEditModal(${item.slug_publication}, '${item.publication_report}', '${item.publication_name}', '${item.publication_pic}')"
+                                <button onclick="openEditModal('${item.slug_publication}', '${item.publication_report.replace(/'/g, "\\'")}', '${item.publication_name.replace(/'/g, "\\'")}', '${item.publication_pic.replace(/'/g, "\\'")}')"
                                     class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-blue-600 hover:bg-blue-700 rounded-lg mb-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" 
                                         fill="none" viewBox="0 0 24 24" stroke-width="1.5" 
@@ -825,7 +973,7 @@ document.getElementById('search').addEventListener('keyup', function() {
                                     </svg>
                                     Edit
                                 </button>
-                                <button onclick="deletePublication(${item.slug_publication})"
+                                <button onclick="deletePublication('${item.slug_publication}')"
                                     class="flex gap-1 sm:text-xs px-3 py-1 text-sm text-white bg-red-600 hover:bg-red-700 rounded-lg mb-1">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                                         <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd"/>
@@ -840,25 +988,84 @@ document.getElementById('search').addEventListener('keyup', function() {
                     </td>
                 </tr>
             `).join('');
+        })
+        .catch(err => {
+            console.error('Error fetching search results:', err);
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="14" class="text-center text-red-500 py-4">
+                        Terjadi kesalahan saat memuat data
+                    </td>
+                </tr>
+            `;
         });
 });
 
+// ✅ FIXED: Function delete menggunakan slug_publication (UUID)
 function deletePublication(slug_publication) {
     if (!confirm("Yakin ingin menghapus publikasi ini?")) return;
+
+    // ✅ FIXED: Cek CSRF token dengan fallback
+    const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+    const csrfInput = document.querySelector('input[name="_token"]');
+    const csrfToken = csrfMeta ? csrfMeta.content : (csrfInput ? csrfInput.value : '');
+
+    if (!csrfToken) {
+        console.error('CSRF token not found');
+        alert('Error: CSRF token tidak ditemukan. Silakan refresh halaman.');
+        return;
+    }
+
+    // ✅ Tambahkan loading state (optional)
+    const deleteBtn = event.target.closest('button');
+    const originalText = deleteBtn ? deleteBtn.innerHTML : '';
+    if (deleteBtn) {
+        deleteBtn.disabled = true;
+        deleteBtn.innerHTML = '<svg class="animate-spin h-4 w-4 inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Menghapus...';
+    }
 
     fetch(`/publications/${slug_publication}`, {
         method: 'DELETE',
         headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json', // ✅ PENTING: Memberitahu server kita expect JSON
+            'Content-Type': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest' // ✅ Menandai sebagai AJAX request
         }
     })
-    .then(res => res.json())
-    .then(data => {
-        alert(data.message || "Berhasil dihapus");
-        location.reload(); // reload tabel setelah hapus
+    .then(res => {
+        // ✅ Cek status response
+        if (!res.ok) {
+            return res.json().then(err => {
+                throw new Error(err.message || `HTTP error! status: ${res.status}`);
+            });
+        }
+        return res.json();
     })
-    .catch(err => console.error(err));
+    .then(data => {
+        if (data.success) {
+            alert(data.message || "Berhasil dihapus");
+            
+            // ✅ Trigger search ulang jika ada query, atau reload
+            const searchInput = document.getElementById('search');
+            if (searchInput && searchInput.value) {
+                searchInput.dispatchEvent(new Event('keyup'));
+            } else {
+                location.reload();
+            }
+        } else {
+            throw new Error(data.message || 'Gagal menghapus publikasi');
+        }
+    })
+    .catch(err => {
+        console.error('Error deleting publication:', err);
+        alert('Terjadi kesalahan saat menghapus publikasi: ' + err.message);
+        
+        // ✅ Restore button state jika error
+        if (deleteBtn) {
+            deleteBtn.disabled = false;
+            deleteBtn.innerHTML = originalText;
+        }
+    });
 }
 </script>
-
-

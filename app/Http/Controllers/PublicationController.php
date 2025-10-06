@@ -325,17 +325,40 @@ class PublicationController extends Controller
 
     public function destroy(Publication $publication)
     {
-        // $publication = Publication::where('slug_publication', $slug_publication)->firstOrFail();
+        try {
+            // Hapus semua StepsPlan yang terkait
+            $publication->stepsPlans()->delete();
 
-        // Hapus semua StepsPlan yang terkait
-        $publication->stepsPlans()->delete();
+            // Hapus publication
+            $publication->delete();
 
-        // Hapus publication
-        $publication->delete();
+            // ✅ PENTING: Cek apakah request AJAX atau redirect biasa
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Publikasi dan semua tahapan terkait berhasil dihapus!'
+                ], 200);
+            }
 
-        return redirect()->route('publications.index')
-                        ->with('success', 'Publikasi dan semua tahapan terkait berhasil dihapus!');
+            return redirect()->route('publications.index')
+                ->with('success', 'Publikasi dan semua tahapan terkait berhasil dihapus!');
+
+        } catch (\Exception $e) {
+            // Log error untuk debugging
+            \Log::error('Error deleting publication: ' . $e->getMessage());
+            
+            if (request()->expectsJson() || request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat menghapus publikasi: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat menghapus publikasi');
+        }
     }
+
 
     public function search(Request $request)
     {
@@ -353,42 +376,50 @@ class PublicationController extends Controller
         ->get();
 
         foreach ($publications as $publication) {
-            // ... kode rekap yang sama ...
-            
             $rekapPlans = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
             $rekapFinals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
-            $lintasTriwulan = 0;
-            $progressKumulatif = 0;
+            $lintasTriwulan = [1 => 0, 2 => 0, 3 => 0, 4 => 0]; // ✅ Per triwulan
+            
+            // ✅ Tambahkan array untuk menyimpan list
+            $listPlans = [1 => [], 2 => [], 3 => [], 4 => []];
+            $listFinals = [1 => [], 2 => [], 3 => [], 4 => []];
+            $listLintas = [1 => [], 2 => [], 3 => [], 4 => []];
 
             foreach ($publication->stepsPlans as $plan) {
                 $q = getQuarter($plan->plan_start_date);
-                if ($q) $rekapPlans[$q]++;
+                if ($q) {
+                    $rekapPlans[$q]++;
+                    $listPlans[$q][] = $plan->plan_name; // ✅ Simpan nama rencana
+                }
 
                 if ($plan->stepsFinals) {
                     $fq = getQuarter($plan->stepsFinals->actual_started);
-                    if ($fq) $rekapFinals[$fq]++;
+                    if ($fq) {
+                        $rekapFinals[$fq]++;
+                        $listFinals[$fq][] = $plan->plan_name; // ✅ Simpan nama realisasi
+                    }
 
+                    // ✅ Cek lintas triwulan
                     if ($fq && $q && $fq != $q) {
-                        $lintasTriwulan++;
+                        $lintasTriwulan[$fq]++; // ✅ Hitung per triwulan realisasi
+                        $listLintas[$fq][] = [
+                            'plan_name' => $plan->plan_name,
+                            'from_quarter' => "Triwulan $q",
+                            'to_quarter' => "Triwulan $fq"
+                        ];
                     }
                 }
             }
 
             $totalPlans = array_sum($rekapPlans);
             $totalFinals = array_sum($rekapFinals);
-            if ($totalPlans > 0) {
-                $progressKumulatif = ($totalFinals / $totalPlans) * 100;
-            } else {
-                $progressKumulatif = 0;
-            }
+            $progressKumulatif = $totalPlans > 0 ? ($totalFinals / $totalPlans) * 100 : 0;
 
             $progressTriwulan = [];
             foreach ([1, 2, 3, 4] as $q) {
-                if ($rekapPlans[$q] > 0) {
-                    $progressTriwulan[$q] = ($rekapFinals[$q] / $rekapPlans[$q]) * 100;
-                } else {
-                    $progressTriwulan[$q] = 0;
-                }
+                $progressTriwulan[$q] = $rekapPlans[$q] > 0 
+                    ? ($rekapFinals[$q] / $rekapPlans[$q]) * 100 
+                    : 0;
             }
 
             $publication->rekapPlans = $rekapPlans;
@@ -396,20 +427,28 @@ class PublicationController extends Controller
             $publication->lintasTriwulan = $lintasTriwulan;
             $publication->progressKumulatif = $progressKumulatif;
             $publication->progressTriwulan = $progressTriwulan;
+            
+            // ✅ Set data list
+            $publication->listPlans = $listPlans;
+            $publication->listFinals = $listFinals;
+            $publication->listLintas = $listLintas;
         }
 
-        // Return dengan explicit fields termasuk slug_publication
+        // ✅ Return dengan data lengkap
         return response()->json($publications->map(function($pub) {
             return [
-                'slug_publication' => $pub->slug_publication, // PENTING: pastikan ini ada
+                'slug_publication' => $pub->slug_publication,
                 'publication_report' => $pub->publication_report,
                 'publication_name' => $pub->publication_name,
                 'publication_pic' => $pub->publication_pic,
                 'rekapPlans' => $pub->rekapPlans,
                 'rekapFinals' => $pub->rekapFinals,
-                'lintasTriwulan' => $pub->lintasTriwulan,
+                'lintasTriwulan' => $pub->lintasTriwulan, // ✅ Array per triwulan
                 'progressKumulatif' => $pub->progressKumulatif,
                 'progressTriwulan' => $pub->progressTriwulan,
+                'listPlans' => $pub->listPlans,     // ✅ Tambahkan
+                'listFinals' => $pub->listFinals,   // ✅ Tambahkan
+                'listLintas' => $pub->listLintas,   // ✅ Tambahkan
             ];
         }));
     }
