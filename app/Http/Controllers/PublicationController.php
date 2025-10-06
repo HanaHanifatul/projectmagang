@@ -37,6 +37,11 @@ class PublicationController extends Controller
             $lintasTriwulan = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
             $progressKumulatif = 0;
 
+            // 🟩 Tambahkan inisialisasi array list kosong per publikasi
+            $listPlans = [1 => [], 2 => [], 3 => [], 4 => []];
+            $listFinals = [1 => [], 2 => [], 3 => [], 4 => []];
+            $listLintas = [1 => [], 2 => [], 3 => [], 4 => []];
+
             // Looping di setiap tahapan 
             foreach ($publication->stepsPlans as $plan) {
                 

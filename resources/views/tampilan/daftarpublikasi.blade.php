@@ -187,9 +187,20 @@
                             <!-- Rencana Triwulan I -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapPlans[1] ?? 0) > 0)
-                                    <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">
+                                <div class="relative group inline-block">
+                                    <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block cursor-pointer hover:bg-blue-800 transition">
                                         {{ $publication->rekapPlans[1] }} Rencana
                                     </div>
+                                    <!-- Tooltip muncul saat hover -->
+                                    <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                        <p class="font-semibold text-gray-800 mb-1">Daftar Rencana:</p>
+                                        <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                            @foreach($publication->listPlans[1] as $item)
+                                                <li>{{ $item }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
                                     <p class="text-xs text-gray-500 mt-1">
                                         {{ number_format($publication->progressTriwulan[1] ?? 0, 0) }}% selesai
                                     </p>
@@ -201,9 +212,20 @@
                             <!-- Rencana Triwulan II -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapPlans[2] ?? 0) > 0)
-                                    <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">
+                                <div class="relative group inline-block">
+                                    <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block cursor-pointer hover:bg-blue-800 transition">
                                         {{ $publication->rekapPlans[2] }} Rencana
                                     </div>
+                                    <!-- Tooltip muncul saat hover -->
+                                    <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                        <p class="font-semibold text-gray-800 mb-1">Daftar Rencana:</p>
+                                        <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                            @foreach($publication->listPlans[2] as $item)
+                                                <li>{{ $item }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
                                     <p class="text-xs text-gray-500 mt-1">
                                         {{ number_format($publication->progressTriwulan[2] ?? 0, 0) }}% selesai
                                     </p>
@@ -215,9 +237,20 @@
                             <!-- Rencana Triwulan III -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapPlans[3] ?? 0) > 0)
-                                    <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">
+                                <div class="relative group inline-block">
+                                    <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block cursor-pointer hover:bg-blue-800 transition">
                                         {{ $publication->rekapPlans[3] }} Rencana
                                     </div>
+                                    <!-- Tooltip muncul saat hover -->
+                                    <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                        <p class="font-semibold text-gray-800 mb-1">Daftar Rencana:</p>
+                                        <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                            @foreach($publication->listPlans[3] as $item)
+                                                <li>{{ $item }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
                                     <p class="text-xs text-gray-500 mt-1">
                                         {{ number_format($publication->progressTriwulan[3] ?? 0, 0) }}% selesai
                                     </p>
@@ -229,9 +262,20 @@
                             <!-- Rencana Triwulan IV -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapPlans[4] ?? 0) > 0)
-                                <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block">
+                                <div class="relative group inline-block">
+                                    <div class="px-3 py-1 rounded-full bg-blue-900 text-white inline-block cursor-pointer hover:bg-blue-800 transition">
                                         {{ $publication->rekapPlans[4] }} Rencana
                                     </div>
+                                    <!-- Tooltip muncul saat hover -->
+                                    <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm text-gray-700 z-50">
+                                        <p class="font-semibold text-gray-800 mb-1">Daftar Rencana:</p>
+                                        <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                            @foreach($publication->listPlans[4] as $item)
+                                                <li>{{ $item }}</li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
                                     <p class="text-xs text-gray-500 mt-1">
                                         {{ number_format($publication->progressTriwulan[4] ?? 0, 0) }}% selesai
                                     </p>
@@ -244,13 +288,45 @@
                             <!-- Realisasi Triwulan I -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapFinals[1] ?? 0) > 0)
+                                    <div class="relative inline-block group">
+                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block cursor-pointer">
+                                            {{ $publication->rekapFinals[1] }} Selesai
+                                        </div>
+
+                                        {{-- Tooltip daftar realisasi, muncul hanya saat hover --}}
+                                        <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block 
+                                                    bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm 
+                                                    text-gray-700 z-50">
+                                            <p class="font-semibold text-gray-800 mb-1">Daftar Realisasi:</p>
+                                            <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                                @foreach($publication->listFinals[1] ?? [] as $item)
+                                                    <li>{{ $item }}</li>
+                                                @endforeach
+                                            </ul>
+
+                                            @if(($publication->lintasTriwulan[1] ?? 0) > 0)
+                                                <div class="mt-2 pt-2 border-t border-gray-200">
+                                                    <p class="text-xs text-orange-500 font-medium">
+                                                        +{{ $publication->lintasTriwulan[1] }} lintas triwulan:
+                                                    </p>
+                                                    <ul class="list-disc pl-4 text-xs">
+                                                        @foreach($publication->listLintas[1] ?? [] as $lintas)
+                                                            <li>
+                                                                {{ $lintas['plan_name'] }} 
+                                                                ({{ $lintas['from_quarter'] }} → {{ $lintas['to_quarter'] }})
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    {{-- Tambahan teks di bawah --}}
                                     @if(($publication->lintasTriwulan[1] ?? 0) > 0)
-                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[1] }} Selesai </div>
                                         <p class="text-xs text-orange-500 mt-1">
                                             +{{ $publication->lintasTriwulan[1] }} lintas triwulan
                                         </p>
-                                    @else
-                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[1] }} Selesai </div>
                                     @endif
                                 @else
                                     <div class="px-3 py-1 text-black inline-block"> - </div>
@@ -259,13 +335,45 @@
                             <!-- Realisasi Triwulan II -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapFinals[2] ?? 0) > 0)
+                                    <div class="relative inline-block group">
+                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block cursor-pointer">
+                                            {{ $publication->rekapFinals[2] }} Selesai
+                                        </div>
+
+                                        {{-- Tooltip daftar realisasi, muncul hanya saat hover --}}
+                                        <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block 
+                                                    bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm 
+                                                    text-gray-700 z-50">
+                                            <p class="font-semibold text-gray-800 mb-1">Daftar Realisasi:</p>
+                                            <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                                @foreach($publication->listFinals[2] ?? [] as $item)
+                                                    <li>{{ $item }}</li>
+                                                @endforeach
+                                            </ul>
+
+                                            @if(($publication->lintasTriwulan[2] ?? 0) > 0)
+                                                <div class="mt-2 pt-2 border-t border-gray-200">
+                                                    <p class="text-xs text-orange-500 font-medium">
+                                                        +{{ $publication->lintasTriwulan[2] }} lintas triwulan:
+                                                    </p>
+                                                    <ul class="list-disc pl-4 text-xs">
+                                                        @foreach($publication->listLintas[2] ?? [] as $lintas)
+                                                            <li>
+                                                                {{ $lintas['plan_name'] }} 
+                                                                ({{ $lintas['from_quarter'] }} → {{ $lintas['to_quarter'] }})
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    {{-- Tambahan teks di bawah --}}
                                     @if(($publication->lintasTriwulan[2] ?? 0) > 0)
-                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[2] }} Selesai </div>
                                         <p class="text-xs text-orange-500 mt-1">
                                             +{{ $publication->lintasTriwulan[2] }} lintas triwulan
                                         </p>
-                                    @else
-                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[2] }} Selesai </div>
                                     @endif
                                 @else
                                     <div class="px-3 py-1 text-black inline-block"> - </div>
@@ -274,13 +382,45 @@
                             <!-- Realisasi Triwulan III -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapFinals[3] ?? 0) > 0)
+                                    <div class="relative inline-block group">
+                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block cursor-pointer">
+                                            {{ $publication->rekapFinals[3] }} Selesai
+                                        </div>
+
+                                        {{-- Tooltip daftar realisasi, muncul hanya saat hover --}}
+                                        <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block 
+                                                    bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm 
+                                                    text-gray-700 z-50">
+                                            <p class="font-semibold text-gray-800 mb-1">Daftar Realisasi:</p>
+                                            <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                                @foreach($publication->listFinals[3] ?? [] as $item)
+                                                    <li>{{ $item }}</li>
+                                                @endforeach
+                                            </ul>
+
+                                            @if(($publication->lintasTriwulan[3] ?? 0) > 0)
+                                                <div class="mt-2 pt-2 border-t border-gray-200">
+                                                    <p class="text-xs text-orange-500 font-medium">
+                                                        +{{ $publication->lintasTriwulan[3] }} lintas triwulan:
+                                                    </p>
+                                                    <ul class="list-disc pl-4 text-xs">
+                                                        @foreach($publication->listLintas[3] ?? [] as $lintas)
+                                                            <li>
+                                                                {{ $lintas['plan_name'] }} 
+                                                                ({{ $lintas['from_quarter'] }} → {{ $lintas['to_quarter'] }})
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    {{-- Tambahan teks di bawah --}}
                                     @if(($publication->lintasTriwulan[3] ?? 0) > 0)
-                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[3] }} Selesai </div>
                                         <p class="text-xs text-orange-500 mt-1">
                                             +{{ $publication->lintasTriwulan[3] }} lintas triwulan
                                         </p>
-                                    @else
-                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[3] }} Selesai </div>
                                     @endif
                                 @else
                                     <div class="px-3 py-1 text-black inline-block"> - </div>
@@ -289,13 +429,45 @@
                             <!-- Realisasi Triwulan IV -->
                             <td class="px-4 py-4 text-center">
                                 @if(($publication->rekapFinals[4] ?? 0) > 0)
+                                    <div class="relative inline-block group">
+                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block cursor-pointer">
+                                            {{ $publication->rekapFinals[4] }} Selesai
+                                        </div>
+
+                                        {{-- Tooltip daftar realisasi, muncul hanya saat hover --}}
+                                        <div class="absolute left-1/2 -translate-x-1/2 top-full mt-2 hidden group-hover:block 
+                                                    bg-white border border-gray-200 shadow-lg rounded-lg p-2 w-64 text-sm 
+                                                    text-gray-700 z-50">
+                                            <p class="font-semibold text-gray-800 mb-1">Daftar Realisasi:</p>
+                                            <ul class="list-disc pl-4 space-y-1 max-h-40 overflow-y-auto">
+                                                @foreach($publication->listFinals[4] ?? [] as $item)
+                                                    <li>{{ $item }}</li>
+                                                @endforeach
+                                            </ul>
+
+                                            @if(($publication->lintasTriwulan[4] ?? 0) > 0)
+                                                <div class="mt-2 pt-2 border-t border-gray-200">
+                                                    <p class="text-xs text-orange-500 font-medium">
+                                                        +{{ $publication->lintasTriwulan[4] }} lintas triwulan:
+                                                    </p>
+                                                    <ul class="list-disc pl-4 text-xs">
+                                                        @foreach($publication->listLintas[4] ?? [] as $lintas)
+                                                            <li>
+                                                                {{ $lintas['plan_name'] }} 
+                                                                ({{ $lintas['from_quarter'] }} → {{ $lintas['to_quarter'] }})
+                                                            </li>
+                                                        @endforeach
+                                                    </ul>
+                                                </div>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    {{-- Tambahan teks di bawah --}}
                                     @if(($publication->lintasTriwulan[4] ?? 0) > 0)
-                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[4] }} Selesai </div>
                                         <p class="text-xs text-orange-500 mt-1">
                                             +{{ $publication->lintasTriwulan[4] }} lintas triwulan
                                         </p>
-                                    @else
-                                        <div class="px-3 py-1 rounded-full bg-emerald-600 text-white inline-block"> {{ $publication->rekapFinals[4] }} Selesai </div>
                                     @endif
                                 @else
                                     <div class="px-3 py-1 text-black inline-block"> - </div>
