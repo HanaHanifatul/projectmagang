@@ -275,11 +275,16 @@ class PublicationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'publication_name'   => 'required|string|max:255',
-            'publication_report' => 'required|string|max:255',
-            'publication_pic'    => 'required|string|max:255',
-            'publication_report_other' => 'nullable|string|max:255'
-        ]);
+            'publication_name'   => 'required|string|max:255|min:3|regex:/^[^<>`]+$/',
+            'publication_report' => 'required|string|max:255|min:3|regex:/^[^<>`]+$/',
+            'publication_pic'    => 'required|string|max:255|min:3|regex:/^[^<>`]+$/',
+            'publication_report_other' => 'nullable|string|max:255|min:3|regex:/^[^<>`]+$/'
+        ],
+        [
+        'publication_name.regex' => 'Nama publikasi tidak boleh mengandung karakter aneh seperti <, >, atau `.',
+        'publication_report.regex' => 'Laporan publikasi tidak boleh mengandung karakter aneh seperti <, >, atau `.',
+        'publication_pic.regex' => 'PIC tidak boleh mengandung karakter aneh seperti <, >, atau `.',
+    ]);
 
         // Cek kalau user pilih "other"
         $publicationReport = $request->publication_report === 'other'
@@ -301,11 +306,17 @@ class PublicationController extends Controller
     public function update(Request $request, Publication $publication)
     {        
         $request->validate([
-            'publication_name'   => 'required|string|max:255',
-            'publication_report' => 'required|string|max:255',
-            'publication_pic'    => 'required|string|max:255',
-            'publication_report_other' => 'nullable|string|max:255'
-        ]);
+            'publication_name'   => 'required|string|max:255|min:3|regex:/^[^<>`]+$/',
+            'publication_report' => 'required|string|max:255|min:3|regex:/^[^<>`]+$/',
+            'publication_pic'    => 'required|string|max:255|min:3|regex:/^[^<>`]+$/',
+            'publication_report_other' => 'nullable|string|max:255|min:3|regex:/^[^<>`]+$/'
+        ],
+        [
+            'publication_name.regex' => 'Nama publikasi tidak boleh mengandung karakter aneh seperti <, >, atau `.',
+            'publication_report.regex' => 'Laporan publikasi tidak boleh mengandung karakter aneh seperti <, >, atau `.',
+            'publication_pic.regex' => 'PIC tidak boleh mengandung karakter aneh seperti <, >, atau `.',
+        ]
+    );
 
         // Cek kalau user pilih "other"
         $publicationReport = $request->publication_report === 'other'
