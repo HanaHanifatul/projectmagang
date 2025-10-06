@@ -7,7 +7,7 @@
         </div>
 
         <div class="flex flex-wrap gap-2 justify-start sm:justify-end" x-data="{ open: false }">
-            @if(auth()->check() && auth()->user()->role === 'ketua_tim' || auth()->user()->role === 'admin')
+            @if(auth()->check() && in_array(auth()->user()->role, ['ketua_tim', 'admin']))
                 <!-- Tombol Unduh Excel -->
                 <a href="{{ route('publications.exportTable') }}"
                     class="flex items-center justify-center gap-1 border text-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm shadow hover:text-white hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
@@ -485,7 +485,7 @@
                                     Detail
                                 </a>
 
-                                @if(auth()->check() && auth()->user()->role === 'ketua_tim' || auth()->user()->role === 'admin')
+                                @if(auth()->check() && in_array(auth()->user()->role, ['ketua_tim', 'admin']))
                                     <div x-data="{
                                         open: false, 
                                         editOpen: false, 
