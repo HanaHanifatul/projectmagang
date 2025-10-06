@@ -110,6 +110,12 @@ class PublicationController extends Controller
             $rekapFinals = [1 => 0, 2 => 0, 3 => 0, 4 => 0];
 
             foreach ($publication->stepsPlans as $plan) {
+                // 1. Belum berlangsung (tidak punya tanggal sama sekali)
+                if (empty($plan->plan_start_date) && empty($plan->plan_end_date)) {
+                    $belumBerlangsungTahapan++;
+                    continue; // lanjut ke plan berikutnya
+                }
+
                 $q = getQuarter($plan->plan_start_date);
                 
                 // Hanya hitung tahapan di triwulan yang dipilih
@@ -117,12 +123,8 @@ class PublicationController extends Controller
                     $totalTahapan++;
                     $rekapPlans[$q]++;
 
-                    // 1. Belum berlangsung
-                    if (empty($plan->plan_start_date) && empty($plan->plan_end_date)) {
-                        $belumBerlangsungTahapan++;
-                    }
                     // 2. Sudah selesai
-                    else if ($plan->stepsFinals) {
+                    if ($plan->stepsFinals) {
                         $sudahSelesaiTahapan++;
                         $fq = getQuarter($plan->stepsFinals->actual_started);
                         if ($fq) {
