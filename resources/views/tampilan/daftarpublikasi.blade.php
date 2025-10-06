@@ -7,18 +7,18 @@
         </div>
 
         <div class="flex flex-wrap gap-2 justify-start sm:justify-end" x-data="{ open: false }">
-            <!-- Tombol Unduh Excel -->
-            <a href="{{ route('publications.exportTable') }}"
-                class="flex items-center justify-center gap-1 border text-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm shadow hover:text-white hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                        <path d="M8.75 2.75a.75.75 0 0 0-1.5 0v5.69L5.03 6.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.44V2.75Z" />
-                        <path d="M3.5 9.75a.75.75 0 0 0-1.5 0v1.5A2.75 2.75 0 0 0 4.75 14h6.5A2.75 2.75 0 0 0 14 11.25v-1.5a.75.75 0 0 0-1.5 0v1.5c0 .69-.56 1.25-1.25 1.25h-6.5c-.69 0-1.25-.56-1.25-1.25v-1.5Z" />
-                    </svg>
-                    Unduh Excel
-            </a>
+            @if(auth()->check() && auth()->user()->role === 'ketua_tim' || 'admin')
+                <!-- Tombol Unduh Excel -->
+                <a href="{{ route('publications.exportTable') }}"
+                    class="flex items-center justify-center gap-1 border text-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm shadow hover:text-white hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                            <path d="M8.75 2.75a.75.75 0 0 0-1.5 0v5.69L5.03 6.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.44V2.75Z" />
+                            <path d="M3.5 9.75a.75.75 0 0 0-1.5 0v1.5A2.75 2.75 0 0 0 4.75 14h6.5A2.75 2.75 0 0 0 14 11.25v-1.5a.75.75 0 0 0-1.5 0v1.5c0 .69-.56 1.25-1.25 1.25h-6.5c-.69 0-1.25-.56-1.25-1.25v-1.5Z" />
+                        </svg>
+                        Unduh Excel
+                </a>
 
-            <!-- Tombol Tambah Publikasi -->
-            @if(auth()->check() && auth()->user()->role === 'ketua_tim')
+                <!-- Tombol Tambah Publikasi -->
                 <button 
                     @click="open = true" 
                     class="flex items-center justify-center gap-1 bg-emerald-600 text-white px-3 py-2 rounded-lg text-xs sm:text-sm shadow hover:bg-emerald-800 whitespace-nowrap min-w-[110px]">
@@ -485,7 +485,7 @@
                                     Detail
                                 </a>
 
-                                @if(auth()->check() && auth()->user()->role === 'ketua_tim')
+                                @if(auth()->check() && auth()->user()->role === 'ketua_tim' || 'admin')
                                     <div x-data="{
                                         open: false, 
                                         editOpen: false, 
@@ -958,7 +958,7 @@ document.getElementById('search').addEventListener('keyup', function() {
                             `;
 
                             // Tambahkan tombol edit dan hapus hanya jika role = ketua_tim
-                            if (window.userRole === "ketua_tim") {
+                            if (window.userRole === "ketua_tim" || "admin") {
                                 // ✅ FIXED: Parameter onclick diganti ke slug_publication dan escape quotes
                                 html += `
                                 <button onclick="openEditModal('${item.slug_publication}', '${item.publication_report.replace(/'/g, "\\'")}', '${item.publication_name.replace(/'/g, "\\'")}', '${item.publication_pic.replace(/'/g, "\\'")}')"

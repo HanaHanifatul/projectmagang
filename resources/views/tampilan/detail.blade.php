@@ -49,7 +49,7 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-6 gap-2 mb-4 items-center">
                     <!-- Search (2 kolom di layar besar) -->
-                    <div class="{{ (auth()->check() && auth()->user()->role === 'ketua_tim') ? 'sm:col-span-4' : 'sm:col-span-5' }}">
+                    <div class="{{ (auth()->check() && auth()->user()->role === 'ketua_tim' || 'admin') ? 'sm:col-span-4' : 'sm:col-span-6' }}">
                             <input 
                             type="text" 
                             id="search-input"
@@ -59,19 +59,19 @@
                             class="w-full border px-3 py-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                     </div>
-                    <!-- Tombol Unduh Excel -->
-                    <div class="sm:col-span-1">
-                        <a href="{{ route('publication.export', $publication->slug_publication) }}" 
-                            class="flex items-center justify-center gap-1 border text-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm shadow hover:text-white hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                <path d="M8.75 2.75a.75.75 0 0 0-1.5 0v5.69L5.03 6.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.44V2.75Z" />
-                                <path d="M3.5 9.75a.75.75 0 0 0-1.5 0v1.5A2.75 2.75 0 0 0 4.75 14h6.5A2.75 2.75 0 0 0 14 11.25v-1.5a.75.75 0 0 0-1.5 0v1.5c0 .69-.56 1.25-1.25 1.25h-6.5c-.69 0-1.25-.56-1.25-1.25v-1.5Z" />
-                            </svg>
-                            Unduh
-                        </a>
-                    </div>
-                    <!-- Tambah Tahapan -->
-                    @if(auth()->check() && auth()->user()->role === 'ketua_tim')
+                    @if(auth()->check() && auth()->user()->role === 'ketua_tim' || 'admin')
+                        <!-- Tombol Unduh Excel -->
+                        <div class="sm:col-span-1">
+                            <a href="{{ route('publication.export', $publication->slug_publication) }}" 
+                                class="flex items-center justify-center gap-1 border text-gray-700 px-3 py-2 rounded-lg text-xs sm:text-sm shadow hover:text-white hover:bg-emerald-800 whitespace-nowrap min-w-[100px]">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
+                                    <path d="M8.75 2.75a.75.75 0 0 0-1.5 0v5.69L5.03 6.22a.75.75 0 0 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.44V2.75Z" />
+                                    <path d="M3.5 9.75a.75.75 0 0 0-1.5 0v1.5A2.75 2.75 0 0 0 4.75 14h6.5A2.75 2.75 0 0 0 14 11.25v-1.5a.75.75 0 0 0-1.5 0v1.5c0 .69-.56 1.25-1.25 1.25h-6.5c-.69 0-1.25-.56-1.25-1.25v-1.5Z" />
+                                </svg>
+                                Unduh
+                            </a>
+                        </div>
+                        <!-- Tambah Tahapan -->
                         <div class="sm:col-span-1">
                             <div x-data="{ open: false }">
                                 <button 
@@ -270,62 +270,63 @@
                                 </div>
                             </div>
                             <!-- Modal Edit Tahapan -->
-                            <div x-data="{ open: false }">
-                                <button 
-                                    @click="open = true"
-                                    class="text-xs sm:text-sm flex gap-1 px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-600 hover:text-white">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
-                                        <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
-                                        <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
-                                    </svg>
-                                </button>
-                                <div x-show="open" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                                    <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
-                                        <h2 class="text-lg font-semibold">Edit Tahapan</h2>
-                                        <p class="text-sm text-gray-500 mb-2">Mengedit tahapan publikasi/laporan</p>
-                                        <form action="{{ route('plans.update_stage', $plan->step_plan_id) }}" method="POST">
-                                            @csrf
-                                            @method('PUT')
-                                            <!-- Jenis Tahapan -->
-                                            <div class="mb-3">
-                                                <label class="block text-sm font-medium text-gray-700">Jenis Tahapan</label>
-                                                <select name="plan_type" required
-                                                    class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
-                                                    <option value="">-- Pilih Jenis Tahapan --</option>
-                                                    {{-- Menandai opsi yang dipilih --}}
-                                                    <option value="persiapan" @if(old('plan_type', $plan->plan_type) == 'persiapan') selected @endif>Persiapan</option>
-                                                    <option value="pengumpulan data" @if(old('plan_type', $plan->plan_type) == 'pengumpulan data') selected @endif>Pengumpulan Data</option>
-                                                    <option value="pengolahan data" @if(old('plan_type', $plan->plan_type) == 'pengolahan data') selected @endif>Pengolahan Data</option>
-                                                    <option value="analisis data" @if(old('plan_type', $plan->plan_type) == 'analisis data') selected @endif>Analisis Data</option>
-                                                    <option value="diseminasi" @if(old('plan_type', $plan->plan_type) == 'diseminasi') selected @endif>Diseminasi</option>
-                                                </select>
-                                            </div>
+                            @if(auth()->check() && auth()->user()->role === 'ketua_tim' || 'admin')
+                                <div x-data="{ open: false }">
+                                    <button 
+                                        @click="open = true"
+                                        class="text-xs sm:text-sm flex gap-1 px-4 py-2 rounded-lg text-gray-700 hover:bg-emerald-600 hover:text-white">
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-5">
+                                            <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                                            <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                                        </svg>
+                                    </button>
+                                    <div x-show="open" x-transition class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                                        <div class="bg-white rounded-xl shadow-lg w-full max-w-md p-6 relative">
+                                            <h2 class="text-lg font-semibold">Edit Tahapan</h2>
+                                            <p class="text-sm text-gray-500 mb-2">Mengedit tahapan publikasi/laporan</p>
+                                            <form action="{{ route('plans.update_stage', $plan->step_plan_id) }}" method="POST">
+                                                @csrf
+                                                @method('PUT')
+                                                <!-- Jenis Tahapan -->
+                                                <div class="mb-3">
+                                                    <label class="block text-sm font-medium text-gray-700">Jenis Tahapan</label>
+                                                    <select name="plan_type" required
+                                                        class="px-2 py-2 w-full rounded-lg border-gray-300 shadow-sm focus:border-emerald-500 focus:ring-emerald-500 text-sm">
+                                                        <option value="">-- Pilih Jenis Tahapan --</option>
+                                                        {{-- Menandai opsi yang dipilih --}}
+                                                        <option value="persiapan" @if(old('plan_type', $plan->plan_type) == 'persiapan') selected @endif>Persiapan</option>
+                                                        <option value="pengumpulan data" @if(old('plan_type', $plan->plan_type) == 'pengumpulan data') selected @endif>Pengumpulan Data</option>
+                                                        <option value="pengolahan data" @if(old('plan_type', $plan->plan_type) == 'pengolahan data') selected @endif>Pengolahan Data</option>
+                                                        <option value="analisis data" @if(old('plan_type', $plan->plan_type) == 'analisis data') selected @endif>Analisis Data</option>
+                                                        <option value="diseminasi" @if(old('plan_type', $plan->plan_type) == 'diseminasi') selected @endif>Diseminasi</option>
+                                                    </select>
+                                                </div>
 
-                                            <!-- Nama Tahapan -->
-                                            <div class="mb-3">
-                                                <label class="block text-sm font-medium text-gray-700">Nama Tahapan</label>
-                                                <input type="text" name="plan_name" value="{{ old('plan_name', $plan->plan_name) }}" required
-                                                    class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                                                    placeholder="Contoh: Perekrutan Anggota Pelatihan Anggota">
-                                            </div>
+                                                <!-- Nama Tahapan -->
+                                                <div class="mb-3">
+                                                    <label class="block text-sm font-medium text-gray-700">Nama Tahapan</label>
+                                                    <input type="text" name="plan_name" value="{{ old('plan_name', $plan->plan_name) }}" required
+                                                        class="w-full border rounded-lg px-3 py-2 mt-1 focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                                                        placeholder="Contoh: Perekrutan Anggota Pelatihan Anggota">
+                                                </div>
 
-                                            <!-- Tombol Simpan -->
-                                            <div class="flex justify-end mt-4 gap-2">
-                                                <button type="button" @click="open = false" 
-                                                    class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
-                                                    Batal
-                                                </button>
-                                                <button type="submit" 
-                                                    class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
-                                                    Simpan
-                                                </button>
-                                            </div>
-                                        </form>
+                                                <!-- Tombol Simpan -->
+                                                <div class="flex justify-end mt-4 gap-2">
+                                                    <button type="button" @click="open = false" 
+                                                        class="text-xs sm:text-sm bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded-lg">
+                                                        Batal
+                                                    </button>
+                                                    <button type="submit" 
+                                                        class="bg-emerald-600 text-white px-4 py-2 rounded-lg hover:bg-emerald-700">
+                                                        Simpan
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
                         </div>
-                    
 
                         <!-- Konten Card (hanya tampil kalau editMode = false) -->
                         <div x-show="!editMode" x-transition>
@@ -440,7 +441,7 @@
                             <!-- Tombol Edit -->
                             <div class="flex justify-end mt-4 gap-2">
                                 @if(auth()->check()) 
-                                    @if(auth()->user()->role === 'ketua_tim')
+                                    @if(auth()->user()->role === 'ketua_tim' || 'admin')
                                         <div x-data="{ showConfirm: false }">
                                             <button type="button"
                                                 @click="showConfirm = true"
@@ -478,7 +479,7 @@
                                             </div> 
                                         </div>
                                     @endif
-                                    @if(auth()->user()->role === 'ketua_tim' || 'operator')
+                                    @if(auth()->user()->role === 'ketua_tim' || 'operator' || 'admin')
                                         <button @click="editMode = true"
                                             class="text-xs sm:text-sm flex gap-1 px-4 py-2  rounded-lg bg-gray-200 text-gray-700 hover:bg-emerald-600 hover:text-white">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
