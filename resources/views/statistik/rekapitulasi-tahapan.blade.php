@@ -1,7 +1,7 @@
 {{-- statistik/rekapitulasi-tahapan.blade.php --}}
-<div class="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
     <!-- Sedang Berlangsung -->
-    <div class="relative p-4 border rounded text-center">
+    <!-- <div class="relative p-4 border rounded text-center">
         <div class="absolute top-2 right-2 text-yellow-500">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
                 <path fill-rule="evenodd" d="M1 8a7 7 0 1 1 14 0A7 7 0 0 1 1 8Zm7.75-4.25a.75.75 0 0 0-1.5 0V8c0 .414.336.75.75.75h3.25a.75.75 0 0 0 0-1.5h-2.5v-3.5Z" clip-rule="evenodd" />
@@ -10,7 +10,7 @@
         <p class="text-sm text-gray-500">Belum Berlangsung</p>
         <p class="text-2xl font-bold" x-text="data.tahapan.belumBerlangsung"></p>
         <p class="text-xs text-gray-400">Tahapan Telah Dibuat</p>
-    </div>
+    </div> -->
 
     <!-- Sedang Berlangsung -->
     <div class="relative p-4 border rounded text-center">

@@ -49,7 +49,7 @@
         </div>
         
         <!-- Dropdown Triwulan -->
-        <div class="relative">
+        <div class="relative" x-show="tab === 'tahapan'">
             <label for="triwulan" class="mr-2 text-sm font-medium text-gray-700">Triwulan:</label>
             <select id="triwulan" 
                     class="rounded-md border text-sm" 
