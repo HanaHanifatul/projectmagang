@@ -185,7 +185,26 @@
                     final_desc: '{{ old('final_desc', optional($final)->final_desc) }}',
                     next_step: '{{ old('next_step', optional($final)->next_step) }}',
                     hasFinalDoc: {{ optional($final)->final_doc ? 'true' : 'false' }},
-                                      
+                    
+                    hasInvalidChars(text) {
+                        // Regex: Memperbolehkan huruf, angka, spasi, koma (,), titik (.), tanda tanya (?), tanda seru (!), dan tanda kurung ().
+                        // Semua karakter lain dianggap tidak valid/khusus.
+                        return /[^a-zA-Z0-9\s.,?!()]/g.test(text);
+                    },
+
+                    // Fungsi validasi untuk minimal jumlah kata (minimal 3 kata)
+                    hasMinWords(text, minWords = 3) {
+                        // Hilangkan spasi berlebih dan pisahkan berdasarkan spasi
+                        const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+                        return words.length >= minWords;
+                    },
+
+                    // Fungsi untuk mendapatkan status validasi teks
+                    isTextValid(text) {
+                        if (!text || text.trim() === '') return false;
+                        return !this.hasInvalidChars(text) && this.hasMinWords(text);
+                    },
+                    
                     validateDates(type) {
                         if (type === 'rencana') {
                             this.datesAreInvalid = (this.plan_start_date && this.plan_end_date) && new Date(this.plan_end_date) < new Date(this.plan_start_date);
@@ -212,13 +231,18 @@
                         let isDocMissing = false;
                         let isAnyStruggleEmpty = false;
 
+                        // Panggil validasi teks
+                        let isPlanDescValid = this.isTextValid(this.plan_desc);
+                        let isFinalDescValid = this.isTextValid(this.final_desc);
+                        let isNextStepValid = this.isTextValid(this.next_step);
+
                         if (this.tab === 'rencana') {
                             isDocMissing = !this.hasPlanDoc && !this.fileSizeError && !this.docTypeError;
-                            this.formIsInvalid = !this.plan_start_date || !this.plan_end_date || !this.plan_desc.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isDocMissing;
+                            this.formIsInvalid = !this.plan_start_date || !this.plan_end_date || !isPlanDescValid || !this.plan_desc.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isDocMissing;
                         } else if (this.tab === 'realisasi') {
                             isDocMissing = !this.hasFinalDoc && !this.fileSizeError && !this.docTypeError;
                             // Logika struggle bisa ditambahkan di sini jika Anda ingin validasi sisi klien
-                            this.formIsInvalid = !this.actual_started || !this.actual_ended || !this.final_desc.trim() || !this.next_step.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isDocMissing || isAnyStruggleEmpty;
+                            this.formIsInvalid = !this.actual_started || !this.actual_ended || !isFinalDescValid || !isNextStepValid || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isDocMissing || isAnyStruggleEmpty;
                         }
                     },
                     

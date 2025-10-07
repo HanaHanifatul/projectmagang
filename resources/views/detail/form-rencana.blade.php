@@ -21,11 +21,26 @@
     <!-- Narasi rencana -->
     <div>
         <label class="block text-sm font-medium text-gray-700">Narasi Rencana</label>
-        <textarea name="plan_desc" rows="3" 
-            x-model="plan_desc" @input="updateFormValidity()"
-            class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500"
+        <textarea 
+            x-model="plan_desc"
+            @input="updateFormValidity()" 
+            @change="updateFormValidity()"
+            name="plan_desc" 
+            id="plan_desc" 
+            rows="3"
+            class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
             placeholder="Deskripsi rencana untuk tahapan ini">
         </textarea>
+
+         <template x-if="plan_desc.trim() !== '' && !isTextValid(plan_desc)">
+            <div class="mt-1 text-xs text-red-600">
+                Teks tidak valid:
+                <ul class="list-disc ml-4">
+                    <li x-show="hasInvalidChars(plan_desc)">Tidak boleh mengandung karakter khusus (hanya huruf, angka, spasi, koma, titik, ?, !, () yang diperbolehkan).</li>
+                    <li x-show="!hasMinWords(plan_desc)">Minimal harus 3 kata.</li>
+                </ul>
+            </div>
+        </template>
     </div>
     <!-- Dokumen Pendukung -->
     <div>

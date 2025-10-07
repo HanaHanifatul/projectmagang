@@ -20,10 +20,26 @@
 <!-- Narasi Realisasi -->
 <div>
     <label class="block text-sm font-medium text-gray-700">Narasi Realisasi</label>
-    <textarea name="final_desc" rows="3" x-model="final_desc" @input="updateFormValidity()"
-        class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500"
-        placeholder="Deskripsi rencana untuk tahapan ini">
-    </textarea>
+        <textarea 
+            x-model="final_desc"
+            @input="updateFormValidity()" 
+            @change="updateFormValidity()"
+            name="final_desc"
+            id="final_desc"
+            rows="3"
+             class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+            placeholder="Rincian realisasi kegiatan">
+        </textarea>
+
+        <template x-if="final_desc.trim() !== '' && !isTextValid(final_desc)">
+            <div class="mt-1 text-xs text-red-600">
+                Teks tidak valid:
+                <ul class="list-disc ml-4">
+                    <li x-show="hasInvalidChars(final_desc)">Tidak boleh mengandung karakter khusus (hanya huruf, angka, spasi, koma, titik, ?, !, () yang diperbolehkan).</li>
+                    <li x-show="!hasMinWords(final_desc)">Minimal harus 3 kata.</li>
+                </ul>
+            </div>
+        </template>
 </div>
 
 <!-- Kendala (dinamis) -->
@@ -89,10 +105,27 @@
 <!-- Tindak Lanjut Realisasi -->
 <div>
     <label class="block text-sm font-medium text-gray-700">Tindak Lanjut Realisasi</label>
-    <textarea name="next_step" rows="3" x-model="next_step" @input="updateFormValidity()"
-        class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500"
-        placeholder="Tindak lanjut realisasi...">
-    </textarea>
+        <textarea 
+            x-model="next_step"
+            @input="updateFormValidity()" 
+            @change="updateFormValidity()"
+            name="next_step"
+            id="next_step"
+            rows="3"
+            class="w-full border rounded px-3 py-2 focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm"
+            {{-- class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm" --}}
+            placeholder="Tindak lanjut realisasi">
+        </textarea>
+
+        <template x-if="next_step.trim() !== '' && !isTextValid(next_step)">
+            <div class="mt-1 text-xs text-red-600">
+                Teks tidak valid:
+                <ul class="list-disc ml-4">
+                    <li x-show="hasInvalidChars(next_step)">Tidak boleh mengandung karakter khusus (hanya huruf, angka, spasi, koma, titik, ?, !, () yang diperbolehkan).</li>
+                    <li x-show="!hasMinWords(next_step)">Minimal harus 3 kata.</li>
+                </ul>
+            </div>
+        </template>
 </div>
 
 <!-- Dokumen Pendukung -->
