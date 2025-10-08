@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\StepsPlan;
 use App\Models\StepsFinal;
 use App\Models\Struggle;
+use Closure;
 
 class StepsFinalController extends Controller
 {
@@ -34,37 +35,45 @@ class StepsFinalController extends Controller
             'final_doc'      => $finalDocValidation,
         ]);
 
+        // Rule ini akan digunakan untuk struggle_desc dan solution_desc
+        $minThreeWordsRule = function (string $attribute, mixed $value, Closure $fail) {
+            // Hilangkan tag HTML dan spasi di awal/akhir
+            $cleanValue = strip_tags((string)$value);
+            
+            // Hitung kata.
+            $wordCount = str_word_count($cleanValue);
+            if ($wordCount < 3) {
+                $fieldName = str_contains($attribute, 'struggle_desc') ? 'Kendala' : 'Solusi';
+                if (preg_match('/struggles\.(\d+)\./', $attribute, $matches)) {
+                    $index = $matches[1] + 1;
+                    $fail("Bidang {$fieldName} pada item Kendala ke-{$index} harus berisi minimal 3 kata.");
+                } else {
+                    $fail("Bidang {$fieldName} harus berisi minimal 3 kata.");
+                }
+                // Hentikan validasi lebih lanjut jika kata kurang dari 3 (agar pesan error tidak tumpang tindih)
+                return;
+            }
+
+            // 2. Cek Karakter Khusus (Match logic: memperbolehkan huruf, angka, spasi, dan tanda baca umum)
+            if (!preg_match('/^[\p{L}\d\s.,?!()\/"]*$/u', $cleanValue)) {
+                $fieldName = str_contains($attribute, 'struggle_desc') ? 'Kendala' : 'Solusi';
+                if (preg_match('/struggles\.(\d+)\./', $attribute, $matches)) {
+                    $index = $matches[1] + 1;
+                    $fail("Bidang {$fieldName} pada item Kendala ke-{$index} mengandung karakter yang tidak diizinkan (hanya huruf, angka, spasi, dan tanda baca umum).");
+                } else {
+                    $fail("Bidang {$fieldName} mengandung karakter yang tidak diizinkan (hanya huruf, angka, spasi, dan tanda baca umum).");
+                }
+            }
+        };
+
         // dd($validatedFinal);
 
         // Validasi input untuk Struggle
         $request->validate([
-            'struggles.*.struggle_desc'  => 'required|string',
-            'struggles.*.solution_desc'  => 'required|string',
+            'struggles.*.struggle_desc'  => ['required', 'string', $minThreeWordsRule],
+            'struggles.*.solution_desc'  => ['required', 'string', $minThreeWordsRule],
             'struggles.*.solution_doc'   => 'nullable|file|mimes:pdf,jpg,png,jpeg,docx|max:2048',
         ]);
-
-        // dd($validatedStruggle);
-
-        // Cek dan simpan file dokumen realisasi
-        // if ($request->hasFile('final_doc')) {
-        //     $path = $request->file('final_doc')->store('documents', 'public');
-        //     $validatedFinal['final_doc'] = $path;
-        // }
-
-        // // Cari atau buat record StepsFinal berdasarkan step_plan_id
-        // $final = StepsFinal::firstOrNew(['step_plan_id' => $plan->step_plan_id]);
-        // $final->fill($validatedFinal);
-        // $final->save();
-
-        
-        // if ($request->hasFile('final_doc')) {
-        //     // Hapus file lama jika ada sebelum menyimpan yang baru
-        //     if ($final->final_doc) {
-        //         \Storage::disk('public')->delete($final->final_doc);
-        //     }
-        //     $path = $request->file('final_doc')->store('documents', 'public');
-        //     $validatedFinal['final_doc'] = $path;
-        // }
 
         // Cek dan simpan file dokumen realisasi
         if ($request->hasFile('final_doc')) {

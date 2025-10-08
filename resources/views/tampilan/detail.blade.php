@@ -214,18 +214,6 @@
                         this.updateFormValidity();
                     },
 
-                    {{-- // Fungsi validasi form
-                    updateFormValidity() {
-                        // Validasi hanya untuk form yang aktif dan elemen statis
-                        if (this.tab === 'rencana') {
-                            let isDocMissing = !this.hasPlanDoc && !this.fileSizeError && !this.docTypeError;
-                            this.formIsInvalid = !this.plan_start_date || !this.plan_end_date || !this.plan_desc.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isAnyStruggleEmpty || isFinalDocMissing;
-                        } else if (this.tab === 'realisasi') {
-                            let isFinalDocMissing = !this.hasFinalDoc  && !this.fileSizeError && !this.docTypeError;
-                            this.formIsInvalid = !this.actual_started || !this.actual_ended || !this.final_desc.trim() || !this.next_step.trim() || this.datesAreInvalid || this.fileSizeError || this.docTypeError || isAnyStruggleEmpty || isFinalDocMissing;
-                        }
-                    } --}}
-
                    // Logika validasi form utama
                     updateFormValidity() {
                         let isDocMissing = false;
@@ -405,33 +393,6 @@
                                         @endif
                                     </p>
 
-                                    {{-- <p class="text-sm text-gray-600">Kendala</p>
-                                    <p class="text-sm mb-2">
-                                        @if( optional($struggle)->struggle_desc)
-                                            {{ $struggle->struggle_desc }}
-                                        @else
-                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
-                                        @endif
-                                    </p>
-
-                                    <p class="text-sm text-gray-600">Solusi</p>
-                                    <p class="text-sm mb-2">
-                                         @if( optional($struggle)->solution_desc)
-                                            {{ $struggle->solution_desc }}
-                                        @else
-                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
-                                        @endif
-                                    </p>
-
-                                    <p class="text-sm text-gray-600">Tindak Lanjut</p>
-                                    <p class="text-sm mb-2">
-                                        @if( optional($final)->next_step)
-                                            {{ $final->next_step }}
-                                        @else
-                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
-                                        @endif
-                                    </p> --}}
-
                                     <p class="text-sm text-gray-600">Kendala & Solusi</p>
                                     @forelse(optional($final)->struggles ?? [] as $s)
                                         <div class="border p-2 rounded mb-2">
@@ -448,6 +409,15 @@
                                             <span class="text-gray-500 italic text-xs">Belum diisi</span>
                                         </p>
                                     @endforelse
+
+                                    <p class="text-sm text-gray-600">Rencana Selanjutnya</p>
+                                    <p class="text-sm mb-2">
+                                        @if( optional($final)->next_step)
+                                            {{ $final->next_step }}
+                                        @else
+                                            <span class="text-gray-500 italic text-xs">Belum Diisi</span>
+                                        @endif
+                                    </p>
 
                                     <p class="text-sm text-gray-600">Bukti Pendukung Solusi</p>
                                     <div class="flex flex-col gap-1">
@@ -589,82 +559,6 @@
 
 </body>
 </html>
-
-{{-- <script>
-    document.addEventListener('DOMContentLoaded', function() {
-    
-    // --- Logika Penambahan Kendala ---
-    
-    // Gunakan Delegasi Event pada document untuk menangani semua tombol .add-struggle-button
-    document.addEventListener('click', function(event) {
-        // 1. Cek apakah elemen yang diklik adalah atau berada di dalam tombol penambah kendala
-        const addButton = event.target.closest('.add-struggle-button');
-        
-        if (addButton) {
-            // Hentikan perilaku default (jika ada)
-            event.preventDefault(); 
-
-            const targetPlanId = addButton.getAttribute('data-target-id');
-            
-            // 2. Temukan wrapper yang hanya terkait dengan tombol yang diklik ini
-            // Jika tombol dan wrapper berada di tingkat yang sama/berdekatan:
-            const wrapper = document.getElementById(`struggles-wrapper-${targetPlanId}`);
-            
-            // Menampilkan nilai variabel di Console
-            console.log('ID Tahapan Target:', targetPlanId);
-            console.log('Wrapper yang digunakan:', wrapper); 
-
-
-            // Pastikan wrapper ditemukan
-            if (wrapper) {
-                const struggleItems = wrapper.querySelectorAll('.struggle-item');
-                const struggleIndex = struggleItems.length;
-
-                const div = document.createElement('div');
-                div.classList.add('struggle-item', 'border', 'p-3', 'rounded-lg');
-                
-                // 3. Masukkan HTML (menggunakan struggleIndex dan struggleIndex + 1 yang benar)
-                div.innerHTML = `
-                    <input type="hidden" name="struggles[${struggleIndex}][struggle_id]" value="">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="block text-lg font-medium text-gray-700">Kendala dan Solusi ${struggleIndex + 1}</span>
-                        <button type="button" class="delete-struggle-button text-xs sm:text-sm flex gap-1 px-3 py-1 rounded-lg bg-gray-200 text-red-500 hover:bg-red-600 hover:text-white">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="size-4">
-                                <path fill-rule="evenodd" d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z" clip-rule="evenodd" />
-                            </svg>
-                        </button>
-                    </div>
-                    <label class="block text-sm font-medium text-gray-700">Kendala</label>
-                    <textarea name="struggles[${struggleIndex}][struggle_desc]" rows="2" required class="w-full border rounded px-3 py-2"></textarea>
-                    <label class="block text-sm font-medium text-gray-700">Solusi</label>
-                    <textarea name="struggles[${struggleIndex}][solution_desc]" rows="2" required class="w-full border rounded px-3 py-2"></textarea>
-                    <label class="block text-sm font-medium text-gray-700">Bukti Solusi</label>
-                    <input type="file" name="struggles[${struggleIndex}][solution_doc]" accept=".png,.jpg,.jpeg,.pdf"
-                    class="w-full border rounded px-3 py-2 file:mr-3 file:py-1 file:px-3 file:rounded file:border-0 file:bg-gray-600 file:text-white">
-                `;
-                
-                wrapper.appendChild(div);
-            }
-        }
-
-        // --- Logika Penghapusan Kendala (Sudah benar dan tetap pakai delegasi) ---
-        if (event.target.closest('.delete-struggle-button')) {
-            const struggleItem = event.target.closest('.struggle-item');
-            struggleItem.remove();
-        }
-    });
-
-    // Hapus total semua kode di bawah ini:
-    /*
-    const addButtons = document.querySelectorAll('.add-struggle-button');
-    addButtons.forEach(button => {
-        button.addEventListener('click', function () {
-           // ... logic yang berulang 6x ...
-        });
-    });
-    */
-});
-</script> --}}
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
